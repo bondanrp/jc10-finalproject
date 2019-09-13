@@ -1,0 +1,36 @@
+.login-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 25px;
+    letter-spacing: 10px;
+    font-weight: 400;
+    line-height: 75px;
+  }
+.login-title-div {
+    height: 800px;
+}
+.login-image {
+    height: 150px;
+    align-content: center;
+    line-height: 150px
+}
+.user-icon {
+    height: 50px;
+    
+}
+.login-input-title {
+    font-family: 'Poppins', sans-serif;
+    text-align: center;
+    letter-spacing: 2px
+}
+.login-input{
+    display: block;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.178);
+    width: 60%;
+    margin: 10px auto;
+    height: 40px
+    
+}
+.login-input:focus{
+    border-bottom: 1px solid black
+}

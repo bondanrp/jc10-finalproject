@@ -1,0 +1,28 @@
+{
+  "users": [
+    {
+      "username": "bondan",
+      "email": "bondan@example.com",
+      "password": "admin",
+      "addedItems": [],
+      "total": 0,
+      "id": 1
+    },
+    {
+      "username": "admin",
+      "email": "admin@example",
+      "password": "admin",
+      "addedItems": [],
+      "total": 0,
+      "id": 2
+    },
+    {
+      "username": "toni",
+      "email": "toni@example.com",
+      "password": "toni",
+      "addedItems": [],
+      "total": 0,
+      "id": 3
+    }
+  ]
+}
