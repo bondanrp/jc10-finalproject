@@ -30,8 +30,8 @@ class Login extends Component {
     if (!this.props.user_name) {
       return (
         <div>
-            <div className="login-title-div py-5">
-          <div className="mx-auto my-5 shadow login-card">
+            <div className="login-title-div ">
+          <div className="mx-auto shadow login-card">
             <div className='login-image text-center'>
               <img className='user-icon' src="http://icons.iconarchive.com/icons/custom-icon-design/silky-line-user/128/user-icon.png" alt="user"/>
             </div>

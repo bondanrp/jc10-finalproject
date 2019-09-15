@@ -6,9 +6,10 @@
     line-height: 75px;
   }
 .login-title-div {
-    height: 1000px;
-    background: url('https://images.unsplash.com/photo-1566041510394-cf7c8fe21800?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2134&q=80');
-
+    /* background: url('https://images.unsplash.com/photo-1566041510394-cf7c8fe21800?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2134&q=80'); */
+background: linear-gradient(90deg, rgb(84, 21, 156),rgb(132, 51, 77));
+padding-top: 100px;
+padding-bottom: 100px
 }
 .login-image {
     height: 75px;
@@ -21,7 +22,7 @@
 }
 .login-card{
     padding-bottom: 20px;
-    width: 40%;
+    width: 30%;
     background: white;
     border-radius: 5px
 }

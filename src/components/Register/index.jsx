@@ -68,8 +68,6 @@ class Register extends Component {
         username: username,
         email: email,
         password: password,
-        addedItems: [],
-        total: 0
       })
       .then(res => {
         this.toggle();
@@ -85,8 +83,8 @@ class Register extends Component {
     if (!this.props.username) {
       return (
         <div>
-          <div className="py-5 register-title-div">
-            <div className="mx-auto my-5 shadow register-card">
+          <div className="register-title-div">
+            <div className="mx-auto shadow register-card">
               <div className="register-image text-center">
                 <img
                   className="user-icon"

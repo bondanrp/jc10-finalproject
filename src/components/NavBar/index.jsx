@@ -22,7 +22,7 @@ class NavBar extends Component {
   };
 
   render() {
-    const burger = this.state.toggleBurger ? "hilang hilang-active" : "hilang";
+    const hilang = this.state.toggleBurger ? "hilang hilang-active" : "hilang";
     const anim = this.state.toggleBurger ? "burger change" : "burger";
 
     if (!this.props.username) {
@@ -31,12 +31,12 @@ class NavBar extends Component {
           <div className={styles.skipLink}>
             <a href="#mainContent">Skip to Main Content</a>
           </div>
-          <nav className="navbar navbar-expand-sm navbar-light border-bottom justify-content-between shadow">
-            <Link className="judul navbar-brand" to="/">
+          <nav className="navbar shadow">
+            <Link className="judul" to="/">
               Logo Perusahaan
             </Link>
 
-            <div className={burger}>
+            <div className={hilang}>
               <Link
                 className="tautan active"
                 onClick={this.burgerToggle}
@@ -47,23 +47,23 @@ class NavBar extends Component {
               <Link
                 className="tautan active"
                 onClick={this.burgerToggle}
-                to="Products"
+                to="About"
               >
-                Products
+                About
+              </Link>
+              <Link
+                className="tautan active"
+                onClick={this.burgerToggle}
+                to="Contact"
+              >
+                Contact
               </Link>
               <Link
                 className="tautan active"
                 onClick={this.burgerToggle}
                 to="Register"
               >
-                Register
-              </Link>
-              <Link
-                className="tautan active"
-                onClick={this.burgerToggle}
-                to="Login"
-              >
-                Login
+                <div className="userIcon"></div>
               </Link>
             </div>
             <div className={anim} onClick={this.burgerToggle}>
@@ -88,7 +88,7 @@ class NavBar extends Component {
             >
               Logo Perusahaan
             </Link>
-            <div className={burger}>
+            <div className={hilang}>
               <Link
                 className="tautan active"
                 onClick={this.burgerToggle}
@@ -99,9 +99,16 @@ class NavBar extends Component {
               <Link
                 className="tautan active"
                 onClick={this.burgerToggle}
-                to="Products"
+                to="About"
               >
-                Products
+                About
+              </Link>
+              <Link
+                className="tautan active"
+                onClick={this.burgerToggle}
+                to="Contact"
+              >
+                Contact
               </Link>
               <Link
                 className="tautan active"
