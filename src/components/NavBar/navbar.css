@@ -1,7 +1,7 @@
 .navbar{
   position: sticky !important;
   top: 0;
-  background: white 
+  background: white;
 }
 .judul {
     font-family: 'Poppins', sans-serif;
@@ -12,7 +12,7 @@
 .hilang{
   display: flex;
   justify-content: space-around;
-  width: 40%
+  width: 30%
 }
 .tautan {
     font-family: 'Poppins', sans-serif;
@@ -78,7 +78,7 @@
   height: 3px;
   background-color: #333;
   margin: 5px 0;
-  transition: 0.4s;
+  transition: 0.5s;
 }
 
 /* Rotate first bar */

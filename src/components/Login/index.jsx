@@ -17,10 +17,11 @@ class Login extends Component {
   };
 
   onLoginClick = () => {
+    if(this.validateForm()){
     let username = this.state.username;
     let password = this.state.password;
     this.props.onLoginUser(username, password);
-  };
+  }}
 
   handleSubmit = event => {
     event.preventDefault();
@@ -46,6 +47,7 @@ class Login extends Component {
                 type="text"
                 placeholder='username'
                 autoFocus
+                required
               />
               <div className="login-input-title card-title mt-2">Password</div>
               <input
@@ -55,12 +57,12 @@ class Login extends Component {
                 onChange={this.handleChange}
                 placeholder='********'
                 type="password"
+                required
               />
               <br />
               <div className="text-center">
                 <button
                   className="btn btn-outline-success mb-5"
-                  disabled={!this.validateForm()}
                   type="submit"
                   onClick={this.onLoginClick}
                 >
