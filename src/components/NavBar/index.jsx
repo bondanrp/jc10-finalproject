@@ -6,19 +6,25 @@ import { connect } from "react-redux";
 import swal from 'sweetalert2'
 import { onLogOutUser } from "../../actions/login/login";
 
-//TODO Web Template Studio: Add a new link in the NavBar for your page here.
-// A skip link is included as an accessibility best practice. For more information visit https://www.w3.org/WAI/WCAG21/Techniques/general/G1.
 class NavBar extends Component {
+  state = {toggleBurger : false}
+
 logOut = () => {
   console.log('halo');
     this.props.onLogOutUser();
     swal.fire("Success!", "User successfuly logged out", "success");
     this.props.history.push("/");
   };
-burgerToggle(x) {
-    x.addClass('change')
-  } 
+
+burgerToggle = ()=>{
+  console.log('hai');
+  this.setState({toggleBurger: !this.state.toggleBurger})
+  }
+ 
   render() {
+    const burger = this.state.toggleBurger ? 'hilang hilang-active' : 'hilang';
+    const anim = this.state.toggleBurger ? 'burger change' : 'burger';
+
     if (!this.props.username) {
       return (
         <React.Fragment>
@@ -29,25 +35,26 @@ burgerToggle(x) {
             <Link className="judul navbar-brand" to="/">
               Logo Perusahaan
             </Link>
-            <div class="burger" onclick={(e)=>{this.burgerToggle(e)}}>
-  <div class="bar1"></div>
-  <div class="bar2"></div>
-  <div class="bar3"></div>
-</div> 
-            <div className="navbar-nav hilang">
-              <Link className="tautan nav-item nav-link active" to="Home">
+            
+            <div className={burger}>
+              <Link className="tautan active" to="Home">
                 Home
               </Link>
-              <Link className="tautan nav-item nav-link active" to="Products">
+              <Link className="tautan active" to="Products">
                 Products
               </Link>
-              <Link className="tautan nav-item nav-link active" to="Register">
+              <Link className="tautan active" to="Register">
                 Register
               </Link>
-              <Link className="tautan nav-item nav-link active" to="Login">
+              <Link className="tautan active" to="Login">
                 Login
               </Link>
             </div>
+            <div className={anim} onClick={this.burgerToggle}>
+  <div className="bar1"></div>
+  <div className="bar2"></div>
+  <div className="bar3"></div>
+</div> 
           </nav>
         </React.Fragment>
       );

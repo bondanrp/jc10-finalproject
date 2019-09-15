@@ -14,17 +14,17 @@ export default function Footer() {
           <div className="col-2">
             <ul className="list-unstyled">
               <li>
-                <a className={styles.footerlink} href="/">
+                <a className={styles.footerlink} href="http://www.github.com/bondanrp">
                   GitHub
                 </a>
               </li>
               <li>
-                <a className={styles.footerlink} href="/">
+                <a className={styles.footerlink} href="https://www.linkedin.com/in/bondanrp/">
                   LinkedIn
                 </a>
               </li>
               <li>
-                <a className={styles.footerlink} href="/">
+                <a className={styles.footerlink} href="https://www.facebook.com/bondanrp">
                   Facebook
                 </a>
               </li>

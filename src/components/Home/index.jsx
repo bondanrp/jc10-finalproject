@@ -3,7 +3,7 @@
 export class Home extends Component {
   render() {
     return (
-      <div className='text-capitalize text-center my-5'>
+      <div className='text-capitalize text-center my-5' style={{height:'1000px'}}>
         <h1>
         Home
         </h1>
