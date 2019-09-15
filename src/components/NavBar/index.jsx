@@ -15,6 +15,9 @@ logOut = () => {
     swal.fire("Success!", "User successfuly logged out", "success");
     this.props.history.push("/");
   };
+burgerToggle(x) {
+    x.addClass('change')
+  } 
   render() {
     if (!this.props.username) {
       return (
@@ -26,7 +29,12 @@ logOut = () => {
             <Link className="judul navbar-brand" to="/">
               Logo Perusahaan
             </Link>
-            <div className="navbar-nav">
+            <div class="burger" onclick={(e)=>{this.burgerToggle(e)}}>
+  <div class="bar1"></div>
+  <div class="bar2"></div>
+  <div class="bar3"></div>
+</div> 
+            <div className="navbar-nav hilang">
               <Link className="tautan nav-item nav-link active" to="Home">
                 Home
               </Link>

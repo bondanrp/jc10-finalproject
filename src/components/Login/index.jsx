@@ -29,13 +29,13 @@ class Login extends Component {
     if (!this.props.user_name) {
       return (
         <div>
-          <div className="login-title-div col-12">
-            <h3 className="login-title text-center mt-5">ACCOUNT LOGIN</h3>
-          
-          <div className="col-4 mx-auto my-5 shadow">
+            <div className="login-title-div py-5">
+          <div className="mx-auto my-5 shadow login-card">
             <div className='login-image text-center'>
               <img className='user-icon' src="http://icons.iconarchive.com/icons/custom-icon-design/silky-line-user/128/user-icon.png" alt="user"/>
             </div>
+            <h3 className="login-title text-center mt-5">ACCOUNT LOGIN</h3>
+            <div>
             <form className="form-group" onSubmit={this.handleSubmit}>
               <div className="login-input-title card-title mt-2">Username</div>
               <input
@@ -68,6 +68,7 @@ class Login extends Component {
                 </button>
               </div>
             </form>
+            </div>
           </div>
         </div></div>
       );

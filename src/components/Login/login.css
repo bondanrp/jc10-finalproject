@@ -6,17 +6,36 @@
     line-height: 75px;
   }
 .login-title-div {
-    height: 800px;
+    height: 1000px;
+    background: url('https://images.unsplash.com/photo-1566041510394-cf7c8fe21800?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2134&q=80');
+
 }
 .login-image {
-    height: 150px;
+    height: 75px;
     align-content: center;
     line-height: 150px
 }
 .user-icon {
     height: 50px;
-    
+
 }
+.login-card{
+    padding-bottom: 20px;
+    width: 40%;
+    background: white;
+    border-radius: 5px
+}
+@media only screen and (max-width: 600px) {
+    .login-card{
+        width: 90% !important;
+    } 
+  }
+@media only screen and (max-width: 1000px ) {
+    .login-card{
+        width: 60%;
+    }
+  }
+
 .login-input-title {
     font-family: 'Poppins', sans-serif;
     text-align: center;
@@ -32,5 +51,6 @@
     
 }
 .login-input:focus{
-    border-bottom: 1px solid black
+    border-bottom: 1px solid black;
+    transition-duration: 1s
 }

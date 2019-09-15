@@ -77,9 +77,8 @@ class Register extends Component {
     if (!this.props.username) {
       return (
         <div>
-          <div className="my-5 register-title-div">
-            <h3 className="register-title text-center mt-5">REGISTER ACCOUNT</h3>
-            <div className="col-4 mx-auto my-5 shadow register-card">
+          <div className="py-5 register-title-div">
+            <div className="mx-auto my-5 shadow register-card">
               <div className="register-image text-center">
                 <img
                   className="user-icon"
@@ -87,27 +86,29 @@ class Register extends Component {
                   alt="user"
                 />
               </div>
+            <h3 className="register-title text-center mt-5">REGISTER ACCOUNT</h3>
+              <div>
               <form className="form-group" onSubmit={this.handleSubmit}>
-                <div className="register-input-title mt-3">Username</div>
+                <div className="register-input-title mt-2">Username</div>
                 <input
                   onChange={this.handleChange}
                   id="username"
                   value={this.state.username}
-                  className="register-input mb-3"
+                  className="register-input mt-2"
                   type="text"
                   required
                   autoFocus
                 />
-                <div className="register-input-title mt-3">Email</div>
+                <div className="register-input-title mt-2">Email</div>
                 <input
                   onChange={this.handleChange}
                   value={this.state.email}
                   id="email"
-                  className="register-input mb-3"
+                  className="register-input mt-2"
                   type="email"
                   required
                 />
-                <div className="register-input-title mt-3">Password</div>
+                <div className="register-input-title mt-5">Password</div>
                 <input
                   onChange={this.handleChange}
                   value={this.state.password}
@@ -116,7 +117,7 @@ class Register extends Component {
                   type="password"
                   required
                 />
-                <div className="text-center mt-3">
+                <div className="text-center mt-5">
                 <button
                   className="btn btn-outline-success mb-5"
                   type="submit"
@@ -154,6 +155,7 @@ class Register extends Component {
                 </div>
                 <p className='text-center mb-5'>Already have an account? <Link to='/login'>Login</Link>!</p>
               </form>
+              </div>
             </div>
           </div>
         </div>

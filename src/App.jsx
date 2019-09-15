@@ -9,7 +9,8 @@ import Products from "./components/Products";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
-//TODO Web Template Studio: Add routes for your new pages here.
+
+
 class App extends Component {
   render() {
     return (
