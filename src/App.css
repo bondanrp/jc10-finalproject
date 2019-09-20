@@ -1,12 +1,15 @@
 ﻿html {
   position: relative;
   min-height: 100%;
+  width: 100vw;
 }
 
 body {
   margin-bottom: 160px !important; /* Height of the footer */
   padding: 0;
-  font-family: 'Poppins', sans-serif;
+  height: 100%;
+  font-family: "Poppins", sans-serif;
+  overflow-x: hidden;
 }
 
 footer {

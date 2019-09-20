@@ -1,59 +1,72 @@
 .register-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 25px;
-    letter-spacing: 7px;
-    font-weight: 400;
-    line-height: 75px;
-  }
-.register-title-div {
-    /* background: url('https://images.unsplash.com/photo-1567073327537-effe8a88f452?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2126&q=80') */
-background: linear-gradient(90deg, rgb(84, 21, 156),rgb(132, 51, 77));
-padding-top: 100px;
-padding-bottom: 100px;
+  font-family: "Playfair Display", serif;
+  font-size: 25px;
+  letter-spacing: 7px;
+  font-weight: 400;
+  line-height: 75px;
 }
-.register-card{
-    padding-bottom: 50px;
-    width: 30%;
-    background: white;
-    border-radius: 5px
+.register-bg {
+  /* background: url('https://images.unsplash.com/photo-1567073327537-effe8a88f452?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2126&q=80') */
+  background: linear-gradient(90deg, rgb(84, 21, 156), rgb(132, 51, 77));
+  width: 100vw;
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+.register-card {
+  padding-bottom: 50px;
+  width: 30%;
+  background: white;
+  border-radius: 5px;
 }
 
 @media only screen and (max-width: 600px) {
-    .register-card{
-        width: 90% !important;
-
-    } 
+  .register-card {
+    width: 90% !important;
+  }
 }
 
-@media only screen and (max-width: 1200px ) {
-    .register-card{
-        width: 90% !important;
-    }
+@media only screen and (max-width: 1200px) {
+  .register-card {
+    width: 90% !important;
+  }
 }
 .register-image {
-    height: 75px;
-    align-content: center;
-    line-height: 150px
-}
-.user-icon {
-    height: 50px;
-    
-}
-.register-input-title {
-    font-family: 'Poppins', sans-serif;
-    text-align: center;
-    letter-spacing: 2px
-}
-.register-input{
-    display: block;
-    border: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.178);
-    width: 60%;
-    margin: 0px auto 20px auto;
-    height: 40px    
+  height: 75px;
+  align-content: center;
+  line-height: 150px;
 }
 
-.register-input:focus{
-    border-bottom: 1px solid black;
-    transition-duration: 1s
+.user-icon {
+  height: 50px;
+}
+.register-form {
+  width: 70%;
+  margin: auto;
+}
+.register-input-title {
+  font-family: "Poppins", sans-serif;
+  text-align: center;
+  letter-spacing: 2px;
+}
+.register-input {
+  display: block;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.178);
+  width: 100%;
+  margin: 0px auto 20px auto;
+  height: 40px;
+}
+.name-input {
+  display: inline;
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.178);
+  width: 100%;
+  margin: 0px auto 20px auto;
+  height: 40px;
+}
+
+.register-input:focus,
+.name-input:focus {
+  border-bottom: 1px solid black;
+  transition-duration: 1s;
 }

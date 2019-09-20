@@ -17,17 +17,124 @@
   font-style: italic;
 }
 .products-title {
-  font-family: "Poppins", sans-serif;
-  letter-spacing: 5px;
+  font-family: "Montserrat", sans-serif;
+  /* letter-spacing: 2px; */
   font-weight: 400;
+  color: rgb(70, 70, 70);
 }
 
 .header {
-  padding-top: 15rem;
-  padding-bottom: 7rem;
-  background: url(../../images/photo-1515378791036-0648a3ef77b2.jpg);
+  padding-top: 3em;
+  margin-top: -3em;
+  height: 25em;
+  background: linear-gradient(40deg, rgb(84, 21, 156), rgb(132, 51, 77));
+  /* background: url(../../images/photo-1515378791036-0648a3ef77b2.jpg); */
   background-repeat: no-repeat;
   background-size: cover;
-  background-attachment: fixed;
-  background-position: 0 -520px;
+  z-index: 4;
+}
+.home-bg {
+  background: #f7f7f7;
+}
+.header-item {
+  height: 30%;
+  width: 50%;
+  margin: 10em auto;
+}
+.home-content {
+  margin: auto;
+  width: 65%;
+  box-sizing: border-box;
+  padding-top: 50px;
+  z-index: 1;
+  background: #f7f7f7;
+}
+.home-extra {
+  height: 600px;
+  width: 100%;
+}
+
+.categories {
+  font-family: "Poppins", sans-serif;
+  letter-spacing: 3px;
+  color: gray;
+  text-decoration: none;
+  border: none;
+  background: none;
+}
+
+.categories:hover {
+  color: black;
+  cursor: pointer;
+}
+.categories:focus {
+  color: black;
+}
+
+.preview {
+  height: 180px;
+  background: white;
+  box-sizing: border-box;
+  transition: transform 1s;
+  padding: 0 !important;
+  position: relative;
+  border-radius: 5px;
+}
+.preview:hover {
+  transform: scale(1.02, 1.02);
+}
+
+.preview-episode {
+  font-family: "Poppins", sans-serif;
+  position: absolute;
+  bottom: 0;
+  right: 5px;
+  font-weight: 900;
+  font-size: 18px;
+  color: white;
+  text-shadow: 2px 2px black;
+}
+.preview-thumbnail {
+  height: 70%;
+  width: 100%;
+  background-size: 100% 50%;
+  position: relative;
+  background-repeat: no-repeat;
+  background-size: contain !important;
+  border-radius: 5px 5px 0 0;
+}
+.preview-title {
+  margin-left: 5px;
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  text-align: start;
+}
+.preview-title:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+.preview-author {
+  font-family: "Poppins", sans-serif;
+  font-size: 10px;
+  margin-right: 10px;
+}
+
+.tombol {
+  border: 1px solid rgb(70, 70, 70);
+  background: none;
+  border-radius: 5px;
+  letter-spacing: 2px;
+  height: 40px;
+  width: 150px;
+  color: rgb(70, 70, 70);
+  margin-top: 40px;
+  font-size: 20px;
+}
+.tombol:active {
+  background: rgb(70, 70, 70);
+  color: white;
+}
+.tombol:hover {
+  background: rgb(70, 70, 70);
+  color: white;
 }

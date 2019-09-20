@@ -10,7 +10,7 @@ import Contact from "./components/Contact";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
-
+import Todo from "./components/Todo/Todo";
 
 class App extends Component {
   render() {
@@ -18,13 +18,14 @@ class App extends Component {
       <React.Fragment>
         <NavBar />
         <Switch>
-          <Redirect exact path = "/" to = "/Home" />
-          <Route path = "/Home" component = { Home } />
-          <Route path = "/About" component = { About } />
-          <Route path = "/Contact" component = { Contact } />
-          <Route path = "/Register" component = { Register } />
-          <Route path = "/Login" component = { Login } />
-          <Route path = "/Profile" component = { Profile } />
+          <Redirect exact path="/" to="/Home" />
+          <Route path="/Home" component={Home} />
+          <Route path="/About" component={About} />
+          <Route path="/Contact" component={Contact} />
+          <Route path="/Register" component={Register} />
+          <Route path="/Login" component={Login} />
+          <Route path="/Profile" component={Profile} />
+          <Route path="/Todo" component={Todo} />
         </Switch>
         <Footer />
       </React.Fragment>

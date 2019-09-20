@@ -1,48 +1,35 @@
-const mysql = require('mysql')
-const express = require('express')
-var app = express()
-const bodyParser = require('body-parser')
+var express = require("express");
+var app = express();
+var bodyParser = require("body-parser");
 var cors = require("cors");
-port = 3001
+const port = 3001;
+const {
+  getAllUserData,
+  getUser,
+  getUserName,
+  registerUser,
+  getUserEmail,
+  getVideos
+} = require("./src/database/index");
 
-app.use(bodyParser.json())
-app.use(cors())
+app.use(bodyParser());
+app.use(cors());
 
-var db = mysql.createConnection({
-    host: 'localhost',
-    user: 'root',
-    password: 'assalamualaikum',
-    database: 'jc10_finalproject',
-    port: 3307
-})
+app.get("/", (req, res) => {
+  res.send(`<h1>Selamat datang di API Final Project Bondan JC10 JKT</h1>`);
+});
 
-db.connect((err)=>{
-    if(!err)
-    console.log('Database connection succeded.');
-    else 
-    console.log('Database connection failed \n Error' + JSON.stringify(err, undefined, 2))
-    
-})
+// user db
+app.get("/getalluserdata", getAllUserData);
+app.get("/getusername", getUserName);
+app.get("/getuser", getUser);
+app.get("/getuseremail", getUserEmail);
+app.post("/registeruser", registerUser);
 
-app.listen(port, ()=>console.log('Express server is running in port ' + port))
+// video db
+app.get("/getvideos", getVideos);
+// app.put("/edittodo", editTodo);
+// app.put("/completeaction", kochengOren);
+// app.delete("/deletetodo/:terserah", deleteTodo);
 
-app.get('/users',(req,res)=>{
-    db.query('select * from users', (err, rows)=>{
-        if(!err)
-        res.send(rows)
-        else
-        console.log(err);
-    })
-})
-app.get('/getuser',(req,res)=>{
-    let username = 'admin'
-    let password = 'admin'
-    db.query(`select * from users where username = ? and password = ?` ,[username, password], (err, rows)=>{
-        if(!err)
-        res.send(rows)
-        else
-        console.log(err);
-    })
-})
-
-
+app.listen(port, console.log("Listening in port " + port));

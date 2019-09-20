@@ -1,25 +1,37 @@
 ﻿import React, { Component } from "react";
 import axios from "axios";
-import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from "reactstrap";
+import { Modal, ModalBody, ModalHeader } from "reactstrap";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import swal from "sweetalert2";
 import "./register.css";
 
+const urlApiUser = "http://localhost:3001/";
+
 class Register extends Component {
-  state = { modal: false, username: "", email: "", password: "" };
+  state = {
+    modal: false,
+    username: "",
+    email: "",
+    password: "",
+    firstname: "",
+    lastname: "",
+    terms: false
+  };
   validateForm() {
     return (
       this.state.username.length > 0 &&
       this.state.email.length > 0 &&
-      this.state.password.length > 0
+      this.state.password.length > 0 &&
+      this.state.firstname.length > 0 &&
+      this.state.lastname.length > 0
     );
   }
 
   toggle = () => {
     this.setState(prevState => ({
       modal: !prevState.modal
-    })); 
+    }));
   };
   handleChange = event => {
     this.setState({ [event.target.id]: event.target.value });
@@ -29,10 +41,9 @@ class Register extends Component {
   };
   onRegisterClick = () => {
     if (this.validateForm()) {
-      let username = this.state.username;
-      let email = this.state.email;
+      let { username, email } = this.state;
       axios
-        .get("http://localhost:2019/users", {
+        .get(urlApiUser + "getusername", {
           params: {
             username: username
           }
@@ -40,14 +51,14 @@ class Register extends Component {
         .then(res => {
           if (res.data.length === 0) {
             axios
-              .get("http://localhost:2019/users", {
+              .get(urlApiUser + "getuseremail", {
                 params: {
                   email: email
                 }
               })
               .then(res => {
                 if (res.data.length === 0) {
-                  this.toggle();
+                  this.handleRegistration();
                 } else {
                   swal.fire("Sorry", "Email already registered", "error");
                 }
@@ -59,23 +70,28 @@ class Register extends Component {
     }
   };
   handleRegistration = () => {
-    let username = this.state.username;
-    let email = this.state.email;
-    let password = this.state.password;
-    this.props.history.push("/");
+    console.log(this.state);
+    let { username, email, password, lastname, firstname } = this.state;
+    console.log(username);
+    let input = {
+      username: username,
+      email: email,
+      password: password,
+      firstname: firstname,
+      lastname: lastname
+    };
     axios
-      .post("http://localhost:2019/users", {
-        username: username,
-        email: email,
-        password: password,
-      })
+      .post(urlApiUser + "registeruser", input)
       .then(res => {
-        this.toggle();
         swal.fire(
           "Account Created!",
           `Please <a href='/login'>Log In</a> to continue shopping`,
           "success"
         );
+        this.props.history.push("/login");
+      })
+      .catch(err => {
+        alert("error woi");
       });
   };
 
@@ -83,7 +99,7 @@ class Register extends Component {
     if (!this.props.username) {
       return (
         <div>
-          <div className="register-title-div">
+          <div className="register-bg">
             <div className="mx-auto shadow register-card">
               <div className="register-image text-center">
                 <img
@@ -95,7 +111,7 @@ class Register extends Component {
               <h3 className="register-title text-center mt-5">
                 REGISTER ACCOUNT
               </h3>
-              <div>
+              <div className="register-form">
                 <form className="form-group" onSubmit={this.handleSubmit}>
                   <div className="register-input-title mt-2">Username</div>
                   <input
@@ -107,6 +123,32 @@ class Register extends Component {
                     required
                     autoFocus
                   />
+                  <div className="row">
+                    <div className="col-6 justify-content-around">
+                      <div className="mt-2 register-input-title">
+                        First Name
+                      </div>
+                      <input
+                        onChange={this.handleChange}
+                        id="firstname"
+                        value={this.state.firstname}
+                        className="name-input mt-2"
+                        type="text"
+                        required
+                      />
+                    </div>
+                    <div className="col-6 justify-content-around">
+                      <div className="mt-2 register-input-title">Last Name</div>
+                      <input
+                        onChange={this.handleChange}
+                        id="lastname"
+                        value={this.state.lastmame}
+                        className="name-input mt-2"
+                        type="text"
+                        required
+                      />
+                    </div>
+                  </div>
                   <div className="register-input-title mt-2">Email</div>
                   <input
                     onChange={this.handleChange}
@@ -125,23 +167,48 @@ class Register extends Component {
                     type="password"
                     required
                   />
+                  <input
+                    type="checkbox"
+                    className="form-check-inline"
+                    required
+                    onClick={() => {
+                      this.setState(prevState => ({
+                        terms: !prevState.terms
+                      }));
+                    }}
+                  />
+                  <span className="text-justify">
+                    I have read and agree to the
+                    <button className="terms" onClick={this.toggle}>
+                      terms and conditions
+                    </button>
+                  </span>
                   <div className="text-center mt-5">
                     <button
                       className="btn btn-outline-success mb-5"
                       type="submit"
                       onClick={this.onRegisterClick}
+                      disabled={!this.state.terms}
                     >
                       Register
                     </button>
                     <Modal
+                      style={{
+                        position: "absolute",
+                        left: "50%",
+                        top: "50%",
+                        transform: "translate(-50%, -50%)"
+                      }}
                       isOpen={this.state.modal}
                       toggle={this.toggle}
                       className={this.props.className}
                     >
                       <ModalHeader toggle={this.toggle}>
-                        Terms of service
+                        Terms and Conditions
                       </ModalHeader>
-                      <ModalBody>
+                      <ModalBody className="text-justify">
+                        I. Lorem ipsum dolor sit.
+                        <br />
                         Lorem ipsum dolor sit amet, consectetur adipisicing
                         elit, sed do eiusmod tempor incididunt ut labore et
                         dolore magna aliqua. Ut enim ad minim veniam, quis
@@ -151,18 +218,14 @@ class Register extends Component {
                         fugiat nulla pariatur. Excepteur sint occaecat cupidatat
                         non proident, sunt in culpa qui officia deserunt mollit
                         anim id est laborum.
+                        <br />
+                        <br />
+                        II. Lorem, ipsum dolor.
+                        <br />
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Eligendi praesentium non, voluptatum quis dignissimos
+                        necessitatibus repudiandae placeat deserunt esse amet.
                       </ModalBody>
-                      <ModalFooter>
-                        <Button
-                          onClick={this.handleRegistration}
-                          color="success"
-                        >
-                          Accept
-                        </Button>
-                        <Button color="secondary" onClick={this.toggle}>
-                          Cancel
-                        </Button>
-                      </ModalFooter>
                     </Modal>
                   </div>
                   <p className="text-center mb-5">

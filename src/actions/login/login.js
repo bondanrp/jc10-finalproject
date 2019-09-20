@@ -1,45 +1,42 @@
 import axios from "axios";
 import swal from "sweetalert2";
 
+const urlApiUser = "http://localhost:3001/";
+
 export const onLoginUser = (USERNAME, PASSWORD) => {
   return dispatch => {
     axios
-      .get(`http://localhost:2019/users`, {
+      .get(urlApiUser + "getusername", {
         params: {
           username: USERNAME
         }
       })
       .then(res => {
-        if (!res.data.length) {
+        let hasil = res.data;
+        console.log(!PASSWORD === hasil[0].password);
+        console.log(PASSWORD === hasil[0].password);
+        if (!hasil.length) {
           swal.fire("Error", "User not found", "error");
-        } else {
-          axios
-            .get(`http://localhost:2019/users`, {
-              params: {
-                username: USERNAME,
-                password: PASSWORD
-              }
-            })
-            .then(res => {
-              if (!res.data.length) {
-                swal.fire("Error", "Wrong password!", "error");
-              } else {
-                swal.fire("Success", "User Logged in!", "success");
-                let { id, username } = res.data[0];
-                localStorage.setItem(
-                  "userData",
-                  JSON.stringify({ id, username })
-                );
+        } else if (PASSWORD !== hasil[0].password) {
+          swal.fire("Error", "Wrong password!", "error");
+        } else if (PASSWORD === hasil[0].password) {
+          swal.fire("Success", "User Logged in!", "success");
+          let { id, username, role } = res.data[0];
+          localStorage.setItem(
+            "userData",
+            JSON.stringify({ id, username, role })
+          );
 
-                dispatch({
-                  type: "LOGIN_SUCCESS",
-                  payload: {
-                    id,
-                    username
-                  }
-                });
-              }
-            });
+          dispatch({
+            type: "LOGIN_SUCCESS",
+            payload: {
+              id,
+              username,
+              role
+            }
+          });
+        } else {
+          console.log("semua false");
         }
       });
   };
