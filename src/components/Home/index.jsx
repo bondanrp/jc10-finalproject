@@ -1,11 +1,14 @@
 ﻿import React, { Component } from "react";
 import "./home.css";
 import Axios from "axios";
+import { Redirect } from "react-router-dom";
+import Swal from "sweetalert2";
+import { connect } from "react-redux";
 
 let urlPreviewApi = "http://localhost:3001/";
 
 export class Home extends Component {
-  state = { preview: [], category: "semua" };
+  state = { preview: [], category: "semua", redirect: false };
   componentDidMount() {
     this.getPreviewApi();
   }
@@ -23,6 +26,14 @@ export class Home extends Component {
       [array[i], array[j]] = [array[j], array[i]];
     }
   }
+  handleRedirect = () => {
+    if (this.props.username) {
+      this.setState({ redirect: true });
+    } else {
+      Swal.fire("Error", "Please sign in first", "error");
+    }
+  };
+
   renderPreview = () => {
     if (this.state.category !== "semua") {
       let filter = this.state.preview.filter(val => {
@@ -31,7 +42,7 @@ export class Home extends Component {
       let page = filter.slice(0, 10);
       let render = page.map(val => {
         return (
-          <div className="col-8 col-sm-2 preview m-3 shadow">
+          <div className="preview">
             <div
               style={{
                 background: `url(${val.thumbnail})`
@@ -51,7 +62,7 @@ export class Home extends Component {
       let page = this.state.preview.slice(0, 10);
       let render = page.map(val => {
         return (
-          <div className="col-8 col-sm-2 preview m-3 shadow">
+          <div className="preview">
             <div
               style={{
                 background: `url(${val.thumbnail})`
@@ -99,43 +110,52 @@ export class Home extends Component {
   };
 
   render() {
-    return (
-      <main id="mainContent">
-        <div className="text-center header">
-          <div className="header-item">
-            <h1 className="judul-products">Nama Perusahaan</h1>
-            <p className="desc-products"></p>
-          </div>
-        </div>
-        <div className="home-bg">
-          <div className="home-content text-center justify-content-center py-5">
-            <h2 className="products-title font-italic">
-              Akses Kelas Tidak Terbatas
-            </h2>
-            <h6>
-              <button
-                onClick={this.setCategory}
-                className="categories text-capitalize"
-                value="semua"
-              >
-                semua
-              </button>
-              {this.renderCategory()}
-            </h6>
-            <div className="row justify-content-center my-2">
-              {this.renderPreview()}
+    if (this.state.redirect) {
+      return <Redirect to="/browse"></Redirect>;
+    } else {
+      return (
+        <main id="mainContent">
+          <div className="text-center header">
+            <div className="header-item">
+              <h1 className="judul-products">Nama Perusahaan</h1>
+              <p className="desc-products"></p>
             </div>
-            <button className="tombol">Cari Kursus</button>
           </div>
-        </div>
-        <div className="home-extra">
-          <h2 className="products-title font-italic text-center my-5">
-            Daftar Sekarang
-          </h2>
-        </div>
-      </main>
-    );
+          <div className="home-bg">
+            <div className="home-content text-center justify-content-center py-5">
+              <h2 className="products-title font-italic">
+                Akses Kelas Tidak Terbatas
+              </h2>
+              <h6>
+                <button
+                  onClick={this.setCategory}
+                  className="categories text-capitalize"
+                  value="semua"
+                >
+                  semua
+                </button>
+                {this.renderCategory()}
+              </h6>
+              <div className="previewbox my-2">{this.renderPreview()}</div>
+              <button className="tombol" onClick={this.handleRedirect}>
+                Cari Kursus
+              </button>
+            </div>
+          </div>
+          <div className="home-extra">
+            <h2 className="products-title font-italic text-center my-5">
+              Daftar Sekarang
+            </h2>
+          </div>
+        </main>
+      );
+    }
   }
 }
 
-export default Home;
+const mapStateToProps = state => {
+  return {
+    username: state.auth.username
+  };
+};
+export default connect(mapStateToProps)(Home);

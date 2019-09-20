@@ -11,6 +11,7 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
 import Todo from "./components/Todo/Todo";
+import Upload from "./components/Upload/index";
 
 class App extends Component {
   render() {
@@ -26,6 +27,7 @@ class App extends Component {
           <Route path="/Login" component={Login} />
           <Route path="/Profile" component={Profile} />
           <Route path="/Todo" component={Todo} />
+          <Route path="/Upload" component={Upload} />
         </Switch>
         <Footer />
       </React.Fragment>

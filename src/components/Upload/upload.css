@@ -1,0 +1,128 @@
+.gray-background {
+  background: #f7f7f7;
+  width: 100%;
+  height: auto;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+.upload-titles {
+  font-family: "Poppins", sans-serif;
+  letter-spacing: -3px;
+  font-weight: 900;
+  font-style: italic;
+  grid-column: 1/6;
+  text-align: center;
+  color: rgb(70, 70, 70);
+}
+.upload-input {
+  border-radius: 10px;
+  border: 1px solid rgb(70, 70, 70);
+  width: 100%;
+}
+.upload-container {
+  height: auto;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 200px 100px 1fr 1fr 1fr 1fr;
+  column-gap: 20px;
+  row-gap: 20px;
+  width: 80%;
+}
+.uploadimg {
+  background: linear-gradient(90deg, rgb(84, 21, 156), rgb(132, 51, 77));
+  height: 50%;
+  border-radius: 10px 10px 0 0;
+  position: relative;
+}
+.your-uploads > .uploadimg {
+  background: linear-gradient(45deg, rgb(84, 21, 156), rgb(132, 51, 77));
+  height: 100%;
+  border-radius: 10px;
+  position: relative;
+}
+.your-uploads {
+  grid-column: 1/5;
+  height: 100px !important;
+}
+.upload-stats > .uploadimg {
+  height: 100px;
+}
+.upload-stats {
+  grid-column: 5;
+  grid-row: 2 / end;
+  height: 100% !important;
+}
+.uploadimg > h1 {
+  position: absolute;
+  bottom: 10px;
+  text-align: center;
+  color: white;
+  left: 20px;
+}
+.upload-card {
+  grid-column: 1/6;
+}
+form > h4 {
+  font-family: "Poppins", sans-serif;
+  letter-spacing: 1px;
+  text-align: center;
+
+  color: rgb(70, 70, 70);
+}
+.upload-form {
+  width: 90%;
+  padding-top: 15px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  column-gap: 10px;
+}
+.upload-container > div {
+  height: 200px;
+  width: 100%;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+.delete {
+  border: none;
+  background: none;
+  font-weight: 900;
+}
+.edit {
+  border: none;
+  background: none;
+  font-weight: 900;
+}
+.user-video-thumb {
+  border-radius: 10px 10px 0 0;
+  height: 60%;
+  width: 100%;
+  background-position: center !important;
+  background-size: contain !important;
+}
+.user-vid-title {
+  margin-bottom: 0;
+  text-align: center;
+}
+.user-vid-title:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+.user-vid-desc {
+  font-size: 10px;
+}
+.upload-button {
+  border: 1px solid rgb(70, 70, 70);
+  background: none;
+  border-radius: 10px;
+  color: rgb(70, 70, 70);
+  height: 100%;
+}
+
+.upload-button:hover {
+  background: rgb(70, 70, 70);
+  color: white;
+}

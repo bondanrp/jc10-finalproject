@@ -71,19 +71,6 @@
   color: black;
 }
 
-.preview {
-  height: 180px;
-  background: white;
-  box-sizing: border-box;
-  transition: transform 1s;
-  padding: 0 !important;
-  position: relative;
-  border-radius: 5px;
-}
-.preview:hover {
-  transform: scale(1.02, 1.02);
-}
-
 .preview-episode {
   font-family: "Poppins", sans-serif;
   position: absolute;
@@ -99,8 +86,9 @@
   width: 100%;
   background-size: 100% 50%;
   position: relative;
-  background-repeat: no-repeat;
-  background-size: contain !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-position: center !important;
   border-radius: 5px 5px 0 0;
 }
 .preview-title {
@@ -137,4 +125,28 @@
 .tombol:hover {
   background: rgb(70, 70, 70);
   color: white;
+}
+
+.previewbox {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  column-gap: 10px;
+  row-gap: 10px;
+  padding-top: 20px;
+}
+
+.preview {
+  height: 180px;
+  background: white;
+  box-sizing: border-box;
+  transition: transform 1s;
+  padding: 0 !important;
+  position: relative;
+  border-radius: 10px;
+
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+.preview:hover {
+  transform: scale(1.02, 1.02);
 }

@@ -1,8 +1,7 @@
 .navbar {
   position: sticky !important;
   top: 0;
-  margin-top: -3em;
-  /* background: white; */
+  background: white;
   height: 3em;
   display: flex;
   justify-content: center;
@@ -11,16 +10,7 @@
   box-sizing: border-box;
   padding-left: 20px !important;
   padding-right: 20px !important;
-}
-.begron {
-  position: sticky !important;
-  top: 0;
-  height: 3em;
-  z-index: 1;
-  box-sizing: border-box;
-  padding-left: 20px !important;
-  padding-right: 20px !important;
-  background: black;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 .judul {
   font-family: "Poppins", sans-serif;
@@ -29,12 +19,12 @@
   font-style: italic;
   font-size: 20px;
   text-decoration: none;
-  color: rgb(223, 223, 223);
+  color: rgb(70, 70, 70);
 }
 
 .judul:hover {
   text-decoration: none;
-  color: white;
+  color: black;
   transition-duration: 0.5s;
 }
 .hilang {
@@ -48,12 +38,12 @@
   font-weight: 100;
   cursor: pointer;
   text-decoration: none;
-  color: rgb(223, 223, 223);
+  color: rgb(150, 150, 150);
 }
 .tautan:hover {
   transform: scale(1.05, 1.05);
   transition-duration: 0.5s;
-  color: white;
+  color: black;
   text-decoration: none;
 }
 .tautan:active {

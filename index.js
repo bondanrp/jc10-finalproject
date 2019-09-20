@@ -9,7 +9,9 @@ const {
   getUserName,
   registerUser,
   getUserEmail,
-  getVideos
+  getVideos,
+  getUserVideos,
+  uploadVideo
 } = require("./src/database/index");
 
 app.use(bodyParser());
@@ -28,6 +30,8 @@ app.post("/registeruser", registerUser);
 
 // video db
 app.get("/getvideos", getVideos);
+app.get("/getuservideos", getUserVideos);
+app.get("/uploadvideo", uploadVideo);
 // app.put("/edittodo", editTodo);
 // app.put("/completeaction", kochengOren);
 // app.delete("/deletetodo/:terserah", deleteTodo);

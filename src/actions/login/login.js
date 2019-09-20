@@ -13,8 +13,6 @@ export const onLoginUser = (USERNAME, PASSWORD) => {
       })
       .then(res => {
         let hasil = res.data;
-        console.log(!PASSWORD === hasil[0].password);
-        console.log(PASSWORD === hasil[0].password);
         if (!hasil.length) {
           swal.fire("Error", "User not found", "error");
         } else if (PASSWORD !== hasil[0].password) {

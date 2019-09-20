@@ -40,7 +40,6 @@ class NavBar extends Component {
           <div className={styles.skipLink}>
             <a href="#mainContent">Skip to Main Content</a>
           </div>
-          <div className="begron"></div>
           <div className="navbar">
             <div>
               <Link className="judul" to="/">
@@ -91,7 +90,6 @@ class NavBar extends Component {
           <div className={styles.skipLink}>
             <a href="#mainContent">Skip to Main Content</a>
           </div>
-          <div className="begron"></div>
           <div className="navbar">
             <Link
               className="judul"
@@ -291,7 +289,7 @@ class NavBar extends Component {
                   >
                     <DropdownItem tag="div">Profile</DropdownItem>
                   </Link>
-                  <Link to="#" className="text-decoration-none text-dark">
+                  <Link to="/upload" className="text-decoration-none text-dark">
                     <DropdownItem tag="div">Manage Uploads</DropdownItem>
                   </Link>
                   <DropdownItem divider />
