@@ -1,7 +1,6 @@
 ﻿html {
   position: relative;
   min-height: 100%;
-  width: 100vw;
 }
 
 body {
@@ -9,7 +8,6 @@ body {
   padding: 0;
   height: 100%;
   font-family: "Poppins", sans-serif;
-  overflow-x: hidden;
 }
 
 footer {

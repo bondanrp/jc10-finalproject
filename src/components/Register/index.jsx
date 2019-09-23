@@ -70,9 +70,7 @@ class Register extends Component {
     }
   };
   handleRegistration = () => {
-    console.log(this.state);
     let { username, email, password, lastname, firstname } = this.state;
-    console.log(username);
     let input = {
       username: username,
       email: email,

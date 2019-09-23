@@ -43,7 +43,7 @@ class NavBar extends Component {
           <div className="navbar">
             <div>
               <Link className="judul" to="/">
-                Logo Perusahaan
+                Kursus Lah
               </Link>
             </div>
             <div className={hilang}>
@@ -96,7 +96,7 @@ class NavBar extends Component {
               onClick={() => this.setState({ toggleBurger: false })}
               to="/"
             >
-              Logo Perusahaan
+              Kursus Lah
             </Link>
             <div className={hilang}>
               <Link
@@ -170,13 +170,13 @@ class NavBar extends Component {
               onClick={() => this.setState({ toggleBurger: false })}
               to="/"
             >
-              Logo Perusahaan
+              Kursus Lah
             </Link>
             <div className={hilang}>
               <Link
                 className="tautan active"
                 onClick={() => this.setState({ toggleBurger: false })}
-                to="Home"
+                to="/"
               >
                 Home
               </Link>
@@ -244,13 +244,13 @@ class NavBar extends Component {
               onClick={() => this.setState({ toggleBurger: false })}
               to="/"
             >
-              Logo Perusahaan
+              Kursus Lah
             </Link>
             <div className={hilang}>
               <Link
                 className="tautan active"
                 onClick={() => this.setState({ toggleBurger: false })}
-                to="Home"
+                to="/"
               >
                 Home
               </Link>

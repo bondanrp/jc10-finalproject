@@ -8,7 +8,13 @@ import { connect } from "react-redux";
 let urlPreviewApi = "http://localhost:3001/";
 
 export class Home extends Component {
-  state = { preview: [], category: "semua", redirect: false };
+  state = {
+    preview: [],
+    category: "semua",
+    redirect: false,
+    targetId: 0,
+    redirectToVideo: false
+  };
   componentDidMount() {
     this.getPreviewApi();
   }
@@ -33,16 +39,32 @@ export class Home extends Component {
       Swal.fire("Error", "Please sign in first", "error");
     }
   };
+  goToVideo = id => {
+    if (this.props.username) {
+      this.setState({ targetId: id });
+      this.setState({ redirectToVideo: true });
+      console.log(this.props.username);
+    } else {
+      Swal.fire("Error", "Please sign in to view the video", "error");
+    }
+  };
 
   renderPreview = () => {
-    if (this.state.category !== "semua") {
+    if (this.state.redirectToVideo) {
+      return <Redirect to={`/video/${this.state.targetId}`}></Redirect>;
+    } else if (this.state.category !== "semua") {
       let filter = this.state.preview.filter(val => {
         return val.category === this.state.category;
       });
       let page = filter.slice(0, 10);
       let render = page.map(val => {
         return (
-          <div className="preview">
+          <div
+            onClick={() => {
+              this.goToVideo(val.id);
+            }}
+            className="preview"
+          >
             <div
               style={{
                 background: `url(${val.thumbnail})`
@@ -62,7 +84,12 @@ export class Home extends Component {
       let page = this.state.preview.slice(0, 10);
       let render = page.map(val => {
         return (
-          <div className="preview">
+          <div
+            onClick={() => {
+              this.goToVideo(val.id);
+            }}
+            className="preview"
+          >
             <div
               style={{
                 background: `url(${val.thumbnail})`
@@ -114,40 +141,42 @@ export class Home extends Component {
       return <Redirect to="/browse"></Redirect>;
     } else {
       return (
-        <main id="mainContent">
-          <div className="text-center header">
-            <div className="header-item">
-              <h1 className="judul-products">Nama Perusahaan</h1>
-              <p className="desc-products"></p>
+        <React.Fragment>
+          <main id="mainContent">
+            <div className="text-center header">
+              <div className="header-item">
+                <h1 className="judul-products">Kursus Lah</h1>
+                <p className="desc-products"></p>
+              </div>
             </div>
-          </div>
-          <div className="home-bg">
-            <div className="home-content text-center justify-content-center py-5">
-              <h2 className="products-title font-italic">
-                Akses Kelas Tidak Terbatas
-              </h2>
-              <h6>
-                <button
-                  onClick={this.setCategory}
-                  className="categories text-capitalize"
-                  value="semua"
-                >
-                  semua
+            <div className="home-bg">
+              <div className="home-content text-center justify-content-center py-5">
+                <h2 className="products-title font-italic">
+                  Akses Kelas Tidak Terbatas
+                </h2>
+                <h6>
+                  <button
+                    onClick={this.setCategory}
+                    className="categories text-capitalize"
+                    value="semua"
+                  >
+                    semua
+                  </button>
+                  {this.renderCategory()}
+                </h6>
+                <div className="previewbox my-2">{this.renderPreview()}</div>
+                <button className="tombol" onClick={this.handleRedirect}>
+                  Cari Kursus
                 </button>
-                {this.renderCategory()}
-              </h6>
-              <div className="previewbox my-2">{this.renderPreview()}</div>
-              <button className="tombol" onClick={this.handleRedirect}>
-                Cari Kursus
-              </button>
+              </div>
             </div>
-          </div>
-          <div className="home-extra">
-            <h2 className="products-title font-italic text-center my-5">
-              Daftar Sekarang
-            </h2>
-          </div>
-        </main>
+            <div className="home-extra">
+              <h2 className="products-title font-italic text-center my-5">
+                Daftar Sekarang
+              </h2>
+            </div>
+          </main>
+        </React.Fragment>
       );
     }
   }

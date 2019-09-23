@@ -129,13 +129,17 @@
 
 .previewbox {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
+  grid-template-columns: repeat(5, 200px);
+  grid-template-rows: repeat(2, 180px);
   column-gap: 10px;
   row-gap: 10px;
   padding-top: 20px;
 }
-
+@media only screen and (max-width: 768px) {
+  .previewbox {
+    grid-template-columns: 1fr;
+  }
+}
 .preview {
   height: 180px;
   background: white;
@@ -149,4 +153,13 @@
 }
 .preview:hover {
   transform: scale(1.02, 1.02);
+  cursor: pointer;
+}
+.linkaja {
+  text-decoration: none;
+  color: black;
+}
+.linkaja:hover {
+  text-decoration: none;
+  color: black;
 }

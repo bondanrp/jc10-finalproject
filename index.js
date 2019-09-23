@@ -10,6 +10,9 @@ const {
   registerUser,
   getUserEmail,
   getVideos,
+  getRelatedVideos,
+  getVideo,
+  getEpisode,
   getUserVideos,
   uploadVideo
 } = require("./src/database/index");
@@ -30,6 +33,9 @@ app.post("/registeruser", registerUser);
 
 // video db
 app.get("/getvideos", getVideos);
+app.get("/getvideo/:id", getVideo);
+app.get("/getepisode", getEpisode);
+app.get("/getrelatedvideos/", getRelatedVideos);
 app.get("/getuservideos", getUserVideos);
 app.get("/uploadvideo", uploadVideo);
 // app.put("/edittodo", editTodo);

@@ -18,11 +18,15 @@ export const onLoginUser = (USERNAME, PASSWORD) => {
         } else if (PASSWORD !== hasil[0].password) {
           swal.fire("Error", "Wrong password!", "error");
         } else if (PASSWORD === hasil[0].password) {
-          swal.fire("Success", "User Logged in!", "success");
-          let { id, username, role } = res.data[0];
+          swal.fire(
+            "User Logged in!",
+            `Welcome ${res.data[0].firstname} ${res.data[0].lastname}`,
+            "success"
+          );
+          let { id, username, role, firstname, lastname } = res.data[0];
           localStorage.setItem(
             "userData",
-            JSON.stringify({ id, username, role })
+            JSON.stringify({ id, username, role, firstname, lastname })
           );
 
           dispatch({
@@ -30,11 +34,13 @@ export const onLoginUser = (USERNAME, PASSWORD) => {
             payload: {
               id,
               username,
-              role
+              role,
+              firstname,
+              lastname
             }
           });
         } else {
-          console.log("semua false");
+          console.log("error");
         }
       });
   };

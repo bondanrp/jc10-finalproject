@@ -26,9 +26,7 @@ export class Upload extends Component {
                 background: `url(${val.thumbnail})`
               }}
               className="user-video-thumb"
-            >
-              {/* <div className="">Eps #{val.episode}</div> */}
-            </div>
+            ></div>
             <p className="text-capitalize user-vid-title">
               {val.title} #{val.episode}
             </p>

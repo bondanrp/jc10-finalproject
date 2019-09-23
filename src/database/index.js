@@ -46,7 +46,6 @@ module.exports = {
   },
 
   registerUser: (req, res) => {
-    console.log(req);
     db.query(
       `insert into users values (0,'${req.body.username}','${req.body.email}','${req.body.password}', 'user','${req.body.firstname}','${req.body.lastname}')`,
       (err, result) => {
@@ -61,6 +60,33 @@ module.exports = {
       if (err) throw err;
       res.send(result);
     });
+  },
+  getRelatedVideos: (req, res) => {
+    db.query(
+      `select * from uploads where category='${req.query.category}' limit 8`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  getVideo: (req, res) => {
+    db.query(
+      `select * from uploads where id = ${req.params.id}`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  getEpisode: (req, res) => {
+    db.query(
+      `select * from uploads where title = '${req.query.title}' and episode = '${req.query.episode}'`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
   },
   getUserVideos: (req, res) => {
     db.query(
