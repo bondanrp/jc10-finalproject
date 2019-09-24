@@ -14,21 +14,37 @@ module.exports = {
   getAllUserData: (req, res) => {
     db.query(`select * from users`, (err, result) => {
       if (err) throw err;
-      res.send(result);
+
+      res.send(hasil);
     });
   },
-  getUserName: (req, res) => {
+  login: (req, res) => {
     db.query(
       `select * from users where username = '${req.query.username}'`,
       (err, result) => {
         if (err) throw err;
-        res.send(result);
+        if (!result.length) {
+          let hasil = { status: "404", message: "User Not Found" };
+          res.send(hasil);
+        } else if (req.query.password !== result[0].password) {
+          let hasil = {
+            status: "401",
+            message: "Wrong Password"
+          };
+          res.send(hasil);
+        } else if (req.query.password === result[0].password) {
+          let hasil = {
+            status: "200",
+            result
+          };
+          res.send(hasil);
+        }
       }
     );
   },
-  getUser: (req, res) => {
+  getUserName: (req, res) => {
     db.query(
-      `select * from users where username = '${req.query.username}' and password = '${req.query.password}'`,
+      `select * from users where username = '${req.query.username}'`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -63,7 +79,7 @@ module.exports = {
   },
   getRelatedVideos: (req, res) => {
     db.query(
-      `select * from uploads where category='${req.query.category}' limit 8`,
+      `select * from uploads where category='${req.query.category}' order by RAND() limit 10`,
       (err, result) => {
         if (err) throw err;
         res.send(result);

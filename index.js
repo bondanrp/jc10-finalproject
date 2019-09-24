@@ -5,8 +5,8 @@ var cors = require("cors");
 const port = 3001;
 const {
   getAllUserData,
-  getUser,
   getUserName,
+  login,
   registerUser,
   getUserEmail,
   getVideos,
@@ -26,8 +26,8 @@ app.get("/", (req, res) => {
 
 // user db
 app.get("/getalluserdata", getAllUserData);
+app.get("/login", login);
 app.get("/getusername", getUserName);
-app.get("/getuser", getUser);
 app.get("/getuseremail", getUserEmail);
 app.post("/registeruser", registerUser);
 

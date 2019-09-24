@@ -6,24 +6,24 @@ const urlApiUser = "http://localhost:3001/";
 export const onLoginUser = (USERNAME, PASSWORD) => {
   return dispatch => {
     axios
-      .get(urlApiUser + "getusername", {
+      .get(urlApiUser + "login", {
         params: {
-          username: USERNAME
+          username: USERNAME,
+          password: PASSWORD
         }
       })
       .then(res => {
-        let hasil = res.data;
-        if (!hasil.length) {
-          swal.fire("Error", "User not found", "error");
-        } else if (PASSWORD !== hasil[0].password) {
-          swal.fire("Error", "Wrong password!", "error");
-        } else if (PASSWORD === hasil[0].password) {
-          swal.fire(
-            "User Logged in!",
-            `Welcome ${res.data[0].firstname} ${res.data[0].lastname}`,
-            "success"
-          );
-          let { id, username, role, firstname, lastname } = res.data[0];
+        let hasil = res.data.result;
+        if (res.data.status === "404" || res.data.status === "401") {
+          let errMsg = res.data.message;
+          swal.fire("Error", errMsg, "error");
+        } else if (res.data.status === "200") {
+          swal.fire({
+            title: "User Logged in!",
+            html: `<p class='text-capitalize'>Welcome ${hasil[0].firstname} ${hasil[0].lastname}</p>`,
+            type: "success"
+          });
+          let { id, username, role, firstname, lastname } = hasil[0];
           localStorage.setItem(
             "userData",
             JSON.stringify({ id, username, role, firstname, lastname })

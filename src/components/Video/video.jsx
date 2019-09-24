@@ -6,14 +6,19 @@ import { connect } from "react-redux";
 
 let urlApi = "http://localhost:3001/";
 export class Video extends Component {
-  state = { data: [], related: [], nextData: [], prevData: [] };
+  state = { data: [], related: [], nextData: [], prevData: [], refresh: false };
   componentDidMount() {
     this.getData();
   }
 
+  componentDidUpdate() {
+    if (this.state.refresh) {
+      this.getData();
+    }
+  }
   getData = () => {
     Axios.get(urlApi + "getvideo/" + this.props.match.params.id).then(res => {
-      this.setState({ data: res.data[0] });
+      this.setState({ data: res.data[0], refresh: false });
       // NEXT EPISODE
       Axios.get(urlApi + "getepisode", {
         params: {
@@ -47,7 +52,13 @@ export class Video extends Component {
   renderRelated = () => {
     let render = this.state.related.map(val => {
       return (
-        <Link to={`./${val.id}`} className="linkaja preview">
+        <Link
+          onClick={() => {
+            this.setState({ refresh: true });
+          }}
+          to={`./${val.id}`}
+          className="linkaja preview"
+        >
           <div
             style={{
               background: `url(${val.thumbnail})`
@@ -69,7 +80,13 @@ export class Video extends Component {
       return (
         <React.Fragment>
           <h6>Next Episode</h6>
-          <Link to={`./${this.state.nextData.id}`}>
+          <Link
+            onClick={() => {
+              this.setState({ refresh: true });
+            }}
+            to={`./${this.state.nextData.id}`}
+            className="text-capitalize"
+          >
             {this.state.nextData.title} Episode #{this.state.nextData.episode}{" "}
           </Link>
         </React.Fragment>
@@ -81,7 +98,13 @@ export class Video extends Component {
       return (
         <React.Fragment>
           <h6>Previous Episode</h6>
-          <Link to={`./${this.state.prevData.id}`}>
+          <Link
+            onClick={() => {
+              this.setState({ refresh: true });
+            }}
+            to={`./${this.state.prevData.id}`}
+            className="text-capitalize"
+          >
             {this.state.prevData.title} Episode #{this.state.prevData.episode}{" "}
           </Link>
         </React.Fragment>
@@ -110,7 +133,12 @@ export class Video extends Component {
               <h1 className="video-title">
                 {this.state.data.title} Episode #{this.state.data.episode}
               </h1>
-              <p className="author">@{this.state.data.author}</p>
+              <Link
+                to={`/profile/${this.state.data.author}`}
+                className="video-author text-left"
+              >
+                @{this.state.data.author}
+              </Link>
               <p className="video-desc">{this.state.data.description}</p>
               <div className="video-episodes my-5">
                 <div>{this.prevEps()}</div>

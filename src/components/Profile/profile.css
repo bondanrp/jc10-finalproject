@@ -1,0 +1,7 @@
+.profile-name {
+  text-align: center;
+}
+
+.profile-name > h1 {
+  text-transform: capitalize;
+}

@@ -14,17 +14,23 @@ class Register extends Component {
     username: "",
     email: "",
     password: "",
+    repeatpassword: "",
     firstname: "",
     lastname: "",
-    terms: false
+    terms: false,
+    matchPass: false
   };
   validateForm() {
+    if (this.state.password !== this.state.repeatpassword) {
+      this.setState({ matchPass: true });
+    }
     return (
       this.state.username.length > 0 &&
       this.state.email.length > 0 &&
       this.state.password.length > 0 &&
       this.state.firstname.length > 0 &&
-      this.state.lastname.length > 0
+      this.state.lastname.length > 0 &&
+      this.state.password === this.state.repeatpassword
     );
   }
 
@@ -165,6 +171,25 @@ class Register extends Component {
                     type="password"
                     required
                   />
+                  <div className="register-input-title mt-5">
+                    Repeat Password
+                  </div>
+                  <input
+                    onChange={this.handleChange}
+                    onFocus={() => {
+                      this.setState({ matchPass: false });
+                    }}
+                    value={this.state.repeatpassword}
+                    id="repeatpassword"
+                    className="register-input mb-3"
+                    type="password"
+                    required
+                  />
+                  {this.state.matchPass ? (
+                    <div className="alert alert-danger text-center">
+                      Passwords does not match
+                    </div>
+                  ) : null}
                   <input
                     type="checkbox"
                     className="form-check-inline"

@@ -150,7 +150,7 @@ export class Home extends Component {
               </div>
             </div>
             <div className="home-bg">
-              <div className="home-content text-center justify-content-center py-5">
+              <div className="home-content">
                 <h2 className="products-title font-italic">
                   Akses Kelas Tidak Terbatas
                 </h2>
@@ -164,7 +164,9 @@ export class Home extends Component {
                   </button>
                   {this.renderCategory()}
                 </h6>
-                <div className="previewbox my-2">{this.renderPreview()}</div>
+                <div className="d-flex justify-content-center">
+                  <div className="previewbox my-2">{this.renderPreview()}</div>
+                </div>
                 <button className="tombol" onClick={this.handleRedirect}>
                   Cari Kursus
                 </button>
@@ -172,7 +174,7 @@ export class Home extends Component {
             </div>
             <div className="home-extra">
               <h2 className="products-title font-italic text-center my-5">
-                Daftar Sekarang
+                Mengapa Kursus Lah
               </h2>
             </div>
           </main>

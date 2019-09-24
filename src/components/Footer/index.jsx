@@ -8,9 +8,10 @@ export default function Footer() {
         <div className="row justify-content-around">
           <div className="col-8 col-md-5">
             <h5 className="judul text-white">Kursus Lah</h5>
-            <p className="text-white">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Optio
-              quidem obcaecati inventore eum maxime!
+            <p className="text-white text-justify">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur
+              distinctio qui laboriosam iusto dolores culpa aliquid quod.
+              Beatae, delectus omnis.
             </p>
           </div>
           <div className="col-2">

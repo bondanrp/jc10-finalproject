@@ -6,12 +6,11 @@
   border-radius: 10px;
   width: min-content;
   margin: auto;
-  margin-top: 50px;
   margin-bottom: 50px;
   background: white;
   box-shadow: 10px 15px 30px rgba(0, 0, 0, 0.14);
   box-sizing: border-box;
-  padding: 20px;
+  padding: 50px;
   justify-content: center;
 }
 .line1 {
@@ -39,6 +38,9 @@
 }
 .video-desc {
   text-align: justify;
+}
+.video-author {
+  text-decoration: none;
 }
 .video-episodes {
   display: grid;

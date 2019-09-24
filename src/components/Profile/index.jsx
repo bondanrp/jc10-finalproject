@@ -1,6 +1,7 @@
 ﻿import React, { Component } from "react";
 import Axios from "axios";
 import { connect } from "react-redux";
+import "./profile.css";
 
 const urlApi = "http://localhost:3001/";
 
@@ -12,7 +13,7 @@ export class Profile extends Component {
   getData = () => {
     Axios.get(urlApi + "getusername", {
       params: {
-        username: this.props.username
+        username: this.props.match.params.username
       }
     })
       .then(res => {
@@ -26,18 +27,20 @@ export class Profile extends Component {
   renderProfile() {
     let hasil = this.state.data.map(val => {
       return (
-        <div className="container shadow my-5">
-          <div>
-            {val.firstname} {val.lastname}
+        <div className="container shadow my-5 bg-white">
+          <div className="profile-name">
+            <h1>
+              {val.firstname} {val.lastname}
+            </h1>
+            <div>{val.username}</div>{" "}
           </div>
-          <div>{val.username}</div>{" "}
         </div>
       );
     });
     return hasil;
   }
   render() {
-    return <div>{this.renderProfile()} </div>;
+    return <div className="gray-background">{this.renderProfile()} </div>;
   }
 }
 const mapStateToProps = state => {
