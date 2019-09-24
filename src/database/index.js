@@ -72,10 +72,21 @@ module.exports = {
   },
 
   getVideos: (req, res) => {
-    db.query(`select * from uploads`, (err, result) => {
-      if (err) throw err;
-      res.send(result);
-    });
+    db.query(
+      `SELECT *
+      FROM
+        (SELECT id, title, episode, thumbnail, video, description, author, category, 
+                     @category_rank := IF(@current_category = category, @category_rank + 1, 1) AS category_rank,
+                     @current_category := category 
+          FROM uploads
+          ORDER BY category
+        ) ranked
+      WHERE category_rank <= 2 limit 10 ;`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
   },
   getRelatedVideos: (req, res) => {
     db.query(
@@ -106,7 +117,7 @@ module.exports = {
   },
   getUserVideos: (req, res) => {
     db.query(
-      `select * from uploads where author = '${req.query.author}'`,
+      `select * from uploads where author = '${req.query.username}' order by id desc`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -117,6 +128,24 @@ module.exports = {
   uploadVideo: (req, res) => {
     db.query(
       `insert into uploads values (0,'${req.body.title}','${req.body.episode}','${req.body.thumbnail}', '${req.body.video}','${req.body.description}','${req.body.author}','${req.body.category}')`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  getCategories: (req, res) => {
+    db.query(
+      `select category from uploads group by category limit 6`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  getPreview: (req, res) => {
+    db.query(
+      `select * from uploads where category = '${req.query.category}' order by id desc limit 10`,
       (err, result) => {
         if (err) throw err;
         res.send(result);

@@ -30,7 +30,7 @@ class NavBar extends Component {
               Hello, {this.props.username}!
             </DropdownItem>
             <Link
-              to={`/profile/${this.props.username}`}
+              to={`/${this.props.username}`}
               className="text-decoration-none text-dark"
             >
               <DropdownItem tag="div">Profile</DropdownItem>
@@ -58,12 +58,15 @@ class NavBar extends Component {
               Hello, {this.props.username}!
             </DropdownItem>
             <Link
-              to={`/profile/${this.props.username}`}
+              to={`/${this.props.username}`}
               className="text-decoration-none text-dark"
             >
               <DropdownItem tag="div">Profile</DropdownItem>
             </Link>
-            <Link to="/upload" className="text-decoration-none text-dark">
+            <Link
+              to={`/${this.props.username}/manageuploads`}
+              className="text-decoration-none text-dark"
+            >
               <DropdownItem tag="div">Manage Uploads</DropdownItem>
             </Link>
             <DropdownItem divider />

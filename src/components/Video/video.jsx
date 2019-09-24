@@ -6,11 +6,17 @@ import { connect } from "react-redux";
 
 let urlApi = "http://localhost:3001/";
 export class Video extends Component {
-  state = { data: [], related: [], nextData: [], prevData: [], refresh: false };
+  state = {
+    data: [],
+    related: [],
+    nextData: [],
+    prevData: [],
+    refresh: false,
+    loading: true
+  };
   componentDidMount() {
     this.getData();
   }
-
   componentDidUpdate() {
     if (this.state.refresh) {
       this.getData();
@@ -18,7 +24,7 @@ export class Video extends Component {
   }
   getData = () => {
     Axios.get(urlApi + "getvideo/" + this.props.match.params.id).then(res => {
-      this.setState({ data: res.data[0], refresh: false });
+      this.setState({ data: res.data[0], refresh: false, loading: false });
       // NEXT EPISODE
       Axios.get(urlApi + "getepisode", {
         params: {
@@ -54,9 +60,9 @@ export class Video extends Component {
       return (
         <Link
           onClick={() => {
-            this.setState({ refresh: true });
+            this.setState({ refresh: true, loading: true });
           }}
-          to={`./${val.id}`}
+          to={`/${val.author}/${val.title}/${val.id}`}
           className="linkaja preview"
         >
           <div
@@ -82,7 +88,7 @@ export class Video extends Component {
           <h6>Next Episode</h6>
           <Link
             onClick={() => {
-              this.setState({ refresh: true });
+              this.setState({ refresh: true, loading: true });
             }}
             to={`./${this.state.nextData.id}`}
             className="text-capitalize"
@@ -100,7 +106,7 @@ export class Video extends Component {
           <h6>Previous Episode</h6>
           <Link
             onClick={() => {
-              this.setState({ refresh: true });
+              this.setState({ refresh: true, loading: true });
             }}
             to={`./${this.state.prevData.id}`}
             className="text-capitalize"
@@ -114,13 +120,20 @@ export class Video extends Component {
   render() {
     if (!this.props.username) {
       return <Redirect to="/"></Redirect>;
+    } else if (this.state.loading) {
+      return (
+        <div className="gray-background">
+          <div className="video-loading">
+            <div className="video-loading-icon"></div>
+          </div>
+        </div>
+      );
     } else {
       return (
         <div className="gray-background">
           <div className="video-container">
             <div className="video-main">
               <iframe
-                className="my-5"
                 title={this.state.data.title}
                 width="560"
                 height="315"
@@ -134,7 +147,7 @@ export class Video extends Component {
                 {this.state.data.title} Episode #{this.state.data.episode}
               </h1>
               <Link
-                to={`/profile/${this.state.data.author}`}
+                to={`/${this.state.data.author}`}
                 className="video-author text-left"
               >
                 @{this.state.data.author}

@@ -4,14 +4,16 @@ import { connect } from "react-redux";
 import Axios from "axios";
 import { Redirect } from "react-router-dom";
 let urlApi = "http://localhost:3001/";
+
 export class Upload extends Component {
   state = { userVid: [] };
   componentDidMount() {
+    console.log("helo");
     this.getUserVideo();
   }
   getUserVideo() {
     Axios.get(urlApi + "getuservideos", {
-      params: { author: "bondan" }
+      params: { author: this.props.username }
     }).then(res => {
       this.setState({ userVid: res.data });
     });
@@ -89,7 +91,7 @@ export class Upload extends Component {
 
 const mapStateToProps = state => {
   return {
-    user_name: state.auth.username,
+    username: state.auth.username,
     role: state.auth.role
   };
 };

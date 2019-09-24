@@ -28,3 +28,8 @@ button:active {
   outline: none !important;
   box-shadow: none !important;
 }
+.gray-background {
+  background: #f7f7f7;
+  width: 100%;
+  height: auto;
+}

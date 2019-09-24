@@ -162,7 +162,7 @@
 }
 .home-bg {
   background: #f7f7f7;
-  box-shadow: inset 10px 15px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 }
 .header-item {
   height: 30%;
@@ -179,6 +179,9 @@
 .home-extra {
   height: 600px;
   width: 100%;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  text-align: center;
+  padding: 50px;
 }
 
 .categories {
@@ -194,8 +197,14 @@
   color: black;
   cursor: pointer;
 }
-.categories:focus {
-  color: black;
+.categories-active {
+  font-family: "Poppins", sans-serif;
+  letter-spacing: 3px;
+  font-weight: 500;
+  text-decoration: none;
+  border: none;
+  background: none;
+  color: #017a84;
 }
 
 .preview-episode {
@@ -225,7 +234,7 @@
   text-align: start;
 }
 .preview-title:hover {
-  text-decoration: underline;
+  text-decoration: none;
   cursor: pointer;
 }
 .preview-author {
@@ -235,22 +244,24 @@
 }
 
 .tombol {
-  border: 1px solid rgb(70, 70, 70);
+  border: 3px solid #017a84;
   background: none;
-  border-radius: 5px;
+  border-radius: 10px;
+  font-weight: bold;
   letter-spacing: 2px;
   height: 40px;
   width: 150px;
-  color: rgb(70, 70, 70);
+  color: #017a84;
   margin-top: 40px;
   font-size: 20px;
+  transition: 0.2s;
 }
 .tombol:active {
-  background: rgb(70, 70, 70);
+  background: #017a84;
   color: white;
 }
 .tombol:hover {
-  background: rgb(70, 70, 70);
+  background: #017a84;
   color: white;
 }
 .home-content {
@@ -279,11 +290,15 @@
   transition: transform 1s;
   padding: 0 !important;
   border-radius: 10px;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  animation-name: frombottom;
+  position: relative;
+  animation-duration: 0.5s;
+  transition: 0.3s;
 }
 .preview:hover {
-  transform: scale(1.02, 1.02);
   cursor: pointer;
+  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
 }
 .linkaja {
   text-decoration: none;
@@ -292,4 +307,19 @@
 .linkaja:hover {
   text-decoration: none;
   color: black;
+}
+.home-loading {
+  grid-column: 3;
+  grid-row: 1/-1;
+}
+
+@keyframes frombottom {
+  from {
+    bottom: -30px;
+    opacity: 0;
+  }
+  to {
+    bottom: 0;
+    opacity: 1;
+  }
 }

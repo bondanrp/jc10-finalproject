@@ -11,7 +11,6 @@ import Contact from "./components/Contact";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
-import Todo from "./components/Todo/Todo";
 import Upload from "./components/Upload/index";
 import Video from "./components/Video/video";
 
@@ -32,11 +31,8 @@ class App extends Component {
   };
 
   componentDidMount() {
-    // check local storage
     let userStorage = JSON.parse(localStorage.getItem("userData"));
-
     if (userStorage) {
-      // kirim ke redux
       this.props.keepLogin(userStorage);
     }
 
@@ -53,10 +49,9 @@ class App extends Component {
           <Route path="/Contact" component={Contact} />
           <Route path="/Register" component={Register} />
           <Route path="/Login" component={Login} />
-          <Route path="/Profile/:username" component={Profile} />
-          <Route path="/Todo" component={Todo} />
-          <Route path="/Upload" component={Upload} />
-          <Route path="/Video/:id" component={Video} />
+          <Route exact path="/:username" component={Profile} />
+          <Route path="/:username/manageuploads" component={Upload} />
+          <Route path="/:username/:title/:id" component={Video} />
         </Switch>
         <Footer />
       </React.Fragment>

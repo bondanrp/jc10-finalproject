@@ -1,7 +1,7 @@
 .navBar {
   position: sticky !important;
   top: 0;
-  background: white;
+  background: #017a84;
   height: 3em;
   display: grid !important;
   grid-template-columns: 1fr 2fr 1fr !important;
@@ -11,13 +11,14 @@
   box-sizing: border-box;
   padding-left: 20px !important;
   padding-right: 20px !important;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 }
 .nav1 {
   grid-column: 1;
 }
 .nav2 {
   grid-column: 2;
+  line-height: 32px;
 }
 .nav3 {
   grid-column: 3;
@@ -31,14 +32,9 @@
   font-style: italic;
   font-size: 20px;
   text-decoration: none;
-  color: rgb(70, 70, 70);
+  color: white;
 }
 
-.judul:hover {
-  text-decoration: none;
-  color: black;
-  transition-duration: 0.5s;
-}
 .hilang {
   display: flex;
   justify-content: space-around;
@@ -55,7 +51,7 @@
 .tautan:hover {
   transform: scale(1.05, 1.05);
   transition-duration: 0.5s;
-  color: black;
+  color: white;
   text-decoration: none;
 }
 .tautan:active {
@@ -83,7 +79,7 @@
     z-index: 1;
   }
   .tautan {
-    color: rgb(223, 223, 223);
+    color: white;
     width: 100;
   }
   .tautan:hover {
@@ -136,8 +132,8 @@
 .userIcon {
   background: url(../../images/585e4bf3cb11b227491c339a.png);
   background-size: contain;
-  height: 2em;
-  width: 2em;
+  height: 32px;
+  width: 32px;
   opacity: 0.4;
   z-index: -1 !important;
 }

@@ -14,7 +14,9 @@ const {
   getVideo,
   getEpisode,
   getUserVideos,
-  uploadVideo
+  uploadVideo,
+  getCategories,
+  getPreview
 } = require("./src/database/index");
 
 app.use(bodyParser());
@@ -38,6 +40,8 @@ app.get("/getepisode", getEpisode);
 app.get("/getrelatedvideos/", getRelatedVideos);
 app.get("/getuservideos", getUserVideos);
 app.get("/uploadvideo", uploadVideo);
+app.get("/getcategories", getCategories);
+app.get("/getpreview", getPreview);
 // app.put("/edittodo", editTodo);
 // app.put("/completeaction", kochengOren);
 // app.delete("/deletetodo/:terserah", deleteTodo);
