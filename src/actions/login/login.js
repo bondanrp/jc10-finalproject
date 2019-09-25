@@ -1,5 +1,6 @@
 import axios from "axios";
 import swal from "sweetalert2";
+import { encrypt } from "../../functions/index";
 
 const urlApiUser = "http://localhost:3001/";
 
@@ -9,7 +10,7 @@ export const onLoginUser = (USERNAME, PASSWORD) => {
       .get(urlApiUser + "login", {
         params: {
           username: USERNAME,
-          password: PASSWORD
+          password: encrypt(PASSWORD)
         }
       })
       .then(res => {
@@ -23,10 +24,24 @@ export const onLoginUser = (USERNAME, PASSWORD) => {
             html: `<p class='text-capitalize'>Welcome ${hasil[0].firstname} ${hasil[0].lastname}</p>`,
             type: "success"
           });
-          let { id, username, role, firstname, lastname } = hasil[0];
+          let {
+            id,
+            username,
+            role,
+            firstname,
+            lastname,
+            profilepict
+          } = hasil[0];
           localStorage.setItem(
             "userData",
-            JSON.stringify({ id, username, role, firstname, lastname })
+            JSON.stringify({
+              id,
+              username,
+              role,
+              firstname,
+              lastname,
+              profilepict
+            })
           );
 
           dispatch({
@@ -36,7 +51,8 @@ export const onLoginUser = (USERNAME, PASSWORD) => {
               username,
               role,
               firstname,
-              lastname
+              lastname,
+              profilepict
             }
           });
         } else {

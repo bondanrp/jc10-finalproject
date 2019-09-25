@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Axios from "axios";
 import "./video.css";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 let urlApi = "http://localhost:3001/";
@@ -56,27 +56,31 @@ export class Video extends Component {
   };
 
   renderRelated = () => {
-    let render = this.state.related.map(val => {
-      return (
-        <Link
-          onClick={() => {
-            this.setState({ refresh: true, loading: true });
-          }}
-          to={`/${val.author}/${val.title}/${val.id}`}
-          className="linkaja preview"
-        >
-          <div
-            style={{
-              background: `url(${val.thumbnail})`
+    let render = this.state.related.map((val, idx) => {
+      if (idx < 8) {
+        return (
+          <Link
+            onClick={() => {
+              this.setState({ refresh: true, loading: true });
             }}
-            className="preview-thumbnail"
+            to={`/${val.author}/${val.title}/${val.id}`}
+            className="linkaja preview"
           >
-            <div className="preview-episode">Eps #{val.episode}</div>
-          </div>
-          <p className="text-capitalize preview-title">{val.title}</p>
-          <p className="preview-author text-left">@{val.author}</p>
-        </Link>
-      );
+            <div
+              style={{
+                background: `url(${val.thumbnail})`
+              }}
+              className="preview-thumbnail"
+            >
+              <div className="preview-episode">Eps #{val.episode}</div>
+            </div>
+            <p className="text-capitalize preview-title">{val.title}</p>
+            <p className="preview-author text-left">@{val.author}</p>
+          </Link>
+        );
+      } else {
+        return null;
+      }
     });
     return render;
   };
@@ -118,9 +122,7 @@ export class Video extends Component {
     }
   };
   render() {
-    if (!this.props.username) {
-      return <Redirect to="/"></Redirect>;
-    } else if (this.state.loading) {
+    if (this.state.loading) {
       return (
         <div className="gray-background">
           <div className="video-loading">
@@ -133,6 +135,7 @@ export class Video extends Component {
         <div className="gray-background">
           <div className="video-container">
             <div className="video-main">
+              <hr />
               <iframe
                 title={this.state.data.title}
                 width="560"
@@ -158,9 +161,10 @@ export class Video extends Component {
                 <div className="text-right">{this.nextEps()}</div>
               </div>
             </div>
-            <div className="line1"></div>
             <div className="video-related">
-              <h1 className="judul">Related Videos</h1>
+              <hr />
+              <h4>Related Videos</h4>
+              <hr />
               <div className="video-list">{this.renderRelated()}</div>
             </div>
           </div>

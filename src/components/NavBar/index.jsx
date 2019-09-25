@@ -5,6 +5,7 @@ import "./navbar.css";
 import { connect } from "react-redux";
 import swal from "sweetalert2";
 import { onLogOutUser } from "../../actions/login/login";
+import userIcon from "../../images/user.png";
 import {
   Dropdown,
   DropdownToggle,
@@ -14,6 +15,7 @@ import {
 
 class NavBar extends Component {
   state = { toggleBurger: false, dropdownOpen: false };
+
   dropDown = () => {
     if (this.props.role === "user") {
       return (
@@ -23,7 +25,19 @@ class NavBar extends Component {
             data-toggle="dropdown"
             aria-expanded={this.state.dropdownOpen}
           >
-            <div className="userIcon tautan"></div>
+            <div className="userIcon">
+              <img
+                src={userIcon}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  overflow: "hidden",
+                  borderRadius: "50%"
+                }}
+                alt=""
+              />
+            </div>
           </DropdownToggle>
           <DropdownMenu right className="text-right">
             <DropdownItem header className="text-capitalize">
@@ -51,7 +65,19 @@ class NavBar extends Component {
             data-toggle="dropdown"
             aria-expanded={this.state.dropdownOpen}
           >
-            <div className="userIcon tautan"></div>
+            <div className="userIcon">
+              <img
+                src={userIcon}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "contain",
+                  overflow: "hidden",
+                  borderRadius: "50%"
+                }}
+                alt=""
+              />
+            </div>
           </DropdownToggle>
           <DropdownMenu right className="text-right">
             <DropdownItem header className="text-capitalize">
@@ -74,14 +100,66 @@ class NavBar extends Component {
           </DropdownMenu>
         </Dropdown>
       );
+    } else if (this.props.role === "admin") {
+      return (
+        <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
+          <DropdownToggle
+            tag="span"
+            data-toggle="dropdown"
+            aria-expanded={this.state.dropdownOpen}
+          >
+            <div className="userIcon">
+              <img
+                src={userIcon}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  overflow: "hidden",
+                  borderRadius: "50%"
+                }}
+                alt=""
+              />
+            </div>
+          </DropdownToggle>
+          <DropdownMenu right className="text-right">
+            <DropdownItem header className="text-capitalize">
+              Hello, {this.props.username}!
+            </DropdownItem>
+            <Link
+              to={`/${this.props.username}`}
+              className="text-decoration-none text-dark"
+            >
+              <DropdownItem tag="div">Profile</DropdownItem>
+            </Link>
+            <Link to="#" className="text-decoration-none text-dark">
+              <DropdownItem tag="div">Admin Dashboard</DropdownItem>
+            </Link>
+            <DropdownItem divider />
+            <DropdownItem onClick={this.logOut}>Logout</DropdownItem>
+          </DropdownMenu>
+        </Dropdown>
+      );
     } else {
       return (
         <Link
-          className="tautan active"
+          className="active"
           onClick={() => this.setState({ toggleBurger: false })}
           to="Login"
         >
-          <div className="userIcon"></div>
+          <div className="userIcon">
+            <img
+              src={userIcon}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+                overflow: "hidden",
+                borderRadius: "50%"
+              }}
+              alt=""
+            />
+          </div>
         </Link>
       );
     }
@@ -129,9 +207,9 @@ class NavBar extends Component {
             <Link
               className="tautan active"
               onClick={() => this.setState({ toggleBurger: false })}
-              to="/About"
+              to="/browse"
             >
-              About
+              Browse
             </Link>
             <Link
               className="tautan active"
@@ -158,7 +236,8 @@ class NavBar extends Component {
 const mapStateToProps = state => {
   return {
     username: state.auth.username,
-    role: state.auth.role
+    role: state.auth.role,
+    profilepict: state.auth.profilepict
   };
 };
 export default withRouter(

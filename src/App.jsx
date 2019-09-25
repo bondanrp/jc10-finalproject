@@ -20,7 +20,8 @@ const keepLogin = objUser => {
     payload: {
       id: objUser.id,
       username: objUser.username,
-      role: objUser.role
+      role: objUser.role,
+      profilepict: objUser.profilepict
     }
   };
 };

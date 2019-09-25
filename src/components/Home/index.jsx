@@ -53,7 +53,11 @@ export class Home extends Component {
     if (this.props.username) {
       this.setState({ redirect: true });
     } else {
-      Swal.fire("Error", "Please sign in first", "error");
+      Swal.fire({
+        title: "Error",
+        html: "Please sign in first",
+        type: "error"
+      });
     }
   };
   goToVideo = (user, title, id) => {

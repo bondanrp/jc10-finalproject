@@ -1,4 +1,5 @@
 var mysql = require("mysql");
+var nodemailer = require("nodemailer");
 
 const db = mysql.createConnection({
   host: "localhost",
@@ -8,9 +9,47 @@ const db = mysql.createConnection({
   port: 3307
 });
 
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "bondanrp@gmail.com",
+    pass: "ynhefgogglxqplcn"
+  }
+});
+
 module.exports = db;
 
 module.exports = {
+  verifyAccount: (req, res) => {
+    let to = req.query.email;
+    let username = req.query.username;
+    let mailOptions = {
+      from: '"Purwadhika JC10" <bondanrp@gmail.com>',
+      to,
+      subject: "Verify Your Account",
+      html: `<p>Please <a href='http://localhost:3001/verify?username=${username}'>click here</a> to verify your account.</p>`
+    };
+    if (to) {
+      transporter.sendMail(mailOptions, (err, info) => {
+        if (err) throw err;
+        res.send("Email Berhasil");
+      });
+    } else {
+      res.send("Email kosong!");
+    }
+  },
+
+  verify: (req, res) => {
+    let username = req.query.username;
+    db.query(
+      `update users set ferified = 1 where username = '${username}'`,
+      (err, res) => {
+        if (err) throw err;
+        res.send("Account Verified");
+      }
+    );
+  },
+
   getAllUserData: (req, res) => {
     db.query(`select * from users`, (err, result) => {
       if (err) throw err;
@@ -60,10 +99,18 @@ module.exports = {
       }
     );
   },
-
+  getTeacher: (req, res) => {
+    db.query(
+      `select * from users where role = 'teacher' order by rand()`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
   registerUser: (req, res) => {
     db.query(
-      `insert into users values (0,'${req.body.username}','${req.body.email}','${req.body.password}', 'user','${req.body.firstname}','${req.body.lastname}')`,
+      `insert into users values (0,'${req.body.username}','${req.body.email}','${req.body.password}', 'user','${req.body.firstname}','${req.body.lastname}','https://www.thispersondoesnotexist.com/image')`,
       (err, result) => {
         if (err) throw err;
         res.send(result);

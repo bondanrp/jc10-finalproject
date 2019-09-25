@@ -34,6 +34,10 @@
   text-decoration: none;
   color: white;
 }
+.judul:hover {
+  text-decoration: none;
+  color: white;
+}
 
 .hilang {
   display: flex;
@@ -46,7 +50,7 @@
   font-weight: 100;
   cursor: pointer;
   text-decoration: none;
-  color: rgb(150, 150, 150);
+  color: white;
 }
 .tautan:hover {
   transform: scale(1.05, 1.05);
@@ -130,12 +134,12 @@
   transform: rotate(45deg) translate(-7px, -6px);
 }
 .userIcon {
-  background: url(../../images/585e4bf3cb11b227491c339a.png);
-  background-size: contain;
-  height: 32px;
-  width: 32px;
-  opacity: 0.4;
+  height: 32px !important;
+  width: 32px !important;
   z-index: -1 !important;
+}
+.userIcon:hover {
+  cursor: pointer;
 }
 
 .terms {

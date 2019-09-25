@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import swal from "sweetalert2";
 import "./register.css";
+import { encrypt } from "../../functions/index";
 
 const urlApiUser = "http://localhost:3001/";
 
@@ -75,8 +76,10 @@ class Register extends Component {
         });
     }
   };
+
   handleRegistration = () => {
-    let { username, email, password, lastname, firstname } = this.state;
+    let { username, email, lastname, firstname } = this.state;
+    let password = encrypt(this.state.password);
     let input = {
       username: username,
       email: email,

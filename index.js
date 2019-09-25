@@ -4,8 +4,11 @@ var bodyParser = require("body-parser");
 var cors = require("cors");
 const port = 3001;
 const {
+  verifyAccount,
+  verify,
   getAllUserData,
   getUserName,
+  getTeacher,
   login,
   registerUser,
   getUserEmail,
@@ -25,9 +28,10 @@ app.use(cors());
 app.get("/", (req, res) => {
   res.send(`<h1>Selamat datang di API Final Project Bondan JC10 JKT</h1>`);
 });
-
+app.get("/verifyaccount", verifyAccount), app.get("/verify", verify);
 // user db
 app.get("/getalluserdata", getAllUserData);
+app.get("/getteacher", getTeacher);
 app.get("/login", login);
 app.get("/getusername", getUserName);
 app.get("/getuseremail", getUserEmail);
@@ -45,5 +49,7 @@ app.get("/getpreview", getPreview);
 // app.put("/edittodo", editTodo);
 // app.put("/completeaction", kochengOren);
 // app.delete("/deletetodo/:terserah", deleteTodo);
+
+// mail
 
 app.listen(port, console.log("Listening in port " + port));
