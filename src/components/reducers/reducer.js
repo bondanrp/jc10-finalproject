@@ -2,7 +2,8 @@ import { combineReducers } from "redux";
 
 const init = {
   id: "",
-  username: ""
+  username: "",
+  role: ""
 };
 
 const AuthReducer = (state = init, action) => {

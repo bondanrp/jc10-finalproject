@@ -31,5 +31,5 @@ button:active {
 .gray-background {
   background: #f7f7f7;
   width: 100%;
-  height: auto;
+  min-height: 100vh;
 }

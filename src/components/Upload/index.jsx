@@ -8,12 +8,11 @@ let urlApi = "http://localhost:3001/";
 export class Upload extends Component {
   state = { userVid: [] };
   componentDidMount() {
-    console.log("helo");
     this.getUserVideo();
   }
   getUserVideo() {
     Axios.get(urlApi + "getuservideos", {
-      params: { author: this.props.username }
+      params: { username: this.props.username }
     }).then(res => {
       this.setState({ userVid: res.data });
     });
@@ -46,7 +45,7 @@ export class Upload extends Component {
   render() {
     if (this.props.role === "teacher") {
       return (
-        <div className="gray-background">
+        <div className="gray-background py-5">
           <div className="upload-container">
             <div className="upload-card">
               <div className="uploadimg">

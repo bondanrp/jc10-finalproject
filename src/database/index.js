@@ -20,32 +20,24 @@ let transporter = nodemailer.createTransport({
 module.exports = db;
 
 module.exports = {
-  verifyAccount: (req, res) => {
-    let to = req.query.email;
-    let username = req.query.username;
-    let mailOptions = {
-      from: '"Purwadhika JC10" <bondanrp@gmail.com>',
-      to,
-      subject: "Verify Your Account",
-      html: `<p>Please <a href='http://localhost:3001/verify?username=${username}'>click here</a> to verify your account.</p>`
-    };
-    if (to) {
-      transporter.sendMail(mailOptions, (err, info) => {
-        if (err) throw err;
-        res.send("Email Berhasil");
-      });
-    } else {
-      res.send("Email kosong!");
-    }
-  },
-
   verify: (req, res) => {
     let username = req.query.username;
     db.query(
-      `update users set ferified = 1 where username = '${username}'`,
+      `update users set verified = 1 where username = '${username}'`,
       (err, res) => {
         if (err) throw err;
         res.send("Account Verified");
+      }
+    );
+  },
+  updateDP: (req, res) => {
+    let username = req.body.username;
+    let picture = req.body.profilepict;
+    db.query(
+      `update users set profilepict = '${picture}' where username = '${username}'`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
       }
     );
   },
@@ -53,8 +45,7 @@ module.exports = {
   getAllUserData: (req, res) => {
     db.query(`select * from users`, (err, result) => {
       if (err) throw err;
-
-      res.send(hasil);
+      res.send(result);
     });
   },
   login: (req, res) => {
@@ -110,10 +101,36 @@ module.exports = {
   },
   registerUser: (req, res) => {
     db.query(
-      `insert into users values (0,'${req.body.username}','${req.body.email}','${req.body.password}', 'user','${req.body.firstname}','${req.body.lastname}','https://www.thispersondoesnotexist.com/image')`,
+      `select * from users where username = '${req.body.username}' or email = '${req.body.email}'`,
       (err, result) => {
         if (err) throw err;
-        res.send(result);
+        if (result.length > 0) {
+          res.send({
+            status: "400",
+            message: "Username or email have already been registered"
+          });
+        } else {
+          db.query(
+            `insert into users values (0,'${req.body.username}','${req.body.email}','${req.body.password}', 'user','${req.body.firstname}','${req.body.lastname}','https://www.thispersondoesnotexist.com/image')`,
+            (err2, result) => {
+              if (err2) throw err2;
+              let mailOptions = {
+                from: '"Bagi Bakat" <bondanrp@gmail.com>',
+                to: req.body.email,
+                subject: "Verify Your Account",
+                html: `<p>Please <a href='http://localhost:3001/verify?username=${req.body.username}'>click here</a> to verify your account.</p>`
+              };
+              transporter.sendMail(mailOptions, (err3, info) => {
+                if (err3) throw err3;
+              });
+              res.send({
+                status: "201",
+                message:
+                  "Your account has been created, please check your email to verify your account!"
+              });
+            }
+          );
+        }
       }
     );
   },
@@ -122,22 +139,38 @@ module.exports = {
     db.query(
       `SELECT *
       FROM
-        (SELECT id, title, episode, thumbnail, video, description, author, category, 
+        (SELECT id, title, episode, thumbnail, video, description, author, category, views, 
                      @category_rank := IF(@current_category = category, @category_rank + 1, 1) AS category_rank,
                      @current_category := category 
           FROM uploads
           ORDER BY category
         ) ranked
-      WHERE category_rank <= 2 limit 10 ;`,
+      WHERE category_rank <= 2 order by views desc limit 10;`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
       }
     );
   },
+  browseAll: (req, res) => {
+    db.query(`SELECT * FROM uploads order by id desc`, (err, result) => {
+      if (err) throw err;
+      res.send(result);
+    });
+  },
   getRelatedVideos: (req, res) => {
     db.query(
       `select * from uploads where category='${req.query.category}' order by RAND() limit 10`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  search: (req, res) => {
+    db.query(
+      `select * from uploads where title like '%${req.query.search}%'
+      or description like '%${req.query.search}%' or author like '%${req.query.search}%' or category like '%${req.query.search}%'`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -155,7 +188,7 @@ module.exports = {
   },
   getEpisode: (req, res) => {
     db.query(
-      `select * from uploads where title = '${req.query.title}' and episode = '${req.query.episode}'`,
+      `select title, episode, id from uploads where title = '${req.query.title}' and episode = '${req.query.episode}'`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -183,7 +216,7 @@ module.exports = {
   },
   getCategories: (req, res) => {
     db.query(
-      `select category from uploads group by category limit 6`,
+      `select category from uploads group by category`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -192,10 +225,71 @@ module.exports = {
   },
   getPreview: (req, res) => {
     db.query(
-      `select * from uploads where category = '${req.query.category}' order by id desc limit 10`,
+      `select * from uploads where category = '${req.query.category}' order by id desc`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
+      }
+    );
+  },
+  getSubscription: (req, res) => {
+    db.query(
+      `SELECT p.id, f.username, j.* FROM users p INNER JOIN subscription pf ON pf.user_id = p.id INNER JOIN users f ON f.id = pf.subscribe_id inner join uploads j on f.username = j.author where p.id = '${req.params.id}' order by j.id desc`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  isSubscribed: (req, res) => {
+    db.query(
+      `SELECT user_id as userid, subscribe_id as targetid FROM subscription where user_id = '${req.query.userid}' and subscribe_id = '${req.query.targetid}'`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  subscribedTeachers: (req, res) => {
+    db.query(
+      `SELECT f.username, f.profilepict
+      FROM users p
+      INNER JOIN subscription pf
+      ON pf.user_id = p.id
+      INNER JOIN users f
+      ON f.id = pf.subscribe_id
+      where p.username = '${req.query.username}'`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  subscribe: (req, res) => {
+    db.query(
+      `insert into subscription values ('${req.body.userid}','${req.body.targetid}')`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  unsubscribe: (req, res) => {
+    db.query(
+      `delete from subscription where user_id = '${req.params.userid}' and subscribe_id = '${req.params.targetid}'`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+
+  view: (req, res) => {
+    db.query(
+      `update uploads set views = views+1 where id = '${req.body.id}'`,
+      (err, result) => {
+        if (err) throw err;
+        res.send("Update Success!");
       }
     );
   }

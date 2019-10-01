@@ -1,18 +1,27 @@
 .video-container {
   display: grid;
-  grid-template-columns: 560px 410px;
-  grid-template-rows: auto;
-  column-gap: 100px;
+  grid-template-columns: 640px auto;
+  grid-template-rows: 480px 60px auto;
+  column-gap: 20px;
+  row-gap: 20px;
   width: 80%;
   margin: auto;
   margin-bottom: 50px;
-  background: white;
-  box-shadow: 10px 15px 30px rgba(0, 0, 0, 0.14);
+  /* background: white; */
+  /* box-shadow: 10px 15px 30px rgba(0, 0, 0, 0.14); */
   box-sizing: border-box;
   padding: 50px;
   justify-content: center;
   animation: trans 1s;
   position: relative;
+}
+.video-container > div {
+  background: white;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.14);
+}
+.video-text {
+  box-sizing: border-box;
+  padding: 20px;
 }
 @media only screen and (max-width: 1000px) {
   .video-container {
@@ -66,21 +75,42 @@
   grid-row: 1;
 }
 .video-related {
-  grid-row: 1;
+  grid-row: 1/-1;
   grid-column: 2;
 }
 .video-list {
   display: grid;
   margin: auto;
-  grid-template-columns: repeat(2, 200px);
-  grid-template-rows: repeat(4, 180px);
+  grid-template-columns: 500px;
+  grid-template-rows: repeat(8, 126px);
   row-gap: 20px;
   column-gap: 20px;
+  padding-bottom: 20px;
 }
 .video-related > h4 {
-  color: black;
+  background: #017a84;
+  color: white;
+  font-family: "poppins";
   letter-spacing: 2px;
-  text-align: center;
+  padding-left: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.14);
+}
+.related-preview {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  margin-left: 20px;
+}
+.related-preview:hover {
+  background: #f7f7f7;
+}
+.related-preview-thumbnail {
+  width: 200px;
+  position: relative;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-position: center !important;
 }
 .video-title {
   text-transform: capitalize;
@@ -97,6 +127,7 @@
 .video-episodes {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  padding: 5px 20px;
 }
 .video-episodes > div > h6 {
   font-weight: bold;

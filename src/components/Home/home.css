@@ -1,173 +1,99 @@
 .judul-products {
-  font-family: "Poppins", sans-serif;
-  letter-spacing: -3px;
+  width: 250px;
+  margin: auto;
+  padding: 19px;
+  /* background: #017a84; */
+}
+.judul-products > h5 {
+  color: white;
+  font-weight: 500;
+  text-align: justify;
+  text-justify: distribute;
+}
+.judul-products > h1 {
+  font-family: "Poppins";
+  letter-spacing: 3px;
   font-weight: 900;
-  font-style: italic;
-  color: black;
+  font-size: 60px;
+  color: white;
+  text-shadow: 0 4px 10px 0 rgba(0, 0, 0, 1);
 }
 .desc-products {
   color: white;
   text-shadow: 5px 5px 2em black;
   letter-spacing: 3px;
 }
-.products {
-  font-family: "Poppins", sans-serif;
-  letter-spacing: 0px;
+.judul-brand {
+  font-family: "poppins";
   font-weight: 900;
-  font-style: italic;
+  letter-spacing: -1.5px;
+  color: #017a84;
 }
 .products-title {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Montserrat";
   /* letter-spacing: 2px; */
   font-weight: 400;
   color: rgb(70, 70, 70);
 }
+.product-desc {
+  display: grid;
+  width: auto;
+  justify-content: center;
+  margin: auto;
+  padding-top: 50px;
+  grid-template-columns: 300px 300px 300px;
+  grid-template-rows: 200px;
+  column-gap: 40px;
+}
+.product-desc > div:nth-of-type(1) {
+  background: url(https://static.skillshare.com/assets/images/homepage/how-it-works/hand-picked_2x.png)
+    no-repeat;
 
+  background-size: contain;
+  background-position: bottom;
+}
+.product-desc > div:nth-of-type(2) {
+  background: url(https://static.skillshare.com/assets/images/homepage/how-it-works/community_2x.png)
+    no-repeat;
+
+  background-size: contain;
+  background-position: bottom;
+}
+.product-desc > div:nth-of-type(3) {
+  background: url(https://static.skillshare.com/assets/images/homepage/how-it-works/reminders_2x.png)
+    no-repeat;
+
+  background-size: contain;
+  background-position: bottom;
+}
+/* .product-desc > div {
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+}
+.product-desc > div:hover {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.6);
+} */
 .header {
   padding-top: 3em;
   margin-top: -3em;
-  height: 25em;
+  height: 32em;
   /* background: linear-gradient(40deg, rgb(84, 21, 156), rgb(132, 51, 77)); */
-  background: linear-gradient(
-      55deg,
-      rgba(208, 208, 208, 0.03) 0%,
-      rgba(208, 208, 208, 0.03) 20%,
-      rgba(55, 55, 55, 0.03) 20%,
-      rgba(55, 55, 55, 0.03) 40%,
-      rgba(81, 81, 81, 0.03) 40%,
-      rgba(81, 81, 81, 0.03) 60%,
-      rgba(208, 208, 208, 0.03) 60%,
-      rgba(208, 208, 208, 0.03) 80%,
-      rgba(191, 191, 191, 0.03) 80%,
-      rgba(191, 191, 191, 0.03) 100%
-    ),
-    linear-gradient(
-      291deg,
-      rgba(190, 190, 190, 0.02) 0%,
-      rgba(190, 190, 190, 0.02) 14.286%,
-      rgba(105, 105, 105, 0.02) 14.286%,
-      rgba(105, 105, 105, 0.02) 28.572%,
-      rgba(230, 230, 230, 0.02) 28.572%,
-      rgba(230, 230, 230, 0.02) 42.858%,
-      rgba(216, 216, 216, 0.02) 42.858%,
-      rgba(216, 216, 216, 0.02) 57.144%,
-      rgba(181, 181, 181, 0.02) 57.144%,
-      rgba(181, 181, 181, 0.02) 71.42999999999999%,
-      rgba(129, 129, 129, 0.02) 71.43%,
-      rgba(129, 129, 129, 0.02) 85.71600000000001%,
-      rgba(75, 75, 75, 0.02) 85.716%,
-      rgba(75, 75, 75, 0.02) 100.002%
-    ),
-    linear-gradient(
-      32deg,
-      rgba(212, 212, 212, 0.03) 0%,
-      rgba(212, 212, 212, 0.03) 12.5%,
-      rgba(223, 223, 223, 0.03) 12.5%,
-      rgba(223, 223, 223, 0.03) 25%,
-      rgba(11, 11, 11, 0.03) 25%,
-      rgba(11, 11, 11, 0.03) 37.5%,
-      rgba(86, 86, 86, 0.03) 37.5%,
-      rgba(86, 86, 86, 0.03) 50%,
-      rgba(106, 106, 106, 0.03) 50%,
-      rgba(106, 106, 106, 0.03) 62.5%,
-      rgba(220, 220, 220, 0.03) 62.5%,
-      rgba(220, 220, 220, 0.03) 75%,
-      rgba(91, 91, 91, 0.03) 75%,
-      rgba(91, 91, 91, 0.03) 87.5%,
-      rgba(216, 216, 216, 0.03) 87.5%,
-      rgba(216, 216, 216, 0.03) 100%
-    ),
-    linear-gradient(
-      312deg,
-      rgba(113, 113, 113, 0.01) 0%,
-      rgba(113, 113, 113, 0.01) 14.286%,
-      rgba(54, 54, 54, 0.01) 14.286%,
-      rgba(54, 54, 54, 0.01) 28.572%,
-      rgba(166, 166, 166, 0.01) 28.572%,
-      rgba(166, 166, 166, 0.01) 42.858%,
-      rgba(226, 226, 226, 0.01) 42.858%,
-      rgba(226, 226, 226, 0.01) 57.144%,
-      rgba(109, 109, 109, 0.01) 57.144%,
-      rgba(109, 109, 109, 0.01) 71.42999999999999%,
-      rgba(239, 239, 239, 0.01) 71.43%,
-      rgba(239, 239, 239, 0.01) 85.71600000000001%,
-      rgba(54, 54, 54, 0.01) 85.716%,
-      rgba(54, 54, 54, 0.01) 100.002%
-    ),
-    linear-gradient(
-      22deg,
-      rgba(77, 77, 77, 0.03) 0%,
-      rgba(77, 77, 77, 0.03) 20%,
-      rgba(235, 235, 235, 0.03) 20%,
-      rgba(235, 235, 235, 0.03) 40%,
-      rgba(215, 215, 215, 0.03) 40%,
-      rgba(215, 215, 215, 0.03) 60%,
-      rgba(181, 181, 181, 0.03) 60%,
-      rgba(181, 181, 181, 0.03) 80%,
-      rgba(193, 193, 193, 0.03) 80%,
-      rgba(193, 193, 193, 0.03) 100%
-    ),
-    linear-gradient(
-      80deg,
-      rgba(139, 139, 139, 0.02) 0%,
-      rgba(139, 139, 139, 0.02) 14.286%,
-      rgba(114, 114, 114, 0.02) 14.286%,
-      rgba(114, 114, 114, 0.02) 28.572%,
-      rgba(240, 240, 240, 0.02) 28.572%,
-      rgba(240, 240, 240, 0.02) 42.858%,
-      rgba(221, 221, 221, 0.02) 42.858%,
-      rgba(221, 221, 221, 0.02) 57.144%,
-      rgba(74, 74, 74, 0.02) 57.144%,
-      rgba(74, 74, 74, 0.02) 71.42999999999999%,
-      rgba(201, 201, 201, 0.02) 71.43%,
-      rgba(201, 201, 201, 0.02) 85.71600000000001%,
-      rgba(187, 187, 187, 0.02) 85.716%,
-      rgba(187, 187, 187, 0.02) 100.002%
-    ),
-    linear-gradient(
-      257deg,
-      rgba(72, 72, 72, 0.03) 0%,
-      rgba(72, 72, 72, 0.03) 16.667%,
-      rgba(138, 138, 138, 0.03) 16.667%,
-      rgba(138, 138, 138, 0.03) 33.334%,
-      rgba(54, 54, 54, 0.03) 33.334%,
-      rgba(54, 54, 54, 0.03) 50.001000000000005%,
-      rgba(161, 161, 161, 0.03) 50.001%,
-      rgba(161, 161, 161, 0.03) 66.668%,
-      rgba(17, 17, 17, 0.03) 66.668%,
-      rgba(17, 17, 17, 0.03) 83.33500000000001%,
-      rgba(230, 230, 230, 0.03) 83.335%,
-      rgba(230, 230, 230, 0.03) 100.002%
-    ),
-    linear-gradient(
-      47deg,
-      rgba(191, 191, 191, 0.01) 0%,
-      rgba(191, 191, 191, 0.01) 16.667%,
-      rgba(27, 27, 27, 0.01) 16.667%,
-      rgba(27, 27, 27, 0.01) 33.334%,
-      rgba(66, 66, 66, 0.01) 33.334%,
-      rgba(66, 66, 66, 0.01) 50.001000000000005%,
-      rgba(36, 36, 36, 0.01) 50.001%,
-      rgba(36, 36, 36, 0.01) 66.668%,
-      rgba(230, 230, 230, 0.01) 66.668%,
-      rgba(230, 230, 230, 0.01) 83.33500000000001%,
-      rgba(93, 93, 93, 0.01) 83.335%,
-      rgba(93, 93, 93, 0.01) 100.002%
-    ),
-    linear-gradient(90deg, #fff, #fff);
+  background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    url(https://images.unsplash.com/photo-1483808161634-29aa1b0e585e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80);
   /* background: url(../../images/photo-1515378791036-0648a3ef77b2.jpg); */
   background-repeat: no-repeat;
   background-size: cover;
-  z-index: 4;
+  background-position: bottom;
+  background-attachment: fixed;
+  background-blend-mode: darken;
 }
 .home-bg {
   background: #f7f7f7;
   box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 }
 .header-item {
-  height: 30%;
-  width: 50%;
-  margin: 10em auto;
+  height: auto;
+  width: auto;
+  margin: 7em auto;
 }
 .home-content {
   margin: auto;
@@ -175,6 +101,8 @@
   box-sizing: border-box;
   padding-top: 50px;
   z-index: 1;
+  text-align: center;
+  padding-bottom: 50px;
 }
 .home-extra {
   height: 600px;
@@ -205,6 +133,7 @@
   border: none;
   background: none;
   color: #017a84;
+  transition: 1s;
 }
 
 .preview-episode {
@@ -215,7 +144,7 @@
   font-weight: 900;
   font-size: 18px;
   color: white;
-  text-shadow: 2px 2px black;
+  text-shadow: 2px 2px 2px #017a84;
 }
 .preview-thumbnail {
   height: 70%;
@@ -229,7 +158,9 @@
 }
 .preview-title {
   margin-left: 5px;
-  font-family: "Poppins", sans-serif;
+  margin-bottom: 0;
+  /* font-family: "Poppins", sans-serif; */
+  font-weight: 900;
   font-size: 14px;
   text-align: start;
 }
@@ -239,18 +170,26 @@
 }
 .preview-author {
   font-family: "Poppins", sans-serif;
-  font-size: 10px;
-  margin-right: 10px;
+  font-size: 12px;
+  display: inline;
+  margin-bottom: 0;
+  margin: 0;
+  padding-left: 5px;
 }
-
+.preview-views {
+  font-size: 12px;
+  display: inline;
+  margin: 0;
+}
 .tombol {
   border: 3px solid #017a84;
+  font-family: "montserrat";
   background: none;
   border-radius: 10px;
   font-weight: bold;
-  letter-spacing: 2px;
+  letter-spacing: 3px;
   height: 40px;
-  width: 150px;
+  width: 200px;
   color: #017a84;
   margin-top: 40px;
   font-size: 20px;
@@ -263,10 +202,6 @@
 .tombol:hover {
   background: #017a84;
   color: white;
-}
-.home-content {
-  text-align: center;
-  padding-bottom: 50px;
 }
 
 .previewbox {
@@ -284,6 +219,7 @@
   }
 }
 .preview {
+  text-align: left;
   height: 180px;
   background: white;
   box-sizing: border-box;
@@ -303,7 +239,8 @@
 }
 .preview:hover {
   cursor: pointer;
-  box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.6);
+  transition-duration: 0.5s;
 }
 .linkaja {
   text-decoration: none;

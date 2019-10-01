@@ -7,6 +7,7 @@ import { connect } from "react-redux";
 
 import Home from "./components/Home";
 import About from "./components/About";
+import Browse from "./components/Browse/browse";
 import Contact from "./components/Contact";
 import Register from "./components/Register";
 import Login from "./components/Login";
@@ -47,6 +48,7 @@ class App extends Component {
           <Redirect exact path="/" to="/Home" />
           <Route path="/Home" component={Home} />
           <Route path="/About" component={About} />
+          <Route path="/Browse" component={Browse} />
           <Route path="/Contact" component={Contact} />
           <Route path="/Register" component={Register} />
           <Route path="/Login" component={Login} />

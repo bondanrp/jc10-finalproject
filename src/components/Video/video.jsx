@@ -16,15 +16,22 @@ export class Video extends Component {
   };
   componentDidMount() {
     this.getData();
+    this.addView();
   }
   componentDidUpdate() {
     if (this.state.refresh) {
       this.getData();
+      this.addView();
     }
   }
+  addView = () => {
+    Axios.put(urlApi + "view", { id: this.props.match.params.id }).then(
+      this.setState({ refresh: false, loading: false })
+    );
+  };
   getData = () => {
     Axios.get(urlApi + "getvideo/" + this.props.match.params.id).then(res => {
-      this.setState({ data: res.data[0], refresh: false, loading: false });
+      this.setState({ data: res.data[0] });
       // NEXT EPISODE
       Axios.get(urlApi + "getepisode", {
         params: {
@@ -64,18 +71,24 @@ export class Video extends Component {
               this.setState({ refresh: true, loading: true });
             }}
             to={`/${val.author}/${val.title}/${val.id}`}
-            className="linkaja preview"
+            className="linkaja related-preview"
           >
             <div
               style={{
                 background: `url(${val.thumbnail})`
               }}
-              className="preview-thumbnail"
+              className="related-preview-thumbnail"
             >
               <div className="preview-episode">Eps #{val.episode}</div>
             </div>
-            <p className="text-capitalize preview-title">{val.title}</p>
-            <p className="preview-author text-left">@{val.author}</p>
+            <div className="ml-2">
+              <p className="text-capitalize preview-title">
+                {val.title} Episode {val.episode}
+              </p>
+              <p className="preview-author">{val.author}</p>
+              <br />
+              <p className="preview-views ml-1">{val.views} views</p>
+            </div>
           </Link>
         );
       } else {
@@ -135,17 +148,23 @@ export class Video extends Component {
         <div className="gray-background">
           <div className="video-container">
             <div className="video-main">
-              <hr />
               <iframe
                 title={this.state.data.title}
-                width="560"
-                height="315"
+                width="640"
+                height="480"
                 src={this.state.data.video}
                 frameborder="0"
                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen
               ></iframe>
-              <hr />
+            </div>
+            <div>
+              <div className="video-episodes">
+                <div>{this.prevEps()}</div>
+                <div className="text-right">{this.nextEps()}</div>
+              </div>
+            </div>
+            <div className="video-text">
               <h1 className="video-title">
                 {this.state.data.title} Episode #{this.state.data.episode}
               </h1>
@@ -155,16 +174,11 @@ export class Video extends Component {
               >
                 @{this.state.data.author}
               </Link>
+              <h6>{this.state.data.views + 1} views</h6>
               <p className="video-desc">{this.state.data.description}</p>
-              <div className="video-episodes my-5">
-                <div>{this.prevEps()}</div>
-                <div className="text-right">{this.nextEps()}</div>
-              </div>
             </div>
             <div className="video-related">
-              <hr />
               <h4>Related Videos</h4>
-              <hr />
               <div className="video-list">{this.renderRelated()}</div>
             </div>
           </div>

@@ -79,26 +79,31 @@ export class Home extends Component {
     } else if (this.state.loading) {
       return <div className="home-loading"></div>;
     } else {
-      let render = this.state.preview.map(val => {
-        return (
-          <div
-            onClick={() => {
-              this.goToVideo(val.author, val.title, val.id);
-            }}
-            className="preview"
-          >
+      let render = this.state.preview.map((val, idx) => {
+        if (idx < 10) {
+          return (
             <div
-              style={{
-                background: `url(${val.thumbnail})`
+              onClick={() => {
+                this.goToVideo(val.author, val.title, val.id);
               }}
-              className="preview-thumbnail"
+              className="preview"
             >
-              <div className="preview-episode">Eps #{val.episode}</div>
+              <div
+                style={{
+                  background: `url(${val.thumbnail})`
+                }}
+                className="preview-thumbnail"
+              >
+                <div className="preview-episode">Eps #{val.episode}</div>
+              </div>
+              <p className="text-capitalize preview-title">{val.title}</p>
+              <p className="preview-author">{val.author} • </p>
+              <p className="preview-views">{val.views} views</p>
             </div>
-            <p className="text-capitalize preview-title">{val.title}</p>
-            <p className="preview-author text-left">@{val.author}</p>
-          </div>
-        );
+          );
+        } else {
+          return null;
+        }
       });
 
       return render;
@@ -110,8 +115,7 @@ export class Home extends Component {
       let kondisi = this.state.category === val;
 
       return (
-        <React.Fragment>
-          |{" "}
+        <React.Fragment key={val}>
           <button
             onClick={this.setCategory}
             className={
@@ -141,16 +145,20 @@ export class Home extends Component {
           <main id="mainContent">
             <div className="text-center header">
               <div className="header-item">
-                <h1 className="judul-products">Kursus Lah</h1>
+                <div className="judul-products">
+                  <h1>Bagi Bakat</h1>
+                  <h5>
+                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
+                    Impedit, suscipit?
+                  </h5>
+                </div>
                 <p className="desc-products"></p>
               </div>
             </div>
             <div className="home-bg">
               <div className="home-content">
-                <h2 className="products-title font-italic">
-                  Akses Kelas Tidak Terbatas
-                </h2>
-                <h6>{this.renderCategory()}|</h6>
+                <h2 className="products-title">Akses Kelas Tidak Terbatas</h2>
+                <h6>{this.renderCategory()}</h6>
                 <div className="d-flex justify-content-center">
                   <div className="previewbox my-2">{this.renderPreview()}</div>
                 </div>
@@ -160,7 +168,14 @@ export class Home extends Component {
               </div>
             </div>
             <div className="home-extra">
-              <h2 className="products-title font-italic">Mengapa Kursus Lah</h2>
+              <h2 className="products-title">
+                Mengapa <span className="judul-brand">Bagi Bakat</span>
+              </h2>
+              <div className="product-desc">
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
             </div>
           </main>
         </React.Fragment>

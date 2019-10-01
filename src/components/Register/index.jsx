@@ -47,37 +47,6 @@ class Register extends Component {
     event.preventDefault();
   };
   onRegisterClick = () => {
-    if (this.validateForm()) {
-      let { username, email } = this.state;
-      axios
-        .get(urlApiUser + "getusername", {
-          params: {
-            username: username
-          }
-        })
-        .then(res => {
-          if (res.data.length === 0) {
-            axios
-              .get(urlApiUser + "getuseremail", {
-                params: {
-                  email: email
-                }
-              })
-              .then(res => {
-                if (res.data.length === 0) {
-                  this.handleRegistration();
-                } else {
-                  swal.fire("Sorry", "Email already registered", "error");
-                }
-              });
-          } else {
-            swal.fire("Sorry!", "Username already taken!", "error");
-          }
-        });
-    }
-  };
-
-  handleRegistration = () => {
     let { username, email, lastname, firstname } = this.state;
     let password = encrypt(this.state.password);
     let input = {
@@ -87,19 +56,22 @@ class Register extends Component {
       firstname: firstname,
       lastname: lastname
     };
-    axios
-      .post(urlApiUser + "registeruser", input)
-      .then(res => {
-        swal.fire(
-          "Account Created!",
-          `Please <a href='/login'>Log In</a> to continue shopping`,
-          "success"
-        );
-        this.props.history.push("/login");
-      })
-      .catch(err => {
-        alert("error woi");
-      });
+    if (this.validateForm()) {
+      axios
+        .post(urlApiUser + "registeruser", input)
+        .then(res => {
+          if (res.data.status === "400") {
+            let errMsg = res.data.message;
+            swal.fire("Error", errMsg, "error");
+          } else if (res.data.status === "201") {
+            console.log(res);
+            swal.fire("Account Created!", `${res.data.message}`, "success");
+          }
+        })
+        .catch(err => {
+          alert("Server Error");
+        });
+    }
   };
 
   render() {

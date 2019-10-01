@@ -1,6 +1,5 @@
 ﻿import React, { Component } from "react";
 import { withRouter, Link } from "react-router-dom";
-import styles from "./navbar.module.css";
 import "./navbar.css";
 import { connect } from "react-redux";
 import swal from "sweetalert2";
@@ -187,13 +186,10 @@ class NavBar extends Component {
     const anim = this.state.toggleBurger ? "burger change" : "burger";
     return (
       <React.Fragment>
-        <div className={styles.skipLink}>
-          <a href="#mainContent">Skip to Main Content</a>
-        </div>
         <div className="navBar">
           <div className=" nav1">
             <Link className="judul" to="/">
-              Kursus Lah
+              Bagi Bakat
             </Link>
           </div>
           <div className={hilang}>
