@@ -1,2 +1,2 @@
-untuk sementara pakai
-json-server -p 2019 ./src/database/db.json
+menggunakan schema dari data.sql
+port 3307

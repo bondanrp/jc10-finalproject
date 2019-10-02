@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import "./profile.css";
 import { Link } from "react-router-dom";
 import swal from "sweetalert2";
+import { updateProfile } from "../../actions/updateprofile/updateprofile";
 
 const urlApi = "http://localhost:3001/";
 
@@ -13,9 +14,11 @@ export class Profile extends Component {
     videos: [],
     teacher: [],
     isSubscribed: [],
+    username: "",
     refresh: false,
     loading: true,
     subscribedTo: [],
+    subscribers: 0,
     loggedUser: "",
     edit: false,
     selectedFile: null,
@@ -25,7 +28,8 @@ export class Profile extends Component {
     this.getData();
   }
   componentDidUpdate() {
-    if (this.state.refresh) {
+    // refresh page biar sesuai
+    if (this.props.match.params.username !== this.state.username) {
       this.getData();
     }
   }
@@ -37,7 +41,14 @@ export class Profile extends Component {
       }
     })
       .then(res => {
-        this.setState({ data: res.data, profpict: res.data[0].profilepict });
+        this.setState({
+          data: res.data,
+          profpict: res.data[0].profilepict,
+          username: res.data[0].username
+        });
+        Axios.get(urlApi + `countsubscribers/${res.data[0].id}`).then(res => {
+          this.setState({ subscribers: res.data[0].subscribers });
+        });
         //check if user is subscribed
         Axios.get(urlApi + "issubscribed", {
           params: { userid: this.props.id, targetid: this.state.data[0].id }
@@ -154,19 +165,25 @@ export class Profile extends Component {
   };
   onSubmit = () => {
     var fd = new FormData();
-    fd.append("aneh", this.state.selectedFile, this.state.selectedFile.name);
+    fd.append(
+      "profpict",
+      this.state.selectedFile,
+      this.state.selectedFile.name
+    );
+    fd.append(
+      "data",
+      JSON.stringify({
+        username: this.props.username
+      })
+    );
     Axios.post(urlApi + "uploadimage", fd).then(res => {
       let menjadi = urlApi + "files/" + res.data.filename;
-      Axios.put(urlApi + "updatedp", {
-        profilepict: menjadi,
-        username: this.props.username
-      }).then(res => {
-        this.setState({
-          edit: false,
-          profpict: menjadi
-        });
-        swal.fire("Success", "Profile Updated!", "success");
+      this.setState({
+        edit: false,
+        profpict: menjadi
       });
+      swal.fire("Success", "Profile Updated!", "success");
+      this.props.updateProfile(menjadi);
     });
   };
   subscribeButton = () => {
@@ -289,6 +306,10 @@ export class Profile extends Component {
                 <span>
                   @{val.username} | {val.role}
                 </span>
+                <br />
+                <span style={{ fontSize: "12px" }}>
+                  {this.state.subscribers} subscribers
+                </span>
               </div>
             </div>
             {this.subscribeButton()}
@@ -369,5 +390,5 @@ const mapStateToProps = state => {
 };
 export default connect(
   mapStateToProps,
-  null
+  { updateProfile }
 )(Profile);

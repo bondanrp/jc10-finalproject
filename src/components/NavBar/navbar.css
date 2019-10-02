@@ -151,3 +151,28 @@
 .terms:hover {
   text-decoration: underline;
 }
+.notifications {
+  width: 400px;
+}
+.notifications > .notification-content > div:hover {
+  background: #f7f7f7;
+}
+.notifications > .notification-content:hover {
+  text-decoration: none !important;
+}
+.notifications > .notification-content > div {
+  font-family: "poppins";
+  font-weight: 200;
+  color: black;
+  box-sizing: border-box;
+  padding-left: 15px;
+  padding-right: 15px;
+  border: 1px solid rgba(70, 70, 70, 0.1);
+}
+.notification-time {
+  padding-top: 10px;
+  font-family: "poppins";
+  font-weight: 200;
+  text-align: right;
+  font-size: 12px;
+}

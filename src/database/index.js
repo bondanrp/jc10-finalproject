@@ -92,7 +92,7 @@ module.exports = {
   },
   getTeacher: (req, res) => {
     db.query(
-      `select * from users where role = 'teacher' order by rand()`,
+      `select p.profilepict, p.firstname,p.lastname,p.username,f.category from users p join uploads f on p.username=f.author group by p.username order by rand()`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -177,9 +177,19 @@ module.exports = {
       }
     );
   },
+  searchTeachers: (req, res) => {
+    db.query(
+      `select p.username, p.profilepict, p.firstname, p.lastname, f.category from (users p join uploads f on p.username = f.author) 
+      where p.role = 'teacher' and p.username like '%${req.query.search}%' or p.firstname like '%${req.query.search}%' or p.lastname like '%${req.query.search}%' or f.category like '%${req.query.search}%' group by p.username`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
   getVideo: (req, res) => {
     db.query(
-      `select * from uploads where id = ${req.params.id}`,
+      `select j.*, f.id as posterid from uploads j join users f on j.author = f.username where j.id = ${req.params.id}`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -204,7 +214,62 @@ module.exports = {
       }
     );
   },
-
+  getComments: (req, res) => {
+    db.query(
+      `select j.id,f.id as video_id, f.title,p.role, p.profilepict, p.username, j.comment, j.timestamp 
+      from comments j join users p on p.id = j.user_id join uploads f on f.id = j.video_id where j.video_id = '${req.query.id}' order by timestamp desc`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  postComment: (req, res) => {
+    db.query(
+      `insert into comments values (0,'${req.body.videoid}','${req.body.userid}','${req.body.comment}',CURRENT_TIMESTAMP)`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  sendCommentNotification: (req, res) => {
+    let link = req.headers.referer.replace("http://localhost:3000/", "");
+    db.query(
+      `insert into notifications values(0,'${req.body.targetid}','${link}','@${req.body.username} just commented on ${req.body.title} #${req.body.episode} "${req.body.comment}"', CURRENT_TIMESTAMP)`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  getNotifications: (req, res) => {
+    db.query(
+      `select * from notifications where user_id = '${req.params.id}' order by timestamp desc`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  deleteNotification: (req, res) => {
+    db.query(
+      `delete from notifications where id = '${req.params.id}'`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  deleteComment: (req, res) => {
+    db.query(
+      `delete from comments where id = '${req.params.id}'`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
   uploadVideo: (req, res) => {
     db.query(
       `insert into uploads values (0,'${req.body.title}','${req.body.episode}','${req.body.thumbnail}', '${req.body.video}','${req.body.description}','${req.body.author}','${req.body.category}')`,
@@ -235,6 +300,15 @@ module.exports = {
   getSubscription: (req, res) => {
     db.query(
       `SELECT p.id, f.username, j.* FROM users p INNER JOIN subscription pf ON pf.user_id = p.id INNER JOIN users f ON f.id = pf.subscribe_id inner join uploads j on f.username = j.author where p.id = '${req.params.id}' order by j.id desc`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  countSubscribers: (req, res) => {
+    db.query(
+      `select count(user_id) as subscribers,subscribe_id from subscription where subscribe_id='${req.params.id}'`,
       (err, result) => {
         if (err) throw err;
         res.send(result);

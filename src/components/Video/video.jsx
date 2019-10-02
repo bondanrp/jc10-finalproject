@@ -3,6 +3,7 @@ import Axios from "axios";
 import "./video.css";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import Swal from "sweetalert2";
 
 let urlApi = "http://localhost:3001/";
 export class Video extends Component {
@@ -12,16 +13,18 @@ export class Video extends Component {
     nextData: [],
     prevData: [],
     refresh: false,
-    loading: true
+    loading: true,
+    comment: "",
+    comments: []
   };
   componentDidMount() {
     this.getData();
-    this.addView();
   }
   componentDidUpdate() {
     if (this.state.refresh) {
       this.getData();
-      this.addView();
+      console.log(this.props.match.params.id);
+      console.log(this.state.data.id);
     }
   }
   addView = () => {
@@ -31,7 +34,7 @@ export class Video extends Component {
   };
   getData = () => {
     Axios.get(urlApi + "getvideo/" + this.props.match.params.id).then(res => {
-      this.setState({ data: res.data[0] });
+      this.setState({ data: res.data[0], refresh: false });
       // NEXT EPISODE
       Axios.get(urlApi + "getepisode", {
         params: {
@@ -40,28 +43,132 @@ export class Video extends Component {
         }
       }).then(res => {
         this.setState({ nextData: res.data[0] });
-      });
-      // PREVIOUS EPISODE
-      Axios.get(urlApi + "getepisode", {
-        params: {
-          title: this.state.data.title,
-          episode: parseInt(this.state.data.episode) - 1
-        }
-      }).then(res => {
-        this.setState({ prevData: res.data[0] });
-      });
-      // RELATED VIDEOS
-      Axios.get(urlApi + "getrelatedvideos", {
-        params: { category: res.data[0].category }
-      }).then(res => {
-        let filter = res.data.filter(val => {
-          return val.id !== this.state.data.id;
+        // PREVIOUS EPISODE
+        Axios.get(urlApi + "getepisode", {
+          params: {
+            title: this.state.data.title,
+            episode: parseInt(this.state.data.episode) - 1
+          }
+        }).then(res => {
+          this.setState({ prevData: res.data[0] });
+          // RELATED VIDEOS
+          Axios.get(urlApi + "getrelatedvideos", {
+            params: { category: this.state.data.category }
+          }).then(res => {
+            let filter = res.data.filter(val => {
+              return val.id !== this.state.data.id;
+            });
+            this.setState({ related: filter });
+            // GET COMMENTS
+            Axios.get(urlApi + "getcomments", {
+              params: {
+                id: this.props.match.params.id
+              }
+            }).then(res => {
+              this.setState({ comments: res.data });
+              this.addView();
+            });
+          });
         });
-        this.setState({ related: filter });
       });
     });
   };
 
+  timeSince(date) {
+    var seconds = Math.floor((new Date() - date) / 1000);
+    var interval = Math.floor(seconds / 31536000);
+    if (interval >= 1) {
+      return interval + " years ago";
+    }
+    interval = Math.floor(seconds / 2592000);
+    if (interval >= 1) {
+      return interval + " months ago";
+    }
+    interval = Math.floor(seconds / 86400);
+    if (interval >= 1) {
+      return interval + " days ago";
+    }
+    interval = Math.floor(seconds / 3600);
+    if (interval >= 1) {
+      return interval + " hours ago";
+    }
+    interval = Math.floor(seconds / 60);
+    if (interval >= 1) {
+      return interval + " minutes ago";
+    } else {
+      return "just now";
+    }
+  }
+
+  renderComments = () => {
+    let render = this.state.comments.map(val => {
+      var t = val.timestamp.split(/[- T Z :]/);
+      var d = new Date(Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4], t[5]));
+      var date = this.timeSince(d);
+
+      return (
+        <div className="comment-box">
+          <Link to={`/${val.username}`} className="linkaja">
+            <div className="comment-header">
+              <img src={val.profilepict} alt="" />
+              <p>@{val.username}</p>
+              <p>{val.role}</p>
+            </div>
+          </Link>
+          <div className="comment-content">
+            <p>{val.comment}</p>
+            <p>{date}</p>
+            {this.props.username === val.username ? (
+              <button
+                className="delete-comment"
+                onClick={() => {
+                  this.onDeleteComment(val.id);
+                }}
+              >
+                X
+              </button>
+            ) : null}
+          </div>
+        </div>
+      );
+    });
+    return render;
+  };
+
+  onDeleteComment = id => {
+    const swalWithButtons = Swal.mixin({
+      customClass: {
+        confirmButton: "confirm-button",
+        cancelButton: "cancel-button"
+      },
+      buttonsStyling: false
+    });
+
+    swalWithButtons
+      .fire({
+        title: "Are you sure?",
+        text: "You won't be able to revert this!",
+        // type: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, cancel!",
+        reverseButtons: true
+      })
+      .then(result => {
+        if (result.value) {
+          Axios.delete(urlApi + `deletecomment/${id}`).then(res => {
+            swalWithButtons.fire("Deleted!", "Your comment has been deleted.");
+            Axios.get(urlApi + "getcomments", {
+              params: {
+                id: this.props.match.params.id
+              }
+            }).then(res => {
+              this.setState({ comments: res.data });
+            });
+          });
+        }
+      });
+  };
   renderRelated = () => {
     let render = this.state.related.map((val, idx) => {
       if (idx < 8) {
@@ -134,52 +241,122 @@ export class Video extends Component {
       );
     }
   };
+  handleSubmit = event => {
+    if (this.state.comment) {
+      Axios.post(urlApi + "postcomment", {
+        videoid: this.props.match.params.id,
+        userid: this.props.id,
+        comment: this.state.comment
+      }).then(res => {
+        Axios.post(urlApi + "sendcommentnotification", {
+          targetid: this.state.data.posterid,
+          comment: this.state.comment,
+          title: this.state.data.title,
+          episode: this.state.data.episode,
+          username: this.props.username
+        }).then(res => {
+          this.setState({ comment: "" });
+          Axios.get(urlApi + "getcomments", {
+            params: {
+              id: this.props.match.params.id
+            }
+          }).then(res => {
+            this.setState({ comments: res.data });
+          });
+        });
+      });
+    }
+
+    event.preventDefault();
+  };
   render() {
     if (this.state.loading) {
       return (
         <div className="gray-background">
-          <div className="video-loading">
-            <div className="video-loading-icon"></div>
+          <div className="video-container-container">
+            <div className="video-container">
+              <div className="video-main"></div>
+              <div className="video-episodes"></div>
+              <div className="video-text"></div>
+              <div></div>
+            </div>
+            <div>
+              <div className="video-related">
+                <div className="related-video">
+                  <h4>Related Videos</h4>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       );
     } else {
       return (
         <div className="gray-background">
-          <div className="video-container">
-            <div className="video-main">
-              <iframe
-                title={this.state.data.title}
-                width="640"
-                height="480"
-                src={this.state.data.video}
-                frameborder="0"
-                allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen
-              ></iframe>
+          <div className="video-container-container">
+            <div className="video-container">
+              <div className="video-main">
+                <iframe
+                  title={this.state.data.title}
+                  width="640"
+                  height="480"
+                  src={this.state.data.video}
+                  frameborder="0"
+                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              </div>
+              <div>
+                <div className="video-episodes">
+                  <div>{this.prevEps()}</div>
+                  <div className="text-right">{this.nextEps()}</div>
+                </div>
+              </div>
+              <div className="video-text">
+                <h1 className="video-title">
+                  {this.state.data.title} Episode #{this.state.data.episode}
+                </h1>
+                <Link
+                  to={`/${this.state.data.author}`}
+                  className="video-author text-left"
+                >
+                  @{this.state.data.author}
+                </Link>
+                <h6>{this.state.data.views + 1} views</h6>
+                <p className="video-desc">{this.state.data.description}</p>
+              </div>
+              <div className="video-comment-input">
+                <div>
+                  <img src={this.props.profilepict} alt="" />
+                  <p>@{this.props.username}</p>
+                  <p>{this.props.role}</p>
+                </div>
+                <form>
+                  <input
+                    type="text"
+                    placeholder="Add a comment"
+                    value={this.state.comment}
+                    maxLength="140"
+                    onChange={e => {
+                      this.setState({
+                        comment: e.target.value
+                      });
+                    }}
+                  />
+                  <div className="text-right">
+                    <button onClick={this.handleSubmit}>Submit</button>
+                  </div>
+                </form>
+              </div>
+              {this.renderComments()}
             </div>
             <div>
-              <div className="video-episodes">
-                <div>{this.prevEps()}</div>
-                <div className="text-right">{this.nextEps()}</div>
+              <div className="video-related">
+                <div className="related-video">
+                  <h4>Related Videos</h4>
+                </div>
+                <div className="video-list">{this.renderRelated()}</div>
               </div>
-            </div>
-            <div className="video-text">
-              <h1 className="video-title">
-                {this.state.data.title} Episode #{this.state.data.episode}
-              </h1>
-              <Link
-                to={`/${this.state.data.author}`}
-                className="video-author text-left"
-              >
-                @{this.state.data.author}
-              </Link>
-              <h6>{this.state.data.views + 1} views</h6>
-              <p className="video-desc">{this.state.data.description}</p>
-            </div>
-            <div className="video-related">
-              <h4>Related Videos</h4>
-              <div className="video-list">{this.renderRelated()}</div>
             </div>
           </div>
         </div>
@@ -190,7 +367,10 @@ export class Video extends Component {
 
 const mapStateToProps = state => {
   return {
-    username: state.auth.username
+    username: state.auth.username,
+    profilepict: state.auth.profilepict,
+    id: state.auth.id,
+    role: state.auth.role
   };
 };
 export default connect(mapStateToProps)(Video);

@@ -5,6 +5,8 @@ var bodyParser = require("body-parser");
 var cors = require("cors");
 const port = 3001;
 var multer = require("multer");
+var fs = require("fs");
+var mysql = require("mysql");
 const {
   verify,
   updateDP,
@@ -20,11 +22,19 @@ const {
   getVideo,
   getEpisode,
   getUserVideos,
+  getComments,
+  postComment,
+  sendCommentNotification,
+  getNotifications,
+  deleteNotification,
+  deleteComment,
   search,
+  searchTeachers,
   uploadVideo,
   getCategories,
   getPreview,
   getSubscription,
+  countSubscribers,
   subscribedTeachers,
   isSubscribed,
   subscribe,
@@ -32,6 +42,13 @@ const {
   view
 } = require("./src/database/index");
 
+const db = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "assalamualaikum",
+  database: "jc10_finalproject",
+  port: 3307
+});
 app.use(bodyParser.json());
 app.use(cors());
 app.use("/files", express.static("./src/database/uploads"));
@@ -57,13 +74,21 @@ app.get("/getvideo/:id", getVideo);
 app.get("/getepisode", getEpisode);
 app.get("/getrelatedvideos/", getRelatedVideos);
 app.get("/getuservideos", getUserVideos);
+app.get("/getcomments", getComments);
+app.post("/postcomment", postComment);
+app.post("/sendcommentnotification", sendCommentNotification);
+app.get("/getnotifications/:id", getNotifications);
+app.delete("/deletenotification/:id", deleteNotification);
+app.delete("/deletecomment/:id", deleteComment);
 app.get("/uploadvideo", uploadVideo);
 app.get("/getcategories", getCategories);
 app.get("/getpreview", getPreview);
 app.get("/search", search);
+app.get("/searchteachers", searchTeachers);
 
 // subscription db
 app.get("/getsubscription/:id", getSubscription);
+app.get("/countsubscribers/:id", countSubscribers);
 app.get("/subscribedTeachers", subscribedTeachers);
 app.get("/issubscribed", isSubscribed);
 app.post("/subscribe", subscribe);
@@ -97,9 +122,24 @@ let upload = multer({
   fileFilter: filterConfig
 });
 
-app.post("/uploadimage", upload.single("aneh"), (req, res) => {
-  console.log(req.file.destination + "/" + req.file.filename);
-  res.send(req.file);
+app.post("/uploadimage", upload.single("profpict"), (req, res) => {
+  try {
+    if (req.validation) throw req.validation;
+    if ((req.file, req.file.size > 5000000))
+      throw { error: true, message: "file size exceeds the maximum limit" };
+    let data = JSON.parse(req.body.data);
+    db.query(
+      `update users set profilepict = '${"http://localhost:3001/files/" +
+        req.file.filename}' where username = '${data.username}'`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(req.file);
+      }
+    );
+  } catch (error) {
+    fs.unlinkSync(req.file.path);
+    console.log(error);
+  }
 });
 
 // mail

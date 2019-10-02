@@ -11,10 +11,126 @@ import {
   DropdownMenu,
   DropdownItem
 } from "reactstrap";
+import Axios from "axios";
+
+const urlApi = "http://localhost:3001/";
 
 class NavBar extends Component {
-  state = { toggleBurger: false, dropdownOpen: false };
-
+  state = {
+    toggleBurger: false,
+    dropdownOpen: false,
+    notificationOpen: false,
+    notifications: []
+  };
+  toggleDropdown = () => {
+    this.setState(prevState => ({
+      dropdownOpen: !prevState.dropdownOpen
+    }));
+  };
+  toggleNotification = () => {
+    this.setState(prevState => ({
+      notificationOpen: !prevState.notificationOpen
+    }));
+  };
+  timeSince(date) {
+    var seconds = Math.floor((new Date() - date) / 1000);
+    var interval = Math.floor(seconds / 31536000);
+    if (interval >= 1) {
+      return interval + " years ago";
+    }
+    interval = Math.floor(seconds / 2592000);
+    if (interval >= 1) {
+      return interval + " months ago";
+    }
+    interval = Math.floor(seconds / 86400);
+    if (interval >= 1) {
+      return interval + " days ago";
+    }
+    interval = Math.floor(seconds / 3600);
+    if (interval >= 1) {
+      return interval + " hours ago";
+    }
+    interval = Math.floor(seconds / 60);
+    if (interval >= 1) {
+      return interval + " minutes ago";
+    } else {
+      return "just now";
+    }
+  }
+  getNotificationData = () => {
+    Axios.get(urlApi + `getnotifications/${this.props.id}`).then(res => {
+      if (res.data.length > 0) {
+        this.setState({ notifications: res.data });
+      } else {
+        this.setState({ notifications: "no notification" });
+      }
+    });
+  };
+  mapNotification = () => {
+    if (this.state.notifications === "no notification") {
+      return <div className="text-center">No notifications to show</div>;
+    } else if (this.state.notifications.length > 0) {
+      let render = this.state.notifications.map(val => {
+        var t = val.timestamp.split(/[- T Z :]/);
+        var d = new Date(Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4], t[5]));
+        var date = this.timeSince(d);
+        return (
+          <Link
+            to={`/${val.link}`}
+            className="notification-content"
+            onClick={() => {
+              Axios.delete(urlApi + `deleteNotification/${val.id}`).then(
+                res => {
+                  this.getNotificationData();
+                }
+              );
+            }}
+          >
+            <div>
+              {val.content}
+              <div className="notification-time">{date}</div>
+            </div>
+          </Link>
+        );
+      });
+      return render;
+    } else {
+      return <div>loading</div>;
+    }
+  };
+  renderNotification = () => {
+    return (
+      <Dropdown
+        isOpen={this.state.notificationOpen}
+        toggle={this.toggleNotification}
+        className="mr-2"
+        onClick={this.getNotificationData}
+      >
+        <DropdownToggle
+          tag="span"
+          data-toggle="dropdown"
+          aria-expanded={this.state.notificationOpen}
+        >
+          <div className="userIcon">
+            <img
+              src={this.props.profilepict}
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                overflow: "hidden",
+                borderRadius: "50%"
+              }}
+              alt=""
+            />
+          </div>
+        </DropdownToggle>
+        <DropdownMenu right className="notifications">
+          {this.mapNotification()}
+        </DropdownMenu>
+      </Dropdown>
+    );
+  };
   dropDown = () => {
     if (this.props.role === "user") {
       return (
@@ -66,11 +182,11 @@ class NavBar extends Component {
           >
             <div className="userIcon">
               <img
-                src={userIcon}
+                src={this.props.profilepict}
                 style={{
                   width: "100%",
                   height: "100%",
-                  objectFit: "contain",
+                  objectFit: "cover",
                   overflow: "hidden",
                   borderRadius: "50%"
                 }}
@@ -164,11 +280,6 @@ class NavBar extends Component {
     }
   };
 
-  toggleDropdown = () => {
-    this.setState(prevState => ({
-      dropdownOpen: !prevState.dropdownOpen
-    }));
-  };
   logOut = () => {
     this.props.onLogOutUser();
     swal.fire("Success!", "User successfuly logged out", "success");
@@ -216,6 +327,7 @@ class NavBar extends Component {
             </Link>
           </div>
           <div className="nav3">
+            {this.props.username ? this.renderNotification() : null}
             {this.dropDown()}
             <div className={anim} onClick={this.burgerToggle}>
               <div className="bar1"></div>
@@ -233,7 +345,8 @@ const mapStateToProps = state => {
   return {
     username: state.auth.username,
     role: state.auth.role,
-    profilepict: state.auth.profilepict
+    profilepict: state.auth.profilepict,
+    id: state.auth.id
   };
 };
 export default withRouter(

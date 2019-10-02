@@ -41,6 +41,12 @@
 .browse-search > form > input:focus {
   border: 2px solid #017a84;
 }
+.browse-search > form > input:focus ~ button {
+  background: #017a84;
+  color: white;
+  transition: 0.2s;
+}
+
 .browse-search > form > input {
   font-family: "poppins";
   margin: 10px auto;
@@ -50,7 +56,7 @@
   height: 30px;
   padding-left: 10px;
   width: 80%;
-  transition: 1s;
+  transition: 0.2s;
 }
 .browse-nav {
   display: grid;
@@ -90,7 +96,7 @@
 .browse-content {
   display: grid;
   grid-template-columns: repeat(5, 200px);
-  grid-template-rows: 70px, repeat(2, 180px);
+  grid-template-rows: 70px, repeat(2, 200px);
   column-gap: 20px;
   row-gap: 20px;
   padding-top: 20px;
@@ -144,4 +150,53 @@
 .browse-profile:hover {
   background: #017a84;
   color: white;
+}
+.show-more {
+  grid-column: 1/-1;
+  text-align: center;
+}
+.show-more:hover {
+  cursor: pointer;
+  transform: scale(1.1, 1.1);
+  transition: 0.2s;
+}
+.browse-dp {
+  height: 100px;
+  width: 100px;
+  margin: auto;
+  margin-top: 20px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.browse-user-icon {
+  height: 200px;
+  background: white;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+  color: black;
+}
+.browse-user-icon:hover {
+  cursor: pointer;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.6);
+  transition-duration: 0.5s;
+}
+.browse-user-icon > p {
+  margin: 0;
+}
+.browse-preview {
+  text-align: left;
+  height: 200px;
+  background: white;
+  box-sizing: border-box;
+  padding: 0 !important;
+  /* border-radius: 10px; */
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  position: relative;
+  animation: fromtransparent 0.5s;
+}
+
+.browse-preview:hover {
+  cursor: pointer;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.6);
+  transition-duration: 0.5s;
 }

@@ -3,7 +3,8 @@ import { combineReducers } from "redux";
 const init = {
   id: "",
   username: "",
-  role: ""
+  role: "",
+  profilepict: ""
 };
 
 const AuthReducer = (state = init, action) => {
@@ -13,7 +14,13 @@ const AuthReducer = (state = init, action) => {
         ...state,
         id: action.payload.id,
         username: action.payload.username,
-        role: action.payload.role
+        role: action.payload.role,
+        profilepict: action.payload.profilepict
+      };
+    case "PROFILE_UPDATED":
+      return {
+        ...state,
+        profilepict: action.payload.profilepict
       };
     case "LOGOUT_SUCCESS":
       return init;

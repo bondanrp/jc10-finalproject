@@ -22,12 +22,11 @@ export class Upload extends Component {
       return (
         <React.Fragment>
           <div>
-            <div
-              style={{
-                background: `url(${val.thumbnail})`
-              }}
+            <img
+              src={val.thumbnail}
               className="user-video-thumb"
-            ></div>
+              alt="thumbnail"
+            />
             <p className="text-capitalize user-vid-title">
               {val.title} #{val.episode}
             </p>
@@ -47,38 +46,13 @@ export class Upload extends Component {
       return (
         <div className="gray-background py-5">
           <div className="upload-container">
-            <div className="upload-card">
-              <div className="uploadimg">
-                <h1 className="upload-titles">Upload Video :</h1>
+            <div className="upload-nav">helo</div>
+            <div className="user-video-container">
+              <div className="uploads-title">
+                <h2>Your Uploads</h2>
               </div>
-              <form className="upload-form">
-                <h4>Title</h4>
-                <h4>Episode</h4>
-                <h4>Thumbnail</h4>
-                <h4>Video</h4>
-                <h4>Description</h4>
-                <h4>Category</h4>
-                <div></div>
-                <input className="upload-input" type="text" />
-                <input className="upload-input" type="text" />
-                <input className="upload-input" type="text" />
-                <input className="upload-input" type="text" />
-                <input className="upload-input" type="text" />
-                <input className="upload-input" type="text" />
-                <button className="upload-button">Upload</button>
-              </form>
+              {this.renderUserVideos()}
             </div>
-            <div className="your-uploads">
-              <div className="uploadimg">
-                <h1 className="upload-titles">Your Videos :</h1>
-              </div>
-            </div>
-            <div className="upload-stats">
-              <div className="uploadimg">
-                <h1 className="upload-titles">Stats:</h1>
-              </div>
-            </div>
-            {this.renderUserVideos()}
           </div>
         </div>
       );
