@@ -1,3 +1,67 @@
+## Overview
+
+## `bagi bakat`
+
+Project ini merupakan sebuah platform untuk berbagi skill non-akademis melalui video. User dapat subscribe ke teacher favorit untuk mendapatkan update terbaru dan berdiskusi melalui kolom komentar.<br>
+
+User dapat apply untuk menjadi teacher dengan mengisi form dan mengupload CV yang nantinya akan dikonfirmasi oleh admin (planned)<br>
+
+User gratis memiliki banner iklan di halaman video dan di halaman browse (planned). <br>
+
+Mengambil inspirasi dari SkillShare, Youtube, RuangGuru, Zenius. <br>
+
+## Features
+
+## Subscribe Teacher
+
+`DONE` Subscribe bekerja seperti youtube. Teacher yang di subscribe akan muncul di subscription dalam browse.<br>
+`WIP` Notifikasi untuk subscriber.<br>
+
+## Video
+
+`DONE` View video.<br>
+`DONE` View video akan bertambah ketika page di load.<br>
+`DONE` kolom komentar.<br>
+`DONE` Notifikasi untuk teacher yang bersangkutan ketika ada user yang berkomentar di videonya.<br>
+`DONE` Related videos berdasarkan kategori.<br>
+`PLANNED` Free user hanya mendapat akses 5 video per bulan.<br>
+`PLANNED` View video hanya akan bertambah jika user menghabiskan waktu setidaknya 1 menit di halaman video.<br>
+`PLANNED` View video hanya akan bertambah 1 per user.<br>
+`PLANNED` Penanda unik untuk komentar dari Teacher yang post video.<br>
+
+## Home
+
+`DONE` Menunjukkan preview card untuk tiap kategori.<br>
+`DONE` Login modal ketika mencoba mengakses video sebelum melakukan login.<br>
+`WIP` konten.<br>
+
+## Browse
+
+`DONE` Menunjukkan semua video.<br>
+`DONE` Menunjukkan video-video teacher yang sudah di subscribe.<br>
+`DONE` Menunjukkan video-video berdasarkan category.<br>
+`DONE` Menunjukkan teacher-teacher.<br>
+`DONE` Category menyesuaikan kategori video yang pernah diupload teacher.<br>
+`WIP` Proper pagination - sekarang hanya show more yang tidak konsisten.<br>
+
+## Profile Page
+
+`DONE` Melihat video-video yang sudah telah di upload oleh user. (hanya ada di user dengan role teacher).<br>
+`DONE` Melihat teacher-teacher yang di subscribe oleh user.<br>
+`DONE` Tombol subscribe/unsubscribe pada profile page teacher.<br>
+`DONE` Upload profile picture dengan mengklik DP user pada profile page.<br>
+`PLANNED` pagination pada video dan subscribed teacher.<br>
+
+## Upload Video
+
+`WIP` semua wip.<br>
+`PLANNED` notifikasi untuk subscriber ketika melakukan upload.<br>
+
+## Become a Teacher
+
+`PLANNED` Form untuk user yang sudah register berisikan kontak, pengalaman, CV.<br>
+`PLANNED` Notifikasi untuk admin.<br>
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
@@ -6,11 +70,7 @@ In the project directory, you can run:
 
 ### `npm start`
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
-
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+npm start akan menjalankan react-app dan juga server dengan bersamaan menggunakan concurrently
 
 ### `npm test`
 
