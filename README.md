@@ -1,3 +1,57 @@
+## Overview
+## `bagi bakat`
+Project ini merupakan sebuah platform untuk berbagi skill non-akademis melalui video. User dapat subscribe ke teacher favorit untuk mendapatkan update terbaru dan berdiskusi melalui kolom komentar.
+
+User dapat apply untuk menjadi teacher dengan mengisi form dan mengupload CV yang nantinya akan dikonfirmasi oleh admin (planned)
+
+User gratis memiliki banner iklan di halaman video dan di halaman browse (planned). 
+
+Mengambil inspirasi dari SkillShare, Youtube, RuangGuru, Zenius. 
+
+## Features
+## `Subscribe Teacher` 
+`DONE` Subscribe bekerja seperti youtube. Teacher yang di subscribe akan muncul di subscription dalam browse
+`WIP` Notifikasi untuk subscriber
+
+## `Video`
+`DONE` View video
+`DONE` View video akan bertambah ketika page di load
+`DONE` kolom komentar
+`DONE` Notifikasi untuk teacher yang bersangkutan ketika ada user yang berkomentar di videonya
+`DONE` Related videos berdasarkan kategory
+`PLANNED` Free user hanya mendapat akses 5 video per bulan
+`PLANNED` View video hanya akan bertambah jika user menghabiskan waktu setidaknya 1 menit di halaman video
+`PLANNED` View video hanya akan bertambah 1 per user
+`PLANNED` Penanda unik untuk komentar dari Teacher yang post video
+
+## `Home`
+`DONE` Menunjukkan preview card untuk tiap kategori
+`DONE` Login modal ketika mencoba mengakses video sebelum melakukan login
+`WIP` konten
+
+## `Browse`
+`DONE` Menunjukkan semua video
+`DONE` Menunjukkan video-video teacher yang sudah di subscribe
+`DONE` Menunjukkan video-video berdasarkan category
+`DONE` Menunjukkan teacher-teacher
+`DONE` Category menyesuaikan kategori video yang pernah diupload teacher
+`WIP` Proper pagination - sekarang hanya show more yang tidak konsisten
+
+## `Profile Page`
+`DONE` Melihat video-video yang sudah telah di upload oleh user. (hanya ada di user dengan role teacher)
+`DONE` Melihat teacher-teacher yang di subscribe oleh user
+`DONE` Tombol subscribe/unsubscribe pada profile page teacher
+`DONE` Upload profile picture dengan mengklik DP user pada profile page
+`PLANNED` pagination pada video dan subscribed teacher
+
+## `Upload Video`
+`WIP` semua wip
+`PLANNED` notifikasi untuk subscriber ketika melakukan upload
+
+## `Become a Teacher`
+`PLANNED` Form untuk user yang sudah register berisikan kontak, pengalaman, CV
+`PLANNED` Notifikasi untuk admin
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
