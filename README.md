@@ -71,10 +71,6 @@ In the project directory, you can run:
 ### `npm start`
 
 npm start akan menjalankan react-app dan juga server dengan bersamaan menggunakan concurrently
-<<<<<<< HEAD
-=======
-
-> > > > > > > 9b2a903bcd6e0ea5a1749872704d6f417173d296
 
 ### `npm test`
 
