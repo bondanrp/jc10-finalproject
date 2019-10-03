@@ -19,9 +19,7 @@ export class Browse extends Component {
     title: "Home",
     search: "",
     loading: true,
-    loadMore: false,
-    page: 15,
-    teachers: []
+    page: 15
   };
 
   componentDidMount() {
@@ -52,7 +50,6 @@ export class Browse extends Component {
       axios.get(urlApi + "browseall").then(res => {
         this.setState({
           preview: res.data,
-          teachers: [],
           refresh: false,
           loading: false,
           page: 15
@@ -64,10 +61,7 @@ export class Browse extends Component {
         .then(res => {
           this.setState({
             preview: res.data,
-
-            teachers: [],
             loading: false,
-            loadMore: false,
             page: 15
           });
         })
@@ -76,7 +70,11 @@ export class Browse extends Component {
         });
     } else if (this.state.nav === "teachers") {
       axios.get(urlApi + "getteacher").then(res => {
-        this.setState({ preview: [], loading: false, teachers: res.data });
+        this.setState({
+          preview: res.data,
+          loading: false,
+          page: 15
+        });
       });
     } else {
       axios
@@ -89,9 +87,6 @@ export class Browse extends Component {
           this.setState({
             preview: res.data,
             loading: false,
-
-            teachers: [],
-            loadMore: false,
             page: 15
           });
         });
@@ -119,69 +114,107 @@ export class Browse extends Component {
             title: `search results for '${this.state.search}'`,
             page: total
           });
+          axios
+            .get(urlApi + "searchteachers", {
+              params: { search: this.state.search }
+            })
+            .then(res => {
+              if (res.data.length > 0) {
+                this.setState({
+                  preview: this.state.preview.concat(res.data),
+                  loading: false,
+                  page: 15
+                });
+              } else {
+                this.setState({
+                  preview: this.state.preview.concat(res.data),
+                  loading: false,
+                  page: 15
+                });
+              }
+            });
         } else {
-          this.setState({
-            preview: res.data
-          });
+          axios
+            .get(urlApi + "searchteachers", {
+              params: { search: this.state.search }
+            })
+            .then(res => {
+              if (res.data.length > 0) {
+                this.setState({
+                  preview: this.state.preview.concat(res.data),
+                  loading: false,
+                  page: 15
+                });
+              } else {
+                this.setState({
+                  preview: res.data,
+                  loading: false,
+                  page: 15
+                });
+              }
+            });
         }
       });
-    axios
-      .get(urlApi + "searchteachers", { params: { search: this.state.search } })
-      .then(res => {
-        if (res.data.length > 0) {
-          this.setState({ teachers: res.data });
-        } else {
-          this.setState({
-            teachers: res.data
-          });
-        }
-      });
-    if (this.state.teachers === null && this.state.preview === null) {
-      this.setState({
-        title: `No result found with keyword '${this.state.search}'`
-      });
-    }
   };
   handleChange = event => {
     this.setState({ [event.target.id]: event.target.value });
   };
   renderVideos = () => {
     let test = document.getElementsByName("sub-nav");
-    let ok = false;
+    let teacherCheck = false;
     for (let i = 0; i < test.length; i++) {
       if (test[i].checked) {
-        ok = true;
+        teacherCheck = true;
       }
     }
     if (this.state.preview.length > 0) {
       let render = this.state.preview.map((val, idx) => {
-        if (idx < 15) {
-          return (
-            <div
-              onClick={() => {
-                this.goToVideo(val.author, val.title, val.id);
-              }}
-              className="browse-preview"
-            >
+        if (idx < this.state.page) {
+          if (val.title) {
+            return (
               <div
-                style={{
-                  background: `url(${val.thumbnail})`
+                onClick={() => {
+                  this.goToVideo(val.author, val.title, val.id);
                 }}
-                className="preview-thumbnail"
+                className="browse-preview"
               >
-                <div className="preview-episode">Eps #{val.episode}</div>
+                <div
+                  style={{
+                    background: `url(${val.thumbnail})`
+                  }}
+                  className="preview-thumbnail"
+                >
+                  <div className="preview-episode">Eps #{val.episode}</div>
+                </div>
+                <p className="text-capitalize preview-title">{val.title}</p>
+                <p className="preview-author">{val.author} • </p>
+                <p className="preview-views">{val.views} views</p>
               </div>
-              <p className="text-capitalize preview-title">{val.title}</p>
-              <p className="preview-author">{val.author} • </p>
-              <p className="preview-views">{val.views} views</p>
-            </div>
-          );
+            );
+          } else if (val.username) {
+            return (
+              <Link to={`/${val.username}`} className="linkaja">
+                <div className="text-center browse-user-icon">
+                  <img className="browse-dp" src={val.profilepict} alt="DP" />
+                  <p className="text-capitalize font-weight-bold">
+                    {val.firstname} {val.lastname}
+                  </p>
+                  <p>@{val.username}</p>
+                  <p className="text-capitalize font-weight-light">
+                    {val.category}
+                  </p>
+                </div>
+              </Link>
+            );
+          } else {
+            return null;
+          }
         } else {
           return null;
         }
       });
       return render;
-    } else if (ok) {
+    } else if (teacherCheck) {
       return (
         <div style={{ gridColumn: "1/-1", margin: "auto", gridRow: "3" }}>
           This user have not uploaded any videos
@@ -203,23 +236,7 @@ export class Browse extends Component {
       );
     }
   };
-  renderTeachers = () => {
-    let render = this.state.teachers.map(val => {
-      return (
-        <Link to={`/${val.username}`} className="linkaja">
-          <div className="text-center browse-user-icon">
-            <img className="browse-dp" src={val.profilepict} alt="DP" />
-            <p className="text-capitalize font-weight-bold">
-              {val.firstname} {val.lastname}
-            </p>
-            <p>@{val.username}</p>
-            <p className="text-capitalize font-weight-light">{val.category}</p>
-          </div>
-        </Link>
-      );
-    });
-    return render;
-  };
+
   subscribedTeachers = () => {
     let subscriptions = document.getElementById("subscriptions");
     if (subscriptions) {
@@ -300,35 +317,7 @@ export class Browse extends Component {
     this.setState({ targetUser: user, targetTitle: title, targetId: id });
     this.setState({ redirectToVideo: true });
   };
-  showMore = () => {
-    let render = this.state.preview.map((val, idx) => {
-      if (idx >= 15 && idx < this.state.page) {
-        return (
-          <div
-            onClick={() => {
-              this.goToVideo(val.author, val.title, val.id);
-            }}
-            className="browse-preview"
-          >
-            <div
-              style={{
-                background: `url(${val.thumbnail})`
-              }}
-              className="preview-thumbnail"
-            >
-              <div className="preview-episode">Eps #{val.episode}</div>
-            </div>
-            <p className="text-capitalize preview-title">{val.title}</p>
-            <p className="preview-author">{val.author} • </p>
-            <p className="preview-views">{val.views} views</p>
-          </div>
-        );
-      } else {
-        return null;
-      }
-    });
-    return render;
-  };
+
   render() {
     if (this.state.redirectToVideo) {
       return (
@@ -365,7 +354,7 @@ export class Browse extends Component {
             <div className="browse-nav">
               <label
                 htmlFor="home"
-                onChange={() => {
+                onClick={() => {
                   this.setState({ nav: "home", title: "Home", loading: true });
                   this.clearRadio();
                   this.getVideo();
@@ -376,7 +365,7 @@ export class Browse extends Component {
               </label>
               <label
                 htmlFor="subscriptions"
-                onChange={() => {
+                onClick={() => {
                   this.setState({
                     nav: "subscriptions",
                     title: "Subscriptions",
@@ -392,7 +381,7 @@ export class Browse extends Component {
               {this.subscribedTeachers()}
               <label
                 htmlFor="category"
-                onChange={() => {
+                onClick={() => {
                   this.setState({
                     nav: "home",
                     title: "All Category",
@@ -408,7 +397,7 @@ export class Browse extends Component {
               {this.categories()}
               <label
                 htmlFor="teachers"
-                onChange={() => {
+                onClick={() => {
                   this.setState({
                     nav: "teachers",
                     title: "teachers",
@@ -427,15 +416,12 @@ export class Browse extends Component {
                 <h1>{this.state.title}</h1>
                 {this.renderProfileButton()}
               </div>
-              {this.renderTeachers()}
               {this.renderVideos()}
-              {this.showMore()}
               {this.state.preview.length > this.state.page ? (
                 <div
                   className="show-more"
-                  onChange={() => {
+                  onClick={() => {
                     this.setState({
-                      loadMore: true,
                       page: this.state.page + 15
                     });
                   }}

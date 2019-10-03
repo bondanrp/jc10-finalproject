@@ -9,10 +9,10 @@
   display: grid;
   grid-template-columns: 900px;
   grid-template-rows: 150px 1fr auto;
-  row-gap: 30px;
+  row-gap: 10px;
 }
 .profile-container > div:hover {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
   transition: 0.5s;
 }
 .profile-container > div {
@@ -83,7 +83,7 @@
   color: white;
   letter-spacing: -2px;
   text-align: left;
-  padding: 30px;
+  padding: 5px 30px;
   background: #017a84;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 }

@@ -12,6 +12,8 @@ import {
   DropdownItem
 } from "reactstrap";
 import Axios from "axios";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBell } from "@fortawesome/free-solid-svg-icons";
 
 const urlApi = "http://localhost:3001/";
 
@@ -95,7 +97,7 @@ class NavBar extends Component {
       });
       return render;
     } else {
-      return <div>loading</div>;
+      return <div className="text-center">loading notifications</div>;
     }
   };
   renderNotification = () => {
@@ -112,17 +114,7 @@ class NavBar extends Component {
           aria-expanded={this.state.notificationOpen}
         >
           <div className="userIcon">
-            <img
-              src={this.props.profilepict}
-              style={{
-                width: "100%",
-                height: "100%",
-                objectFit: "cover",
-                overflow: "hidden",
-                borderRadius: "50%"
-              }}
-              alt=""
-            />
+            <FontAwesomeIcon icon={faBell} className="notificationIcon" />
           </div>
         </DropdownToggle>
         <DropdownMenu right className="notifications">
