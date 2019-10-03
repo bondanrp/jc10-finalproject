@@ -71,11 +71,11 @@ class Login extends Component {
                   <br />
                   <div className="text-center">
                     <button
-                      className="btn btn-outline-success mb-5"
+                      className="login-btn mb-5"
                       type="submit"
                       onClick={this.onLoginClick}
                     >
-                      Login
+                      login
                     </button>
                   </div>
                   <p className="login-text">

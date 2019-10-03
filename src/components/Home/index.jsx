@@ -1,8 +1,10 @@
 ﻿import React, { Component } from "react";
 import "./home.css";
 import Axios from "axios";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import Swal from "sweetalert2";
+
+import { onLoginUser } from "../../actions/login/login";
 import { connect } from "react-redux";
 
 let urlPreviewApi = "http://localhost:3001/";
@@ -18,7 +20,10 @@ export class Home extends Component {
     targetId: 0,
     redirectToVideo: false,
     refresh: false,
-    loading: false
+    loading: false,
+    loginModal: false,
+    username: "",
+    password: ""
   };
   componentDidMount() {
     this.getPreviewApi();
@@ -53,11 +58,7 @@ export class Home extends Component {
     if (this.props.username) {
       this.setState({ redirect: true });
     } else {
-      Swal.fire({
-        title: "Error",
-        html: "Please sign in first",
-        type: "error"
-      });
+      this.loginModal();
     }
   };
   goToVideo = (user, title, id) => {
@@ -67,6 +68,11 @@ export class Home extends Component {
     } else {
       Swal.fire("Error", "Please sign in to view the video", "error");
     }
+  };
+  loginModal = () => {
+    this.setState(prevState => ({
+      loginModal: !prevState.loginModal
+    }));
   };
 
   renderPreview = () => {
@@ -84,7 +90,11 @@ export class Home extends Component {
           return (
             <div
               onClick={() => {
-                this.goToVideo(val.author, val.title, val.id);
+                if (this.props.username) {
+                  this.goToVideo(val.author, val.title, val.id);
+                } else {
+                  this.loginModal();
+                }
               }}
               className="preview"
             >
@@ -136,6 +146,25 @@ export class Home extends Component {
     this.setState({ category: e.target.value, refresh: true, loading: true });
   };
 
+  validateForm() {
+    return this.state.username.length > 0 && this.state.password.length > 0;
+  }
+  handleChange = event => {
+    this.setState({ [event.target.id]: event.target.value });
+  };
+
+  onLoginClick = () => {
+    if (this.validateForm()) {
+      let username = this.state.username;
+      let password = this.state.password;
+      this.props.onLoginUser(username, password);
+      this.props.history.push("/");
+    }
+  };
+
+  handleSubmit = event => {
+    event.preventDefault();
+  };
   render() {
     if (this.state.redirect) {
       return <Redirect to="/browse"></Redirect>;
@@ -143,6 +172,68 @@ export class Home extends Component {
       return (
         <React.Fragment>
           <main id="mainContent">
+            {this.state.loginModal ? (
+              <div className="loginModal-bg">
+                <div className="loginModal-container">
+                  <div className="loginModal-close" onClick={this.loginModal}>
+                    close
+                  </div>
+                  <div className="login-image text-center">
+                    <img
+                      className="user-icon"
+                      src="http://icons.iconarchive.com/icons/custom-icon-design/silky-line-user/128/user-icon.png"
+                      alt="user"
+                    />
+                  </div>
+                  <h3 className="login-title text-center mt-5">
+                    ACCOUNT LOGIN
+                  </h3>
+                  <div>
+                    <form className="form-group" onSubmit={this.handleSubmit}>
+                      <div className="login-input-title card-title mt-2">
+                        Username
+                      </div>
+                      <input
+                        className="login-input"
+                        id="username"
+                        value={this.state.username}
+                        onChange={this.handleChange}
+                        type="text"
+                        placeholder="username"
+                        autoFocus
+                        required
+                      />
+                      <div className="login-input-title card-title mt-2">
+                        Password
+                      </div>
+                      <input
+                        className="login-input"
+                        id="password"
+                        value={this.state.password}
+                        onChange={this.handleChange}
+                        placeholder="********"
+                        type="password"
+                        required
+                      />
+                      <br />
+                      <div className="text-center">
+                        <button
+                          className="login-btn mb-5"
+                          type="submit"
+                          onClick={this.onLoginClick}
+                        >
+                          Login
+                        </button>
+                      </div>
+                      <p className="login-text">
+                        Don't have an account?{" "}
+                        <Link to="register">Sign Up</Link>!
+                      </p>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            ) : null}
             <div className="text-center header">
               <div className="header-item">
                 <div className="judul-products">
@@ -189,4 +280,7 @@ const mapStateToProps = state => {
     username: state.auth.username
   };
 };
-export default connect(mapStateToProps)(Home);
+export default connect(
+  mapStateToProps,
+  { onLoginUser }
+)(Home);

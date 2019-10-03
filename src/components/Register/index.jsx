@@ -183,12 +183,12 @@ class Register extends Component {
                   </span>
                   <div className="text-center mt-5">
                     <button
-                      className="btn btn-outline-success mb-5"
+                      className="login-btn mb-5"
                       type="submit"
                       onClick={this.onRegisterClick}
                       disabled={!this.state.terms}
                     >
-                      Register
+                      register
                     </button>
                     <Modal
                       style={{

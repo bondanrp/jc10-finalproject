@@ -1,0 +1,20 @@
+Selesaikan
+- Upload video
+- Notifikasi upload untuk subscriber
+- akses tiap role
+
+Bikin
+Verify:
+- verify user
+
+
+
+Become a teacher:
+- Register + Form
+- Data register biasa dan form pengalaman dan CV (pdf) akan di kirimkan ke admin untuk confirm
+- Setelah di confirm admin, user akan didaftarkan sebagai teacher
+- User akan dikirimkan email notifikasi
+
+Modal untuk login:
+
+Admin dashboard:
