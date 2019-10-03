@@ -76,20 +76,6 @@ export class Browse extends Component {
           page: 15
         });
       });
-    } else {
-      axios
-        .get(urlApi + "getuservideos", {
-          params: {
-            username: this.state.nav
-          }
-        })
-        .then(res => {
-          this.setState({
-            preview: res.data,
-            loading: false,
-            page: 15
-          });
-        });
     }
   };
 
@@ -238,32 +224,38 @@ export class Browse extends Component {
   };
 
   subscribedTeachers = () => {
-    let subscriptions = document.getElementById("subscriptions");
-    if (subscriptions) {
-      let hidden = subscriptions.checked
-        ? "browse-nav-sub"
-        : "browse-nav-sub-hidden";
-      let render = this.state.subscribedTeachers.map(val => {
-        return (
+    let render = this.state.subscribedTeachers.map(val => {
+      return (
+        <React.Fragment>
+          <input type="checkbox" name="sub-nav" id={`${val.username}`} />
           <label
-            className={hidden}
             htmlFor={`${val.username}`}
             onClick={() => {
               this.setState({
-                nav: val.username,
                 title: `${val.username}'s Videos`,
                 loading: true
               });
-              this.getVideo();
+              axios
+                .get(urlApi + "getuservideos", {
+                  params: {
+                    username: val.username
+                  }
+                })
+                .then(res => {
+                  this.setState({
+                    preview: res.data,
+                    loading: false,
+                    page: 15
+                  });
+                });
             }}
           >
-            <input type="radio" name="sub-nav" id={`${val.username}`} />
-            <p className={hidden}>@{val.username}</p>
+            @{val.username}
           </label>
-        );
-      });
-      return render;
-    }
+        </React.Fragment>
+      );
+    });
+    return render;
   };
   renderProfileButton = () => {
     if (this.state.title.includes("Video")) {
@@ -278,34 +270,29 @@ export class Browse extends Component {
   };
 
   categories = () => {
-    let category = document.getElementById("category");
-    if (category) {
-      let hidden = category.checked
-        ? "browse-nav-sub text-capitalize"
-        : "browse-nav-sub-hidden";
-      let render = this.state.categories.map(val => {
-        return (
+    let render = this.state.categories.map(val => {
+      return (
+        <React.Fragment>
+          <input type="radio" name="sub-nav" id={`${val.category}`} />
           <label
-            className={hidden}
             htmlFor={`${val.category}`}
             onClick={() => {
-              this.setState({ nav: val.category, title: val.category });
+              this.setState({ title: val.category });
               axios
                 .get(urlApi + "getpreview", {
-                  params: { category: this.state.nav }
+                  params: { category: val.category }
                 })
                 .then(res => {
                   this.setState({ preview: res.data });
                 });
             }}
           >
-            <input type="radio" name="sub-nav" id={`${val.category}`} />
-            <p className={hidden}>{val.category}</p>
+            {val.category}
           </label>
-        );
-      });
-      return render;
-    } else return null;
+        </React.Fragment>
+      );
+    });
+    return render;
   };
   clearRadio = () => {
     let test = document.getElementsByName("sub-nav");
@@ -342,7 +329,6 @@ export class Browse extends Component {
                   onChange={this.handleChange}
                   onSubmit={() => {
                     this.handleSearch();
-                    this.clearRadio();
                   }}
                   placeholder="  Search..."
                 />
@@ -352,64 +338,96 @@ export class Browse extends Component {
               </form>
             </div>
             <div className="browse-nav">
-              <label
-                htmlFor="home"
-                onClick={() => {
-                  this.setState({ nav: "home", title: "Home", loading: true });
-                  this.clearRadio();
-                  this.getVideo();
-                }}
-              >
-                <input type="radio" name="home" id="home" defaultChecked />
-                <p>Home</p>
-              </label>
-              <label
-                htmlFor="subscriptions"
-                onClick={() => {
-                  this.setState({
-                    nav: "subscriptions",
-                    title: "Subscriptions",
-                    loading: true
-                  });
-                  this.clearRadio();
-                  this.getVideo();
-                }}
-              >
-                <input type="radio" name="home" id="subscriptions" />
-                <p>Subscriptions</p>
-              </label>
-              {this.subscribedTeachers()}
-              <label
-                htmlFor="category"
-                onClick={() => {
-                  this.setState({
-                    nav: "home",
-                    title: "All Category",
-                    loading: true
-                  });
-                  this.clearRadio();
-                  this.getVideo();
-                }}
-              >
-                <input type="radio" name="home" id="category" />
-                <p>Category</p>
-              </label>
-              {this.categories()}
-              <label
-                htmlFor="teachers"
-                onClick={() => {
-                  this.setState({
-                    nav: "teachers",
-                    title: "teachers",
-                    loading: true
-                  });
-                  this.clearRadio();
-                  this.getVideo();
-                }}
-              >
-                <input type="radio" name="home" id="teachers" />
-                <p>Teachers</p>
-              </label>
+              <div>
+                <input type="checkbox" name="home" id="home" defaultChecked />
+                <label htmlFor="home">Home</label>
+                <div className="nav-content">
+                  <input
+                    type="checkbox"
+                    name="sub-nav"
+                    id="mySubscriptions"
+                    defaultChecked
+                  />
+                  <label
+                    htmlFor="mySubscriptions"
+                    onClick={() => {
+                      this.setState({
+                        title: "Subscriptions",
+                        loading: true
+                      });
+                      if (localStorage.length > 0) {
+                        var loggedId = JSON.parse(localStorage.userData).id;
+                      }
+                      axios
+                        .get(urlApi + `getsubscription/${loggedId}`)
+                        .then(res => {
+                          this.setState({
+                            preview: res.data,
+                            loading: false,
+                            page: 15
+                          });
+                        })
+                        .catch(err => {
+                          alert(err);
+                        });
+                    }}
+                  >
+                    Subscriptions
+                  </label>
+                  <input
+                    type="checkbox"
+                    name="sub-nav"
+                    id="newest"
+                    defaultChecked
+                  />
+                  <label
+                    htmlFor="newest"
+                    onClick={() => {
+                      this.setState({
+                        title: "newest",
+                        loading: true
+                      });
+                      this.getVideo();
+                    }}
+                  >
+                    Newest Uploads
+                  </label>
+                  <input
+                    type="checkbox"
+                    name="sub-nav"
+                    id="most-viewed"
+                    defaultChecked
+                  />
+                  <label
+                    htmlFor="most-viewed"
+                    onClick={() => {
+                      this.setState({
+                        title: "most viewed",
+                        loading: true
+                      });
+                      this.getVideo();
+                    }}
+                  >
+                    Most Viewed
+                  </label>
+                </div>
+              </div>
+              {this.props.username ? (
+                <div>
+                  <input type="checkbox" name="home" id="subscriptions" />
+                  <label htmlFor="subscriptions">Subscriptions</label>
+                  <div className="nav-content">{this.subscribedTeachers()}</div>
+                </div>
+              ) : null}
+              <div>
+                <input type="checkbox" name="home" id="category" />
+                <label htmlFor="category">Category</label>
+                <div className="nav-content">{this.categories()}</div>
+              </div>
+              <div>
+                <input type="checkbox" name="home" id="teachers" />
+                <label>Teachers</label>
+              </div>
             </div>
             <div className="browse-content">
               <div className="browse-title">
@@ -438,6 +456,7 @@ export class Browse extends Component {
 }
 const mapStateToProps = state => {
   return {
+    username: state.auth.id,
     id: state.auth.id
   };
 };

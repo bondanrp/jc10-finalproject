@@ -17,24 +17,30 @@ export class Video extends Component {
     comment: "",
     comments: []
   };
+
+  timer = null;
   componentDidMount() {
     this.getData();
   }
   componentDidUpdate() {
     if (this.state.refresh) {
+      clearTimeout(this.timer);
       this.getData();
-      console.log(this.props.match.params.id);
-      console.log(this.state.data.id);
     }
   }
+  componentWillUnmount() {
+    clearTimeout(this.timer);
+  }
   addView = () => {
-    Axios.put(urlApi + "view", { id: this.props.match.params.id }).then(
-      this.setState({ refresh: false, loading: false })
-    );
+    Axios.put(urlApi + "view", { id: this.props.match.params.id }).then(res => {
+      this.setState({ refresh: false, loading: false });
+      console.log("view added");
+    });
   };
   getData = () => {
     Axios.get(urlApi + "getvideo/" + this.props.match.params.id).then(res => {
-      this.setState({ data: res.data[0], refresh: false });
+      this.setState({ data: res.data[0], refresh: false, loading: false });
+      this.timer = setTimeout(this.addView, 60000);
       // NEXT EPISODE
       Axios.get(urlApi + "getepisode", {
         params: {
@@ -66,7 +72,6 @@ export class Video extends Component {
               }
             }).then(res => {
               this.setState({ comments: res.data });
-              this.addView();
             });
           });
         });
