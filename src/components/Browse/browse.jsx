@@ -68,31 +68,34 @@ export class Browse extends Component {
         .catch(err => {
           alert(err);
         });
-    } else if (this.state.nav === "teachers") {
-      axios.get(urlApi + "getteacher").then(res => {
-        this.setState({
-          preview: res.data,
-          loading: false,
-          page: 15
-        });
-      });
     }
+  };
+  getTeachers = () => {
+    axios.get(urlApi + "getteacher").then(res => {
+      this.setState({
+        preview: res.data,
+        loading: false,
+        page: 15
+      });
+    });
   };
 
   renderSubscribedTeacher = () => {
     let render = this.state.subscription.map(val => {
       return (
         <li>
-          @<Link to={`/${val.username}`}>{val.username}</Link>
+          @<Link to={`/user/${val.username}`}>{val.username}</Link>
         </li>
       );
     });
     return render;
   };
   handleSearch = event => {
+    // search video
     axios
       .get(urlApi + "search", { params: { search: this.state.search } })
       .then(res => {
+        // kalau dapat video
         if (res.data.length > 0) {
           let total = res.data.length;
           this.setState({
@@ -100,11 +103,13 @@ export class Browse extends Component {
             title: `search results for '${this.state.search}'`,
             page: total
           });
+          // search teacher
           axios
             .get(urlApi + "searchteachers", {
               params: { search: this.state.search }
             })
             .then(res => {
+              // kalau dapat teacher
               if (res.data.length > 0) {
                 this.setState({
                   preview: this.state.preview.concat(res.data),
@@ -112,6 +117,7 @@ export class Browse extends Component {
                   page: 15
                 });
               } else {
+                // kalau tidak dapat teacher
                 this.setState({
                   preview: this.state.preview.concat(res.data),
                   loading: false,
@@ -120,22 +126,26 @@ export class Browse extends Component {
               }
             });
         } else {
+          // kalau tidak dapat video, search teacher
           axios
             .get(urlApi + "searchteachers", {
               params: { search: this.state.search }
             })
             .then(res => {
+              // kalau dapat teacher
               if (res.data.length > 0) {
                 this.setState({
                   preview: this.state.preview.concat(res.data),
                   loading: false,
-                  page: 15
+                  page: 15,
+                  title: `search results for '${this.state.search}'`
                 });
               } else {
                 this.setState({
                   preview: res.data,
                   loading: false,
-                  page: 15
+                  page: 15,
+                  title: `no result found for keyword '${this.state.search}'`
                 });
               }
             });
@@ -154,7 +164,15 @@ export class Browse extends Component {
       }
     }
     if (this.state.preview.length > 0) {
-      let render = this.state.preview.map((val, idx) => {
+      let sorted = this.state.preview;
+      if (this.state.title === "most viewed") {
+        sorted = this.state.preview.sort((a, b) =>
+          a.views < b.views ? 1 : -1
+        );
+      } else if (this.state.title === "newest") {
+        sorted = this.state.preview.sort((a, b) => (a.id < b.id ? 1 : -1));
+      }
+      let render = sorted.map((val, idx) => {
         if (idx < this.state.page) {
           if (val.title) {
             return (
@@ -179,7 +197,7 @@ export class Browse extends Component {
             );
           } else if (val.username) {
             return (
-              <Link to={`/${val.username}`} className="linkaja">
+              <Link to={`/user/${val.username}`} className="linkaja">
                 <div className="text-center browse-user-icon">
                   <img className="browse-dp" src={val.profilepict} alt="DP" />
                   <p className="text-capitalize font-weight-bold">
@@ -227,13 +245,14 @@ export class Browse extends Component {
     let render = this.state.subscribedTeachers.map(val => {
       return (
         <React.Fragment>
-          <input type="checkbox" name="sub-nav" id={`${val.username}`} />
+          <input type="radio" name="sub-nav" id={`${val.username}`} />
           <label
             htmlFor={`${val.username}`}
             onClick={() => {
               this.setState({
                 title: `${val.username}'s Videos`,
-                loading: true
+                loading: true,
+                nav: val.username
               });
               axios
                 .get(urlApi + "getuservideos", {
@@ -260,7 +279,7 @@ export class Browse extends Component {
   renderProfileButton = () => {
     if (this.state.title.includes("Video")) {
       return (
-        <Link to={`/${this.state.nav}`}>
+        <Link to={`/user/${this.state.nav}`}>
           <button className="browse-profile">profile</button>
         </Link>
       );
@@ -275,6 +294,7 @@ export class Browse extends Component {
         <React.Fragment>
           <input type="radio" name="sub-nav" id={`${val.category}`} />
           <label
+            className="text-capitalize"
             htmlFor={`${val.category}`}
             onClick={() => {
               this.setState({ title: val.category });
@@ -309,7 +329,7 @@ export class Browse extends Component {
     if (this.state.redirectToVideo) {
       return (
         <Redirect
-          to={`/${this.state.targetUser}/${this.state.targetTitle}/${this.state.targetId}`}
+          to={`/user/${this.state.targetUser}/${this.state.targetTitle}/${this.state.targetId}`}
         ></Redirect>
       );
     } else {
@@ -342,12 +362,7 @@ export class Browse extends Component {
                 <input type="checkbox" name="home" id="home" defaultChecked />
                 <label htmlFor="home">Home</label>
                 <div className="nav-content">
-                  <input
-                    type="checkbox"
-                    name="sub-nav"
-                    id="mySubscriptions"
-                    defaultChecked
-                  />
+                  <input type="radio" name="sub-nav" id="mySubscriptions" />
                   <label
                     htmlFor="mySubscriptions"
                     onClick={() => {
@@ -374,12 +389,7 @@ export class Browse extends Component {
                   >
                     Subscriptions
                   </label>
-                  <input
-                    type="checkbox"
-                    name="sub-nav"
-                    id="newest"
-                    defaultChecked
-                  />
+                  <input type="radio" name="sub-nav" id="newest" />
                   <label
                     htmlFor="newest"
                     onClick={() => {
@@ -392,12 +402,7 @@ export class Browse extends Component {
                   >
                     Newest Uploads
                   </label>
-                  <input
-                    type="checkbox"
-                    name="sub-nav"
-                    id="most-viewed"
-                    defaultChecked
-                  />
+                  <input type="radio" name="sub-nav" id="most-viewed" />
                   <label
                     htmlFor="most-viewed"
                     onClick={() => {
@@ -426,27 +431,40 @@ export class Browse extends Component {
               </div>
               <div>
                 <input type="checkbox" name="home" id="teachers" />
-                <label>Teachers</label>
-              </div>
-            </div>
-            <div className="browse-content">
-              <div className="browse-title">
-                <h1>{this.state.title}</h1>
-                {this.renderProfileButton()}
-              </div>
-              {this.renderVideos()}
-              {this.state.preview.length > this.state.page ? (
-                <div
-                  className="show-more"
+                <label
                   onClick={() => {
                     this.setState({
-                      page: this.state.page + 15
+                      title: "Teachers",
+                      loading: true,
+                      nav: "teachers"
                     });
+                    this.getTeachers();
                   }}
                 >
-                  show more
+                  Teachers
+                </label>
+              </div>
+            </div>
+            <div>
+              <div className="browse-content">
+                <div className="browse-title">
+                  <h1>{this.state.title}</h1>
+                  {this.renderProfileButton()}
                 </div>
-              ) : null}
+                {this.renderVideos()}
+                {this.state.preview.length > this.state.page ? (
+                  <div
+                    className="show-more"
+                    onClick={() => {
+                      this.setState({
+                        page: this.state.page + 15
+                      });
+                    }}
+                  >
+                    show more
+                  </div>
+                ) : null}
+              </div>
             </div>
           </div>
         </div>
@@ -456,8 +474,9 @@ export class Browse extends Component {
 }
 const mapStateToProps = state => {
   return {
-    username: state.auth.id,
-    id: state.auth.id
+    username: state.auth.username,
+    id: state.auth.id,
+    profilepict: state.auth.profilepict
   };
 };
 export default connect(

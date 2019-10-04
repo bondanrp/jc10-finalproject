@@ -9,6 +9,7 @@ import Home from "./components/Home";
 import About from "./components/About";
 import Browse from "./components/Browse/browse";
 import Contact from "./components/Contact";
+import BecomeATeacher from "./components/BecomeATeacher";
 import Register from "./components/Register";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
@@ -50,11 +51,12 @@ class App extends Component {
           <Route path="/About" component={About} />
           <Route path="/Browse" component={Browse} />
           <Route path="/Contact" component={Contact} />
+          <Route path="/BecomeATeacher" component={BecomeATeacher} />
           <Route path="/Register" component={Register} />
           <Route path="/Login" component={Login} />
-          <Route exact path="/:username" component={Profile} />
-          <Route path="/:username/manageuploads" component={Upload} />
-          <Route path="/:username/:title/:id" component={Video} />
+          <Route exact path="/user/:username" component={Profile} />
+          <Route path="/user/:username/manageuploads" component={Upload} />
+          <Route path="/user/:username/:title/:id" component={Video} />
         </Switch>
         <Footer />
       </React.Fragment>

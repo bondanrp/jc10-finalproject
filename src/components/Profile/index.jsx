@@ -125,7 +125,7 @@ export class Profile extends Component {
             onClick={() => {
               // this.setState({ refresh: true, loading: true });
             }}
-            to={`/${val.author}/${val.title}/${val.id}`}
+            to={`/user/${val.author}/${val.title}/${val.id}`}
             className="linkaja preview"
           >
             <div

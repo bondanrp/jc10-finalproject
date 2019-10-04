@@ -23,7 +23,11 @@ export class Video extends Component {
     this.getData();
   }
   componentDidUpdate() {
-    if (this.state.refresh) {
+    if (!this.state.refresh) {
+    } else if (this.props.match.params.id !== this.state.data.id) {
+      this.setState({
+        loading: true
+      });
       clearTimeout(this.timer);
       this.getData();
     }
@@ -33,13 +37,14 @@ export class Video extends Component {
   }
   addView = () => {
     Axios.put(urlApi + "view", { id: this.props.match.params.id }).then(res => {
-      this.setState({ refresh: false, loading: false });
+      this.setState({ refresh: false });
       console.log("view added");
     });
   };
   getData = () => {
+    this.setState({ refresh: false });
     Axios.get(urlApi + "getvideo/" + this.props.match.params.id).then(res => {
-      this.setState({ data: res.data[0], refresh: false, loading: false });
+      this.setState({ data: res.data[0], loading: false });
       this.timer = setTimeout(this.addView, 60000);
       // NEXT EPISODE
       Axios.get(urlApi + "getepisode", {
@@ -113,7 +118,7 @@ export class Video extends Component {
 
       return (
         <div className="comment-box">
-          <Link to={`/${val.username}`} className="linkaja">
+          <Link to={`/user/${val.username}`} className="linkaja">
             <div className="comment-header">
               <img src={val.profilepict} alt="" />
               <p>@{val.username}</p>
@@ -180,9 +185,9 @@ export class Video extends Component {
         return (
           <Link
             onClick={() => {
-              this.setState({ refresh: true, loading: true });
+              this.setState({ refresh: true });
             }}
-            to={`/${val.author}/${val.title}/${val.id}`}
+            to={`/user/${val.author}/${val.title}/${val.id}`}
             className="linkaja related-preview"
           >
             <div
@@ -217,7 +222,7 @@ export class Video extends Component {
           <h6>Next Episode</h6>
           <Link
             onClick={() => {
-              this.setState({ refresh: true, loading: true });
+              this.setState({ refresh: true });
             }}
             to={`./${this.state.nextData.id}`}
             className="text-capitalize"
@@ -235,7 +240,7 @@ export class Video extends Component {
           <h6>Previous Episode</h6>
           <Link
             onClick={() => {
-              this.setState({ refresh: true, loading: true });
+              this.setState({ refresh: true });
             }}
             to={`./${this.state.prevData.id}`}
             className="text-capitalize"
@@ -322,7 +327,7 @@ export class Video extends Component {
                   {this.state.data.title} Episode #{this.state.data.episode}
                 </h1>
                 <Link
-                  to={`/${this.state.data.author}`}
+                  to={`/user/${this.state.data.author}`}
                   className="video-author text-left"
                 >
                   @{this.state.data.author}

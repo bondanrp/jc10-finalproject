@@ -43,7 +43,7 @@
   color: white;
 }
 .unsubscribe {
-  border: 2px solid #575757;
+  border: 2px solid #f46197;
   font-family: "montserrat";
   background: none;
   border-radius: 10px;
@@ -51,13 +51,13 @@
   letter-spacing: 3px;
   height: 40px;
   width: 150px;
-  color: #575757;
+  color: #f46197;
   margin-top: 30px;
   font-size: 15px;
   transition: 0.2s;
 }
 .unsubscribe:hover {
-  background: #575757;
+  background: #f46197;
   color: white;
 }
 .profile-loading {
@@ -150,11 +150,11 @@
   transition: 0.2s;
 }
 .profile-cancel:hover {
-  background: red;
+  background: #f46197;
   color: white;
 }
 .profile-cancel {
-  border: 2px solid red;
+  border: 2px solid #f46197;
   font-family: "montserrat";
   background: none;
   border-radius: 10px;
@@ -162,20 +162,12 @@
   letter-spacing: 3px;
   height: 40px;
   width: 150px;
-  color: red;
+  color: #f46197;
   margin-top: 3px;
   font-size: 15px;
   transition: 0.2s;
 }
 
-.edit-name {
-  border: 2px solid #575757;
-  border-radius: 10px;
-  height: 40px;
-  width: 200px;
-  font-family: "poppins";
-  padding-left: 10px;
-}
 .upload-dp {
   display: none;
   height: 100px;

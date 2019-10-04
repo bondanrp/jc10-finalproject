@@ -77,17 +77,7 @@ class NavBar extends Component {
         var d = new Date(Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4], t[5]));
         var date = this.timeSince(d);
         return (
-          <Link
-            to={`/${val.link}`}
-            className="notification-content"
-            onClick={() => {
-              Axios.delete(urlApi + `deleteNotification/${val.id}`).then(
-                res => {
-                  this.getNotificationData();
-                }
-              );
-            }}
-          >
+          <Link to={`/${val.link}`} className="notification-content">
             <div>
               {val.content}
               <div className="notification-time">{date}</div>
@@ -151,7 +141,7 @@ class NavBar extends Component {
               Hello, {this.props.username}!
             </DropdownItem>
             <Link
-              to={`/${this.props.username}`}
+              to={`/user/${this.props.username}`}
               className="text-decoration-none text-dark"
             >
               <DropdownItem tag="div">Profile</DropdownItem>
@@ -191,13 +181,13 @@ class NavBar extends Component {
               Hello, {this.props.username}!
             </DropdownItem>
             <Link
-              to={`/${this.props.username}`}
+              to={`/user/${this.props.username}`}
               className="text-decoration-none text-dark"
             >
               <DropdownItem tag="div">Profile</DropdownItem>
             </Link>
             <Link
-              to={`/${this.props.username}/manageuploads`}
+              to={`/user/${this.props.username}/manageuploads`}
               className="text-decoration-none text-dark"
             >
               <DropdownItem tag="div">Manage Uploads</DropdownItem>
@@ -234,7 +224,7 @@ class NavBar extends Component {
               Hello, {this.props.username}!
             </DropdownItem>
             <Link
-              to={`/${this.props.username}`}
+              to={`/user/${this.props.username}`}
               className="text-decoration-none text-dark"
             >
               <DropdownItem tag="div">Profile</DropdownItem>
@@ -317,6 +307,16 @@ class NavBar extends Component {
             >
               Contact
             </Link>
+            {!this.props.username || this.props.role === "user" ? (
+              <Link
+                className="tautan active"
+                onClick={() => this.setState({ toggleBurger: false })}
+                to="/becomeateacher
+                "
+              >
+                Become a Teacher
+              </Link>
+            ) : null}
           </div>
           <div className="nav3">
             {this.props.username ? this.renderNotification() : null}
