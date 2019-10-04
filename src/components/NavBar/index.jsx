@@ -14,6 +14,7 @@ import {
 import Axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBell } from "@fortawesome/free-solid-svg-icons";
+import { timeSince } from "../../functions/index";
 
 const urlApi = "http://localhost:3001/";
 
@@ -34,31 +35,7 @@ class NavBar extends Component {
       notificationOpen: !prevState.notificationOpen
     }));
   };
-  timeSince(date) {
-    var seconds = Math.floor((new Date() - date) / 1000);
-    var interval = Math.floor(seconds / 31536000);
-    if (interval >= 1) {
-      return interval + " years ago";
-    }
-    interval = Math.floor(seconds / 2592000);
-    if (interval >= 1) {
-      return interval + " months ago";
-    }
-    interval = Math.floor(seconds / 86400);
-    if (interval >= 1) {
-      return interval + " days ago";
-    }
-    interval = Math.floor(seconds / 3600);
-    if (interval >= 1) {
-      return interval + " hours ago";
-    }
-    interval = Math.floor(seconds / 60);
-    if (interval >= 1) {
-      return interval + " minutes ago";
-    } else {
-      return "just now";
-    }
-  }
+
   getNotificationData = () => {
     Axios.get(urlApi + `getnotifications/${this.props.id}`).then(res => {
       if (res.data.length > 0) {
@@ -73,9 +50,7 @@ class NavBar extends Component {
       return <div className="text-center">No notifications to show</div>;
     } else if (this.state.notifications.length > 0) {
       let render = this.state.notifications.map(val => {
-        var t = val.timestamp.split(/[- T Z :]/);
-        var d = new Date(Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4], t[5]));
-        var date = this.timeSince(d);
+        var date = timeSince(val.timestamp);
         return (
           <Link to={`/${val.link}`} className="notification-content">
             <div>
@@ -95,7 +70,7 @@ class NavBar extends Component {
       <Dropdown
         isOpen={this.state.notificationOpen}
         toggle={this.toggleNotification}
-        className="mr-2"
+        className="nav3-2"
         onClick={this.getNotificationData}
       >
         <DropdownToggle
@@ -116,7 +91,11 @@ class NavBar extends Component {
   dropDown = () => {
     if (this.props.role === "user") {
       return (
-        <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
+        <Dropdown
+          isOpen={this.state.dropdownOpen}
+          toggle={this.toggleDropdown}
+          className="nav3-3"
+        >
           <DropdownToggle
             tag="span"
             data-toggle="dropdown"
@@ -156,7 +135,11 @@ class NavBar extends Component {
       );
     } else if (this.props.role === "teacher") {
       return (
-        <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
+        <Dropdown
+          isOpen={this.state.dropdownOpen}
+          toggle={this.toggleDropdown}
+          className="nav3-3"
+        >
           <DropdownToggle
             tag="span"
             data-toggle="dropdown"
@@ -199,7 +182,11 @@ class NavBar extends Component {
       );
     } else if (this.props.role === "admin") {
       return (
-        <Dropdown isOpen={this.state.dropdownOpen} toggle={this.toggleDropdown}>
+        <Dropdown
+          isOpen={this.state.dropdownOpen}
+          toggle={this.toggleDropdown}
+          className="nav3-3"
+        >
           <DropdownToggle
             tag="span"
             data-toggle="dropdown"
@@ -242,14 +229,14 @@ class NavBar extends Component {
         <Link
           className="active"
           onClick={() => this.setState({ toggleBurger: false })}
-          to="Login"
+          to="/Login"
         >
-          <div className="userIcon">
+          <div className="nav3-3">
             <img
               src={userIcon}
               style={{
-                width: "100%",
-                height: "100%",
+                width: "32px",
+                height: "32px",
                 objectFit: "contain",
                 overflow: "hidden",
                 borderRadius: "50%"
@@ -289,23 +276,9 @@ class NavBar extends Component {
             <Link
               className="tautan active"
               onClick={() => this.setState({ toggleBurger: false })}
-              to="/"
-            >
-              Home
-            </Link>
-            <Link
-              className="tautan active"
-              onClick={() => this.setState({ toggleBurger: false })}
               to="/browse"
             >
               Browse
-            </Link>
-            <Link
-              className="tautan active"
-              onClick={() => this.setState({ toggleBurger: false })}
-              to="/Contact"
-            >
-              Contact
             </Link>
             {!this.props.username || this.props.role === "user" ? (
               <Link
@@ -317,6 +290,13 @@ class NavBar extends Component {
                 Become a Teacher
               </Link>
             ) : null}
+            <Link
+              className="tautan active"
+              onClick={() => this.setState({ toggleBurger: false })}
+              to="/Contact"
+            >
+              Contact
+            </Link>
           </div>
           <div className="nav3">
             {this.props.username ? this.renderNotification() : null}

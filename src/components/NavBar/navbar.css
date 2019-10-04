@@ -23,9 +23,23 @@
 }
 .nav3 {
   grid-column: 3;
-  display: flex;
-  justify-content: right !important;
+  position: relative;
+  /* background: red; */
 }
+
+.nav3-2 {
+  position: absolute !important;
+  bottom: 0;
+  right: 55px;
+  width: 32px;
+}
+.nav3-3 {
+  position: absolute !important;
+  bottom: 3px;
+  right: 3px;
+  width: 32px !important;
+}
+
 .judul {
   font-family: "Poppins";
   letter-spacing: -1.5px;
@@ -95,6 +109,21 @@
   .burger {
     display: block !important;
     padding-left: 20px;
+    position: absolute;
+    right: 0;
+    top: 4px;
+  }
+  .nav3-2 {
+    position: absolute !important;
+    bottom: 0;
+    right: 75px;
+    width: 32px;
+  }
+  .nav3-3 {
+    position: absolute !important;
+    bottom: 3px;
+    right: 40px;
+    width: 32px !important;
   }
 }
 .hilang-active {

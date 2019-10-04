@@ -7,11 +7,13 @@ export default function Footer() {
       <div className="container-fluid">
         <div className="row justify-content-around">
           <div className="col-8 col-md-5">
-            <h5 className="judul text-white">Bagi Bakat</h5>
-            <p className="text-white text-justify">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur
-              distinctio qui laboriosam iusto dolores culpa aliquid quod.
-              Beatae, delectus omnis.
+            <h5 className="judul">Bagi Bakat</h5>
+            <p className="text-justify">
+              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Suscipit
+              fuga atque qui quam sunt repellendus voluptatum nemo perspiciatis
+              voluptatem excepturi! Omnis dignissimos doloremque fugit
+              perspiciatis, eius, et illo tempora, ipsum doloribus excepturi vel
+              itaque sequi. Vero unde sint nostrum veniam!
             </p>
           </div>
           <div className="col-2">

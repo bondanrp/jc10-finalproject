@@ -300,3 +300,15 @@
   background: rgb(70, 70, 70);
   color: white;
 }
+.please {
+  display: flex;
+  justify-content: center;
+  align-content: center;
+}
+.please > h1 {
+  font-family: "poppins";
+  font-weight: 200;
+  padding-top: 70px;
+  font-size: 20px;
+  height: 50px;
+}

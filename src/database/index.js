@@ -139,7 +139,7 @@ module.exports = {
     db.query(
       `SELECT *
       FROM
-        (SELECT id, title, episode, thumbnail, video, description, author, category, views, 
+        (SELECT id, title, episode, thumbnail, video, description, author, category, views, timestamp,
                      @category_rank := IF(@current_category = category, @category_rank + 1, 1) AS category_rank,
                      @current_category := category 
           FROM uploads
@@ -153,7 +153,7 @@ module.exports = {
     );
   },
   browseAll: (req, res) => {
-    db.query(`SELECT * FROM uploads order by id desc`, (err, result) => {
+    db.query(`SELECT * FROM uploads order by timestamp desc`, (err, result) => {
       if (err) throw err;
       res.send(result);
     });
@@ -170,7 +170,7 @@ module.exports = {
   search: (req, res) => {
     db.query(
       `select * from uploads where title like '%${req.query.search}%'
-      or description like '%${req.query.search}%' or author like '%${req.query.search}%' or category like '%${req.query.search}%'`,
+      or description like '%${req.query.search}%' or author like '%${req.query.search}%' or category like '%${req.query.search}%' order by views`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -181,6 +181,15 @@ module.exports = {
     db.query(
       `select p.username, p.profilepict, p.firstname, p.lastname, f.category from (users p join uploads f on p.username = f.author) 
       where p.role = 'teacher' and p.username like '%${req.query.search}%' or p.firstname like '%${req.query.search}%' or p.lastname like '%${req.query.search}%' or f.category like '%${req.query.search}%' group by p.username`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  getFeaturedVideos: (req, res) => {
+    db.query(
+      `select * from uploads where episode = 1 order by RAND() limit 9`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -207,7 +216,7 @@ module.exports = {
   },
   getUserVideos: (req, res) => {
     db.query(
-      `select * from uploads where author = '${req.query.username}' order by id desc`,
+      `select * from uploads where author = '${req.query.username}' order by timestamp`,
       (err, result) => {
         if (err) throw err;
         res.send(result);

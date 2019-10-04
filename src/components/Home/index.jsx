@@ -6,6 +6,7 @@ import Swal from "sweetalert2";
 
 import { onLoginUser } from "../../actions/login/login";
 import { connect } from "react-redux";
+import { timeSince } from "../../functions";
 
 let urlPreviewApi = "http://localhost:3001/";
 
@@ -107,8 +108,10 @@ export class Home extends Component {
                 <div className="preview-episode">Eps #{val.episode}</div>
               </div>
               <p className="text-capitalize preview-title">{val.title}</p>
-              <p className="preview-author">{val.author} • </p>
-              <p className="preview-views">{val.views} views</p>
+              <p className="preview-author">{val.author} </p>
+              <p className="preview-views">
+                {val.views} views • {timeSince(val.timestamp)}
+              </p>
             </div>
           );
         } else {

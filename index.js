@@ -8,6 +8,7 @@ var multer = require("multer");
 var fs = require("fs");
 var mysql = require("mysql");
 const {
+  //profile
   verify,
   updateDP,
   getAllUserData,
@@ -16,12 +17,15 @@ const {
   login,
   registerUser,
   getUserEmail,
+  //video
   browseAll,
   getVideos,
   getRelatedVideos,
   getVideo,
+  getFeaturedVideos,
   getEpisode,
   getUserVideos,
+  //comments
   getComments,
   postComment,
   sendCommentNotification,
@@ -33,6 +37,7 @@ const {
   uploadVideo,
   getCategories,
   getPreview,
+  //subscription
   getSubscription,
   countSubscribers,
   subscribedTeachers,
@@ -70,6 +75,7 @@ app.post("/registeruser", registerUser);
 // video db
 app.get("/browseall", browseAll);
 app.get("/getvideos", getVideos);
+app.get("/getfeaturedvideos", getFeaturedVideos);
 app.get("/getvideo/:id", getVideo);
 app.get("/getepisode", getEpisode);
 app.get("/getrelatedvideos/", getRelatedVideos);

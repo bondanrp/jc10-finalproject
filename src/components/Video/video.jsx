@@ -1,10 +1,18 @@
 import React, { Component } from "react";
 import Axios from "axios";
 import "./video.css";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import Swal from "sweetalert2";
 
+import { timeSince } from "../../functions/index";
+const swalWithButtons = Swal.mixin({
+  customClass: {
+    confirmButton: "confirm-button",
+    cancelButton: "cancel-button"
+  },
+  buttonsStyling: false
+});
 let urlApi = "http://localhost:3001/";
 export class Video extends Component {
   state = {
@@ -15,12 +23,15 @@ export class Video extends Component {
     refresh: false,
     loading: true,
     comment: "",
-    comments: []
+    comments: [],
+    redirectLogin: false
   };
 
   timer = null;
+  timerLogin = null;
   componentDidMount() {
     this.getData();
+    setTimeout(() => {});
   }
   componentDidUpdate() {
     if (!this.state.refresh) {
@@ -35,6 +46,9 @@ export class Video extends Component {
   componentWillUnmount() {
     clearTimeout(this.timer);
   }
+  login = () => {
+    this.setState({ redirectLogin: true });
+  };
   addView = () => {
     Axios.put(urlApi + "view", { id: this.props.match.params.id }).then(res => {
       this.setState({ refresh: false });
@@ -46,6 +60,7 @@ export class Video extends Component {
     Axios.get(urlApi + "getvideo/" + this.props.match.params.id).then(res => {
       this.setState({ data: res.data[0], loading: false });
       this.timer = setTimeout(this.addView, 60000);
+      this.timerLogin = setTimeout(this.login, 10000);
       // NEXT EPISODE
       Axios.get(urlApi + "getepisode", {
         params: {
@@ -76,6 +91,9 @@ export class Video extends Component {
                 id: this.props.match.params.id
               }
             }).then(res => {
+              if (this.props.username) {
+                clearTimeout(this.timerLogin);
+              }
               this.setState({ comments: res.data });
             });
           });
@@ -84,38 +102,9 @@ export class Video extends Component {
     });
   };
 
-  timeSince(date) {
-    var seconds = Math.floor((new Date() - date) / 1000);
-    var interval = Math.floor(seconds / 31536000);
-    if (interval >= 1) {
-      return interval + " years ago";
-    }
-    interval = Math.floor(seconds / 2592000);
-    if (interval >= 1) {
-      return interval + " months ago";
-    }
-    interval = Math.floor(seconds / 86400);
-    if (interval >= 1) {
-      return interval + " days ago";
-    }
-    interval = Math.floor(seconds / 3600);
-    if (interval >= 1) {
-      return interval + " hours ago";
-    }
-    interval = Math.floor(seconds / 60);
-    if (interval >= 1) {
-      return interval + " minutes ago";
-    } else {
-      return "just now";
-    }
-  }
-
   renderComments = () => {
     let render = this.state.comments.map(val => {
-      var t = val.timestamp.split(/[- T Z :]/);
-      var d = new Date(Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4], t[5]));
-      var date = this.timeSince(d);
-
+      var date = timeSince(val.timestamp);
       return (
         <div className="comment-box">
           <Link to={`/user/${val.username}`} className="linkaja">
@@ -146,14 +135,6 @@ export class Video extends Component {
   };
 
   onDeleteComment = id => {
-    const swalWithButtons = Swal.mixin({
-      customClass: {
-        confirmButton: "confirm-button",
-        cancelButton: "cancel-button"
-      },
-      buttonsStyling: false
-    });
-
     swalWithButtons
       .fire({
         title: "Are you sure?",
@@ -280,6 +261,15 @@ export class Video extends Component {
     event.preventDefault();
   };
   render() {
+    if (this.state.redirectLogin) {
+      swalWithButtons.fire({
+        title: "Please Login!",
+        text: "It looks like you're enjoying our site!",
+        confirmButtonText: "Got it!",
+        reverseButtons: true
+      });
+      return <Redirect to="/login"></Redirect>;
+    }
     if (this.state.loading) {
       return (
         <div className="gray-background">
@@ -335,30 +325,40 @@ export class Video extends Component {
                 <h6>{this.state.data.views + 1} views</h6>
                 <p className="video-desc">{this.state.data.description}</p>
               </div>
-              <div className="video-comment-input">
-                <div>
-                  <img src={this.props.profilepict} alt="" />
-                  <p>@{this.props.username}</p>
-                  <p>{this.props.role}</p>
-                </div>
-                <form>
-                  <input
-                    type="text"
-                    placeholder="Add a comment"
-                    value={this.state.comment}
-                    maxLength="140"
-                    onChange={e => {
-                      this.setState({
-                        comment: e.target.value
-                      });
-                    }}
-                  />
-                  <div className="text-right">
-                    <button onClick={this.handleSubmit}>Submit</button>
+              {this.props.username ? (
+                <React.Fragment>
+                  <div className="video-comment-input">
+                    <div>
+                      <img src={this.props.profilepict} alt="" />
+                      <p>@{this.props.username}</p>
+                      <p>{this.props.role}</p>
+                    </div>
+                    <form>
+                      <input
+                        type="text"
+                        placeholder="Add a comment"
+                        value={this.state.comment}
+                        maxLength="140"
+                        onChange={e => {
+                          this.setState({
+                            comment: e.target.value
+                          });
+                        }}
+                      />
+                      <div className="text-right">
+                        <button onClick={this.handleSubmit}>Submit</button>
+                      </div>
+                    </form>
                   </div>
-                </form>
-              </div>
-              {this.renderComments()}
+                  {this.renderComments()}
+                </React.Fragment>
+              ) : (
+                <div className="please">
+                  <h1 className="text-center">
+                    Please <Link to="/login">sign in</Link> to post comments
+                  </h1>
+                </div>
+              )}
             </div>
             <div>
               <div className="video-related">

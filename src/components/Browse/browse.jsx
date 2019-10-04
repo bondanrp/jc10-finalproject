@@ -3,6 +3,7 @@ import axios from "axios";
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import "./browse.css";
+import { timeSince } from "../../functions/index";
 
 const urlApi = "http://localhost:3001/";
 
@@ -19,12 +20,15 @@ export class Browse extends Component {
     title: "Home",
     search: "",
     loading: true,
-    page: 15
+    page: 15,
+    featured: [],
+    sort: ""
   };
 
   componentDidMount() {
     this.getData();
     this.getVideo();
+    this.getFeaturedVideos();
   }
   getData = () => {
     axios.get(urlApi + "getcategories").then(res => {
@@ -43,32 +47,23 @@ export class Browse extends Component {
   };
 
   getVideo = () => {
-    if (localStorage.length > 0) {
-      var loggedId = JSON.parse(localStorage.userData).id;
-    }
-    if (this.state.nav === "home") {
-      axios.get(urlApi + "browseall").then(res => {
-        this.setState({
-          preview: res.data,
-          refresh: false,
-          loading: false,
-          page: 15
-        });
+    axios.get(urlApi + "browseall").then(res => {
+      this.setState({
+        sort: "",
+        preview: res.data,
+        refresh: false,
+        loading: false,
+        page: 15
       });
-    } else if (this.state.nav === "subscriptions") {
-      axios
-        .get(urlApi + `getsubscription/${loggedId}`)
-        .then(res => {
-          this.setState({
-            preview: res.data,
-            loading: false,
-            page: 15
-          });
-        })
-        .catch(err => {
-          alert(err);
-        });
-    }
+    });
+  };
+  getFeaturedVideos = () => {
+    axios.get(urlApi + "getfeaturedvideos").then(res => {
+      this.setState({
+        featured: res.data
+      });
+      console.log(res.data);
+    });
   };
   getTeachers = () => {
     axios.get(urlApi + "getteacher").then(res => {
@@ -91,6 +86,7 @@ export class Browse extends Component {
     return render;
   };
   handleSearch = event => {
+    this.setState({ nav: "search" });
     // search video
     axios
       .get(urlApi + "search", { params: { search: this.state.search } })
@@ -155,23 +151,46 @@ export class Browse extends Component {
   handleChange = event => {
     this.setState({ [event.target.id]: event.target.value });
   };
-  renderVideos = () => {
-    let test = document.getElementsByName("sub-nav");
-    let teacherCheck = false;
-    for (let i = 0; i < test.length; i++) {
-      if (test[i].checked) {
-        teacherCheck = true;
+  renderFeatured = () => {
+    let render = this.state.featured.map((val, idx) => {
+      if (idx < 3) {
+        return (
+          <div className="featured-preview">
+            <img src={val.thumbnail} alt="preview" />
+            <Link to={`/user/${val.author}/${val.title}/${val.episode}`}>
+              {val.title}
+            </Link>
+            <Link to={`/user/${val.author}`}>
+              <p>@{val.author}</p>
+            </Link>
+            <p>{val.description}</p>
+          </div>
+        );
+      } else {
+        return null;
       }
-    }
+    });
+    return render;
+  };
+  renderVideos = () => {
     if (this.state.preview.length > 0) {
       let sorted = this.state.preview;
       if (this.state.title === "most viewed") {
         sorted = this.state.preview.sort((a, b) =>
           a.views < b.views ? 1 : -1
         );
-      } else if (this.state.title === "newest") {
-        sorted = this.state.preview.sort((a, b) => (a.id < b.id ? 1 : -1));
       }
+      if (this.state.sort === "date") {
+        sorted = this.state.preview.sort((a, b) =>
+          a.timestamp < b.timestamp ? 1 : -1
+        );
+      }
+      if (this.state.sort === "views") {
+        sorted = this.state.preview.sort((a, b) =>
+          a.views < b.views ? 1 : -1
+        );
+      }
+
       let render = sorted.map((val, idx) => {
         if (idx < this.state.page) {
           if (val.title) {
@@ -191,8 +210,10 @@ export class Browse extends Component {
                   <div className="preview-episode">Eps #{val.episode}</div>
                 </div>
                 <p className="text-capitalize preview-title">{val.title}</p>
-                <p className="preview-author">{val.author} • </p>
-                <p className="preview-views">{val.views} views</p>
+                <p className="preview-author">{val.author}</p>
+                <p className="preview-views">
+                  {val.views} views • {timeSince(val.timestamp)}
+                </p>
               </div>
             );
           } else if (val.username) {
@@ -218,7 +239,7 @@ export class Browse extends Component {
         }
       });
       return render;
-    } else if (teacherCheck) {
+    } else if (this.state.nav === "teacher") {
       return (
         <div style={{ gridColumn: "1/-1", margin: "auto", gridRow: "3" }}>
           This user have not uploaded any videos
@@ -252,7 +273,7 @@ export class Browse extends Component {
               this.setState({
                 title: `${val.username}'s Videos`,
                 loading: true,
-                nav: val.username
+                nav: "teacher"
               });
               axios
                 .get(urlApi + "getuservideos", {
@@ -297,7 +318,7 @@ export class Browse extends Component {
             className="text-capitalize"
             htmlFor={`${val.category}`}
             onClick={() => {
-              this.setState({ title: val.category });
+              this.setState({ title: val.category, nav: "category" });
               axios
                 .get(urlApi + "getpreview", {
                   params: { category: val.category }
@@ -314,12 +335,7 @@ export class Browse extends Component {
     });
     return render;
   };
-  clearRadio = () => {
-    let test = document.getElementsByName("sub-nav");
-    for (let i = 0; i < test.length; i++) {
-      test[i].checked = false;
-    }
-  };
+
   goToVideo = (user, title, id) => {
     this.setState({ targetUser: user, targetTitle: title, targetId: id });
     this.setState({ redirectToVideo: true });
@@ -336,64 +352,49 @@ export class Browse extends Component {
       return (
         <div className="gray-background py-5">
           <div className="browse-container">
-            <div className="browse-search">
-              <form
-                onSubmit={event => {
-                  event.preventDefault();
-                }}
-              >
-                <input
-                  type="text"
-                  id="search"
-                  value={this.state.search}
-                  onChange={this.handleChange}
-                  onSubmit={() => {
-                    this.handleSearch();
-                  }}
-                  placeholder="  Search..."
-                />
-                <button type="button" onClick={this.handleSearch}>
-                  Search
-                </button>
-              </form>
-            </div>
             <div className="browse-nav">
               <div>
                 <input type="checkbox" name="home" id="home" defaultChecked />
                 <label htmlFor="home">Home</label>
                 <div className="nav-content">
-                  <input type="radio" name="sub-nav" id="mySubscriptions" />
-                  <label
-                    htmlFor="mySubscriptions"
-                    onClick={() => {
-                      this.setState({
-                        title: "Subscriptions",
-                        loading: true
-                      });
-                      if (localStorage.length > 0) {
-                        var loggedId = JSON.parse(localStorage.userData).id;
-                      }
-                      axios
-                        .get(urlApi + `getsubscription/${loggedId}`)
-                        .then(res => {
+                  {this.props.username ? (
+                    <React.Fragment>
+                      <input type="radio" name="sub-nav" id="mySubscriptions" />
+                      <label
+                        htmlFor="mySubscriptions"
+                        onClick={() => {
                           this.setState({
-                            preview: res.data,
-                            loading: false,
-                            page: 15
+                            title: "Subscriptions",
+                            loading: true,
+                            nav: "home"
                           });
-                        })
-                        .catch(err => {
-                          alert(err);
-                        });
-                    }}
-                  >
-                    Subscriptions
-                  </label>
+                          if (localStorage.length > 0) {
+                            var loggedId = JSON.parse(localStorage.userData).id;
+                          }
+                          axios
+                            .get(urlApi + `getsubscription/${loggedId}`)
+                            .then(res => {
+                              this.setState({
+                                preview: res.data,
+                                loading: false,
+                                page: 15
+                              });
+                            })
+                            .catch(err => {
+                              alert(err);
+                            });
+                        }}
+                      >
+                        Subscriptions
+                      </label>
+                    </React.Fragment>
+                  ) : null}
                   <input type="radio" name="sub-nav" id="newest" />
                   <label
                     htmlFor="newest"
                     onClick={() => {
                       this.setState({
+                        nav: "home",
                         title: "newest",
                         loading: true
                       });
@@ -407,6 +408,7 @@ export class Browse extends Component {
                     htmlFor="most-viewed"
                     onClick={() => {
                       this.setState({
+                        nav: "home",
                         title: "most viewed",
                         loading: true
                       });
@@ -419,13 +421,23 @@ export class Browse extends Component {
               </div>
               {this.props.username ? (
                 <div>
-                  <input type="checkbox" name="home" id="subscriptions" />
+                  <input
+                    type="checkbox"
+                    name="home"
+                    id="subscriptions"
+                    defaultChecked
+                  />
                   <label htmlFor="subscriptions">Subscriptions</label>
                   <div className="nav-content">{this.subscribedTeachers()}</div>
                 </div>
               ) : null}
               <div>
-                <input type="checkbox" name="home" id="category" />
+                <input
+                  type="checkbox"
+                  name="home"
+                  id="category"
+                  defaultChecked
+                />
                 <label htmlFor="category">Category</label>
                 <div className="nav-content">{this.categories()}</div>
               </div>
@@ -445,25 +457,74 @@ export class Browse extends Component {
                 </label>
               </div>
             </div>
-            <div>
-              <div className="browse-content">
-                <div className="browse-title">
-                  <h1>{this.state.title}</h1>
-                  {this.renderProfileButton()}
-                </div>
-                {this.renderVideos()}
-                {this.state.preview.length > this.state.page ? (
-                  <div
-                    className="show-more"
-                    onClick={() => {
-                      this.setState({
-                        page: this.state.page + 15
-                      });
+            <div className="browse-container-content">
+              <div className="browse-search">
+                <form
+                  onSubmit={event => {
+                    event.preventDefault();
+                  }}
+                >
+                  <input
+                    type="text"
+                    id="search"
+                    value={this.state.search}
+                    onChange={this.handleChange}
+                    onSubmit={() => {
+                      this.handleSearch();
                     }}
-                  >
-                    show more
+                    placeholder="  Search..."
+                  />
+                  <button type="button" onClick={this.handleSearch}>
+                    Search
+                  </button>
+                </form>
+              </div>
+              {this.state.nav !== "home" ? null : (
+                <div className="browse-featured-container">
+                  <div className="browse-title">
+                    <h1>Featured Classes</h1>
                   </div>
-                ) : null}
+                  <div className="browse-featured">{this.renderFeatured()}</div>
+                </div>
+              )}
+              <div className="browse-content-container">
+                <div className="browse-content">
+                  <div className="browse-title">
+                    <h1>{this.state.title}</h1>
+                    {this.state.nav === "home" ? null : (
+                      <div className="browse-sort">
+                        <button
+                          onClick={() => {
+                            this.setState({ sort: "date" });
+                          }}
+                        >
+                          by date
+                        </button>
+                        <button
+                          onClick={() => {
+                            this.setState({ sort: "views" });
+                          }}
+                        >
+                          by views
+                        </button>
+                      </div>
+                    )}
+                    {this.renderProfileButton()}
+                  </div>
+                  {this.renderVideos()}
+                  {this.state.preview.length > this.state.page ? (
+                    <div
+                      className="show-more"
+                      onClick={() => {
+                        this.setState({
+                          page: this.state.page + 15
+                        });
+                      }}
+                    >
+                      show more
+                    </div>
+                  ) : null}
+                </div>
               </div>
             </div>
           </div>

@@ -1,19 +1,19 @@
 ﻿.footer {
-  background-color: #1d1d1d;
+  background-color: #e7e7e7;
   padding-top: 2rem;
   padding-bottom: 4rem;
   z-index: 2;
 }
 
 .title {
-  color: #fff;
+  color: black;
 }
 
 .description {
-  color: #fff;
+  color: black;
 }
 
 .footerlink,
 .footerlink:hover {
-  color: #fff;
+  color: black;
 }
