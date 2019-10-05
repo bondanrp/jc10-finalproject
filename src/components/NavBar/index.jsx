@@ -275,7 +275,11 @@ class NavBar extends Component {
           <div className={hilang}>
             <Link
               className="tautan active"
-              onClick={() => this.setState({ toggleBurger: false })}
+              onClick={() => {
+                console.log(this.props);
+
+                this.setState({ toggleBurger: false });
+              }}
               to="/browse"
             >
               Browse

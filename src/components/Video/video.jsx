@@ -29,6 +29,8 @@ export class Video extends Component {
   timer = null;
   timerLogin = null;
   componentDidMount() {
+    console.log(this.props.params);
+
     this.getData();
   }
   componentDidUpdate() {
@@ -48,14 +50,14 @@ export class Video extends Component {
     this.setState({ redirectLogin: true });
   };
   addView = () => {
-    Axios.put(urlApi + "view", { id: this.props.targetVideo.id }).then(res => {
+    Axios.put(urlApi + "view", { id: this.props.params.id }).then(res => {
       this.setState({ refresh: false });
       console.log("view added");
     });
   };
   getData = () => {
     this.setState({ refresh: false });
-    Axios.get(urlApi + "getvideo/" + this.props.targetVideo.id).then(res => {
+    Axios.get(urlApi + "getvideo/" + this.props.params.id).then(res => {
       this.setState({ data: res.data[0], loading: false });
       this.timer = setTimeout(this.addView, 60000);
       this.timerLogin = setTimeout(this.login, 20000);
@@ -86,7 +88,7 @@ export class Video extends Component {
             // GET COMMENTS
             Axios.get(urlApi + "getcomments", {
               params: {
-                id: this.props.targetVideo.id
+                id: this.props.params.id
               }
             }).then(res => {
               if (this.props.username) {
@@ -154,7 +156,7 @@ export class Video extends Component {
             swalWithButtons.fire("Deleted!", "Your comment has been deleted.");
             Axios.get(urlApi + "getcomments", {
               params: {
-                id: this.props.targetVideo.id
+                id: this.props.params.id
               }
             }).then(res => {
               this.setState({ comments: res.data });
@@ -170,11 +172,7 @@ export class Video extends Component {
           <React.Fragment>
             <Link
               onClick={() => {
-                this.props.onOtherVideoClick(
-                  val.author,
-                  val.title,
-                  val.episode
-                );
+                this.props.onOtherVideoClick(val.author, val.title, val.id);
                 this.setState({ refresh: true, loading: true });
               }}
               className="related-preview linkaja"
@@ -213,8 +211,8 @@ export class Video extends Component {
           <Link
             onClick={() => {
               this.props.onOtherVideoClick(
-                this.props.targetVideo.author,
-                this.props.targetVideo.title,
+                this.props.params.username,
+                this.props.params.title,
                 this.state.nextData.id
               );
               this.setState({ refresh: true, loading: true });
@@ -235,8 +233,8 @@ export class Video extends Component {
           <Link
             onClick={() => {
               this.props.onOtherVideoClick(
-                this.props.targetVideo.author,
-                this.props.targetVideo.title,
+                this.props.params.username,
+                this.props.params.title,
                 this.state.prevData.id
               );
               this.setState({ refresh: true, loading: true });
@@ -252,7 +250,7 @@ export class Video extends Component {
   handleSubmit = event => {
     if (this.state.comment) {
       Axios.post(urlApi + "postcomment", {
-        videoid: this.props.targetVideo.id,
+        videoid: this.props.params.id,
         userid: this.props.id,
         comment: this.state.comment
       }).then(res => {
@@ -266,7 +264,7 @@ export class Video extends Component {
           this.setState({ comment: "" });
           Axios.get(urlApi + "getcomments", {
             params: {
-              id: this.props.targetVideo.id
+              id: this.props.params.id
             }
           }).then(res => {
             this.setState({ comments: res.data });

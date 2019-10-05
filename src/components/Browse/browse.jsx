@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "./browse.css";
 import { timeSince } from "../../functions/index";
 import { Video } from "../Video/video.jsx";
@@ -35,13 +35,15 @@ export class Browse extends Component {
     targetVideo: "",
     username: "",
     password: "",
-    loginModal: false
+    loginModal: false,
+    profileRefresh: false
   };
 
   componentDidMount() {
     this.getData();
     this.getVideo();
     this.getFeaturedVideos();
+    console.log(this.props.match.params.id);
   }
   getData = () => {
     axios.get(urlApi + "getcategories").then(res => {
@@ -58,7 +60,12 @@ export class Browse extends Component {
         this.setState({ subscribedTeachers: res.data });
       });
   };
-
+  profileRefresh = () => {
+    this.setState({ profileRefresh: true });
+  };
+  profileRefreshFalse = () => {
+    this.setState({ profileRefresh: false });
+  };
   getVideo = () => {
     axios.get(urlApi + "browseall").then(res => {
       this.setState({
@@ -93,11 +100,11 @@ export class Browse extends Component {
 
   onOtherVideoClick = (author, title, id) => {
     this.setState({ targetVideo: { author, title, id }, nav: "video" });
-    this.props.history.push(`/browse/user/${author}/${title}/${id}`);
+    this.props.history.push(`/browse/${author}/${title}/${id}`);
   };
   onOtherProfileClick = username => {
     this.setState({ profile: username, nav: "profile" });
-    this.props.history.push(`/browse/user/${username}`);
+    this.props.history.push(`/browse/${username}`);
   };
   onSubscribe = () => {
     axios
@@ -119,7 +126,6 @@ export class Browse extends Component {
         .then(res => {
           // kalau dapat video
           if (res.data.length > 0) {
-            let total = res.data.length;
             this.setState({
               preview: res.data,
               title: `search results for '${this.state.search}'`
@@ -189,7 +195,7 @@ export class Browse extends Component {
             <img src={val.thumbnail} alt="preview" />
             <Link
               onClick={() =>
-                this.onOtherVideoClick(val.author, val.title, val.episode)
+                this.onOtherVideoClick(val.author, val.title, val.id)
               }
             >
               {val.title}
@@ -243,7 +249,7 @@ export class Browse extends Component {
             return (
               <div
                 onClick={() =>
-                  this.onOtherVideoClick(val.author, val.title, val.episode)
+                  this.onOtherVideoClick(val.author, val.title, val.id)
                 }
                 className="browse-preview"
               >
@@ -356,7 +362,7 @@ export class Browse extends Component {
         <Link
           onClick={() => {
             this.setState({ nav: "profile" });
-            this.props.history.push(`/browse/user/${this.state.profile}`);
+            this.props.history.push(`/browse/${this.state.profile}`);
           }}
         >
           <button className="browse-profile">profile</button>
@@ -382,7 +388,7 @@ export class Browse extends Component {
                   params: { category: val.category }
                 })
                 .then(res => {
-                  this.setState({ preview: res.data });
+                  this.setState({ preview: res.data, pagemin: 0, pagemax: 15 });
                 });
             }}
           >
@@ -394,10 +400,6 @@ export class Browse extends Component {
     return render;
   };
 
-  goToVideo = (user, title, id) => {
-    this.setState({ targetUser: user, targetTitle: title, targetId: id });
-    this.setState({ redirectToVideo: true });
-  };
   onMyProfile = () => {
     if (this.props.username) {
       this.setState({
@@ -407,6 +409,7 @@ export class Browse extends Component {
         loading: true
       });
       this.onOtherProfileClick(this.props.username);
+      this.profileRefresh();
     } else {
       this.loginModal();
     }
@@ -602,6 +605,10 @@ export class Browse extends Component {
             </div>
             {this.state.nav === "profile" ? (
               <Profile
+                profileRefresh={this.profileRefresh}
+                profileRefreshFalse={this.profileRefreshFalse}
+                refreshProfile={this.state.profileRefresh}
+                params={this.props.match.params}
                 loginModal={this.loginModal}
                 profile={this.state.profile}
                 id={this.props.id}
@@ -610,12 +617,13 @@ export class Browse extends Component {
                 profilepict={this.props.profilepict}
                 onOtherVideoClick={this.onOtherVideoClick}
                 onOtherProfileClick={this.onOtherProfileClick}
-                updateProfile={this.props.updateProfile}
+                updateProfile={menjadi => this.props.updateProfile(menjadi)}
                 onSubscribe={this.onSubscribe}
               />
             ) : null}
             {this.state.nav === "video" ? (
               <Video
+                params={this.props.match.params}
                 loginModal={this.loginModal}
                 targetVideo={this.state.targetVideo}
                 id={this.props.id}

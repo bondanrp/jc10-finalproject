@@ -1,7 +1,7 @@
 ﻿import React, { Component } from "react";
 import "./home.css";
 import Axios from "axios";
-import { Link, Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import Swal from "sweetalert2";
 
 import { LoginModal } from "../Login/loginModal";

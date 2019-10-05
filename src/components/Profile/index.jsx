@@ -20,23 +20,69 @@ export class Profile extends Component {
     loggedUser: "",
     edit: false,
     selectedFile: null,
-    profpict: ""
+    profpict: "",
+    page: 15,
+    pagemin: 0,
+    pagemax: 15
   };
   componentDidMount() {
     this.getData();
   }
+  // componentWillReceiveProps(newProps) {
+  //   this.getData();
+  //   console.log(newProps);
+  //   console.log("componentwillrecieve");
+  // }
   componentDidUpdate() {
     // refresh page biar sesuai
-    if (this.state.refresh) {
+    if (this.state.refresh || this.props.refreshProfile) {
       this.getData();
+      console.log("componendtdidupdate");
     }
   }
+  pagelist = () => {
+    let total = Math.ceil(this.state.videos.length / 15);
+    let pages = [];
+    for (let i = 0; i < total; i++) {
+      pages.push(i + 1);
+    }
+    let render = pages.map((val, idx) => {
+      return (
+        <React.Fragment>
+          {idx === 0 ? (
+            <input
+              type="radio"
+              id={"page" + val}
+              name="page"
+              value={val}
+              defaultChecked
+            />
+          ) : (
+            <input type="radio" id={"page" + val} name="page" value={val} />
+          )}
+          <label
+            onClick={() => {
+              let pagemax = val * this.state.page;
+              let pagemin = val * this.state.page - this.state.page;
+              this.setState({ pagemin, pagemax });
+              console.log(pagemax, pagemin);
+            }}
+            htmlFor={"page" + val}
+          >
+            {val}
+          </label>
+        </React.Fragment>
+      );
+    });
+    return render;
+  };
   getData = () => {
     this.setState({ refresh: false });
+    this.props.profileRefreshFalse();
     //get user profile
     Axios.get(urlApi + "getusername", {
       params: {
-        username: this.props.profile
+        username: this.props.params.username
       }
     })
       .then(res => {
@@ -53,12 +99,11 @@ export class Profile extends Component {
           params: { userid: this.props.id, targetid: this.state.data[0].id }
         }).then(res => {
           let check = res.data.length > 0;
-          console.log(check);
           this.setState({
             isSubscribed: check
           });
           //teacher subscribed by target
-          let username = this.props.profile;
+          let username = this.props.params.username;
           Axios.get(urlApi + `subscribedteachers`, {
             params: { username: username }
           }).then(res => {
@@ -76,7 +121,7 @@ export class Profile extends Component {
     //get videos by this user
     Axios.get(urlApi + "getuservideos", {
       params: {
-        username: this.props.profile
+        username: this.props.params.username
       }
     })
       .then(res => {
@@ -122,8 +167,8 @@ export class Profile extends Component {
   };
 
   renderVideos() {
-    if (this.state.videos.length > 0) {
-      return this.state.videos.map(val => {
+    let render = this.state.videos.map((val, idx) => {
+      if (idx >= this.state.pagemin && idx < this.state.pagemax) {
         return (
           <Link
             onClick={() => {
@@ -143,14 +188,12 @@ export class Profile extends Component {
             <p className="preview-author text-left">@{val.author}</p>
           </Link>
         );
-      });
-    } else {
-      return (
-        <div style={{ gridColumn: "2/4", textAlign: "center" }}>
-          This user have not uploaded any videos
-        </div>
-      );
-    }
+      } else {
+        return null;
+      }
+    });
+
+    return render;
   }
   userVideos = () => {
     if (this.state.data[0].role === "teacher") {
@@ -160,6 +203,9 @@ export class Profile extends Component {
             <h3 className="profile-title">Uploads</h3>
           </div>
           <div className="profile-video-list">{this.renderVideos()}</div>
+          {this.state.videos.length > this.state.page ? (
+            <div className="browse-pages">{this.pagelist()}</div>
+          ) : null}
         </div>
       );
     } else {
@@ -196,7 +242,14 @@ export class Profile extends Component {
     ) {
       return (
         <div>
-          <button className="unsubscribe">this is you</button>
+          <button
+            className="unsubscribe"
+            onClick={() => {
+              console.log(JSON.parse(localStorage.getItem("userData")));
+            }}
+          >
+            this is you
+          </button>
         </div>
       );
     } else if (
@@ -355,7 +408,8 @@ export class Profile extends Component {
                   height: "100px",
                   objectFit: "cover",
                   overflow: "hidden",
-                  borderRadius: "50%"
+                  borderRadius: "50%",
+                  margin: "auto"
                 }}
                 alt=""
               />

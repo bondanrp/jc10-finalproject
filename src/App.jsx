@@ -12,7 +12,6 @@ import Contact from "./components/Contact";
 import BecomeATeacher from "./components/BecomeATeacher";
 import Register from "./components/Register";
 import Login from "./components/Login";
-import Profile from "./components/Profile";
 import Upload from "./components/Upload/index";
 
 const keepLogin = objUser => {
@@ -48,13 +47,14 @@ class App extends Component {
           <Redirect exact path="/" to="/Home" />
           <Route path="/Home" component={Home} />
           <Route path="/About" component={About} />
-          <Route path="/Browse" component={Browse} />
+          <Route exact path="/Browse/" component={Browse} />
+          <Route path="/Browse/:username/:title/:id" component={Browse} />
+          <Route path="/Browse/:username/" component={Browse} />
           <Route path="/Contact" component={Contact} />
           <Route path="/BecomeATeacher" component={BecomeATeacher} />
           <Route path="/Register" component={Register} />
           <Route path="/Login" component={Login} />
-          <Route exact path="/user/:username" component={Profile} />
-          <Route path="/user/:username/manageuploads" component={Upload} />
+          <Route path="/upload/:username/manageuploads" component={Upload} />
         </Switch>
         <Footer />
       </React.Fragment>

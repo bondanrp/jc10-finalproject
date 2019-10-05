@@ -180,7 +180,7 @@ module.exports = {
   searchTeachers: (req, res) => {
     db.query(
       `select p.username, p.profilepict, p.firstname, p.lastname, f.category from (users p join uploads f on p.username = f.author) 
-      where p.role = 'teacher' and p.username like '%${req.query.search}%' or p.firstname like '%${req.query.search}%' or p.lastname like '%${req.query.search}%' or f.category like '%${req.query.search}%' group by p.username`,
+      where p.username like '%${req.query.search}%' or p.firstname like '%${req.query.search}%' or p.lastname like '%${req.query.search}%' or f.category like '%${req.query.search}%' group by p.username`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
