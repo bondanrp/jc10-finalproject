@@ -1,10 +1,8 @@
 ﻿import React, { Component } from "react";
 import Axios from "axios";
-import { connect } from "react-redux";
 import "./profile.css";
 import { Link } from "react-router-dom";
 import swal from "sweetalert2";
-import { updateProfile } from "../../actions/updateprofile/updateprofile";
 
 const urlApi = "http://localhost:3001/";
 
@@ -29,15 +27,16 @@ export class Profile extends Component {
   }
   componentDidUpdate() {
     // refresh page biar sesuai
-    if (this.props.match.params.username !== this.state.username) {
+    if (this.state.refresh) {
       this.getData();
     }
   }
   getData = () => {
+    this.setState({ refresh: false });
     //get user profile
     Axios.get(urlApi + "getusername", {
       params: {
-        username: this.props.match.params.username
+        username: this.props.profile
       }
     })
       .then(res => {
@@ -58,8 +57,8 @@ export class Profile extends Component {
           this.setState({
             isSubscribed: check
           });
-          let username = this.props.match.params.username;
           //teacher subscribed by target
+          let username = this.props.profile;
           Axios.get(urlApi + `subscribedteachers`, {
             params: { username: username }
           }).then(res => {
@@ -77,7 +76,7 @@ export class Profile extends Component {
     //get videos by this user
     Axios.get(urlApi + "getuservideos", {
       params: {
-        username: this.props.match.params.username
+        username: this.props.profile
       }
     })
       .then(res => {
@@ -106,6 +105,7 @@ export class Profile extends Component {
     if (input.userid !== input.targetid) {
       Axios.post(urlApi + "subscribe", input).then(res => {
         this.setState({ isSubscribed: true });
+        this.props.onSubscribe();
       });
     }
   };
@@ -114,6 +114,8 @@ export class Profile extends Component {
       urlApi + `unsubscribe/${this.props.id}/${this.state.data[0].id}`
     ).then(res => {
       this.setState({ isSubscribed: false });
+
+      this.props.onSubscribe();
     });
   };
 
@@ -123,9 +125,8 @@ export class Profile extends Component {
         return (
           <Link
             onClick={() => {
-              // this.setState({ refresh: true, loading: true });
+              this.props.onOtherVideoClick(val.author, val.title, val.id);
             }}
-            to={`/user/${val.author}/${val.title}/${val.id}`}
             className="linkaja preview"
           >
             <div
@@ -188,7 +189,7 @@ export class Profile extends Component {
   };
   subscribeButton = () => {
     if (
-      this.props.match.params.username === this.props.username &&
+      this.props.username === this.state.data[0].username &&
       !this.state.edit
     ) {
       return (
@@ -197,7 +198,7 @@ export class Profile extends Component {
         </div>
       );
     } else if (
-      this.props.match.params.username === this.props.username &&
+      this.props.username === this.state.data[0].username &&
       this.state.edit
     ) {
       return (
@@ -233,7 +234,7 @@ export class Profile extends Component {
       return (
         <div className="profile-container">
           <div className="profile-data">
-            {this.props.match.params.username !== this.props.username ? (
+            {this.props.username !== this.state.data[0].username ? (
               <div
                 style={{
                   width: "100px",
@@ -338,8 +339,8 @@ export class Profile extends Component {
       let subscribedTo = this.state.subscribedTo.map(val => {
         return (
           <Link
-            to={`/${val.username}`}
             onClick={() => {
+              this.props.onOtherProfileClick(val.username);
               this.setState({ refresh: true, loading: true });
             }}
             className="teacher-test"
@@ -377,18 +378,11 @@ export class Profile extends Component {
       return (
         <div className="gray-background">
           <div className="profile-loading"></div>
+          <div></div>
+          <div></div>
         </div>
       );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    username: state.auth.username,
-    id: state.auth.id
-  };
-};
-export default connect(
-  mapStateToProps,
-  { updateProfile }
-)(Profile);
+export default Profile;

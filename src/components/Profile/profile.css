@@ -1,21 +1,25 @@
 .profile-container {
   /* background: white; */
-  width: 900px;
+  width: auto;
   margin: auto;
   min-height: 100vh;
   /* box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2); */
-  padding-top: 20px;
-  padding-bottom: 20px;
+  padding: 20px 60px;
   display: grid;
-  grid-template-columns: 900px;
+  grid-template-columns: 1080px;
   grid-template-rows: 150px 1fr auto;
   row-gap: 10px;
 }
-.profile-container > div:hover {
+.profile-loading {
+  width: 1080px;
+  height: auto;
+  background: white;
+}
+.profile-container > div:nth-of-type(1):hover {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.5);
   transition: 0.5s;
 }
-.profile-container > div {
+.profile-container > div:nth-of-type(1) {
   background: white;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 }
@@ -80,18 +84,18 @@
   font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
     "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
   font-weight: 700;
-  color: white;
+  /* color: white; */
   letter-spacing: -2px;
   text-align: left;
   padding: 5px 30px;
-  background: #017a84;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  border-bottom: 4px solid #017a84;
+  /* box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2); */
 }
 .profile-video-list {
   display: grid;
   padding: 20px;
   margin: auto;
-  grid-template-columns: repeat(4, 200px);
+  grid-template-columns: repeat(5, 200px);
   row-gap: 10px;
   column-gap: 10px;
   overflow-x: hidden;
@@ -108,7 +112,7 @@
   display: grid;
   padding: 20px;
   margin: auto;
-  grid-template-columns: repeat(6, 100px);
+  grid-template-columns: repeat(4, 200px);
   column-gap: 30px;
 
   /* background: #f7f7f7;

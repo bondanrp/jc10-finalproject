@@ -4,6 +4,7 @@
   height: 100%;
   display: grid;
   grid-template-columns: 300px 1200px;
+  grid-template-rows: auto;
   row-gap: 10px;
   column-gap: 10px;
 }
@@ -64,9 +65,9 @@
   /* position: fixed; */
   /* top: 8em; */
   width: 300px;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
   /* z-index: 20; */
 }
+
 .browse-nav > div {
   width: 100%;
   overflow: hidden;
@@ -143,8 +144,8 @@
   padding: 10px;
   cursor: pointer;
   margin: 0;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  /* border-top: 1px solid rgba(0, 0, 0, 0.1); */
+  border: 1px solid rgba(0, 0, 0, 0.1);
   background: #f7f7f7;
   font-family: "poppins";
   font-weight: 200;
@@ -176,9 +177,17 @@ input[type="radio"] {
 }
 
 input[type="radio"]:checked + label {
-  background: #e7e7e7;
+  background: #e7e7e7 !important;
 }
-
+.myprofile::after {
+  content: none !important;
+}
+.myprofile {
+  background-color: white !important;
+}
+.myprofile:hover {
+  background: #fafafa !important;
+}
 .browse-nav > div > input:checked + label::after {
   transform: rotate(90deg);
 }

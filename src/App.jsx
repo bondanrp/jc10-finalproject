@@ -14,7 +14,6 @@ import Register from "./components/Register";
 import Login from "./components/Login";
 import Profile from "./components/Profile";
 import Upload from "./components/Upload/index";
-import Video from "./components/Video/video";
 
 const keepLogin = objUser => {
   return {
@@ -56,7 +55,6 @@ class App extends Component {
           <Route path="/Login" component={Login} />
           <Route exact path="/user/:username" component={Profile} />
           <Route path="/user/:username/manageuploads" component={Upload} />
-          <Route path="/user/:username/:title/:id" component={Video} />
         </Switch>
         <Footer />
       </React.Fragment>
