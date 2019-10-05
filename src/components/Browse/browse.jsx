@@ -7,7 +7,9 @@ import { timeSince } from "../../functions/index";
 import { Video } from "../Video/video.jsx";
 import { Profile } from "../Profile/index.jsx";
 import { updateProfile } from "../../actions/updateprofile/updateprofile";
+import { onLoginUser } from "../../actions/login/login";
 import querystring from "query-string";
+import { LoginModal } from "../Login/loginModal";
 
 const urlApi = "http://localhost:3001/";
 
@@ -26,9 +28,14 @@ export class Browse extends Component {
     search: "",
     loading: true,
     page: 15,
+    pagemin: 0,
+    pagemax: 15,
     featured: [],
     sort: "",
-    targetVideo: ""
+    targetVideo: "",
+    username: "",
+    password: "",
+    loginModal: false
   };
 
   componentDidMount() {
@@ -59,7 +66,8 @@ export class Browse extends Component {
         preview: res.data,
         refresh: false,
         loading: false,
-        page: 15
+        pagemax: 15,
+        pagemin: 0
       });
       this.props.history.push("/browse");
     });
@@ -77,7 +85,8 @@ export class Browse extends Component {
       this.setState({
         preview: res.data,
         loading: false,
-        page: 15
+        pagemax: 15,
+        pagemin: 0
       });
     });
   };
@@ -113,8 +122,7 @@ export class Browse extends Component {
             let total = res.data.length;
             this.setState({
               preview: res.data,
-              title: `search results for '${this.state.search}'`,
-              page: total
+              title: `search results for '${this.state.search}'`
             });
             // search teacher
             axios
@@ -127,14 +135,16 @@ export class Browse extends Component {
                   this.setState({
                     preview: this.state.preview.concat(res.data),
                     loading: false,
-                    page: 15
+                    pagemax: 15,
+                    pagemin: 0
                   });
                 } else {
                   // kalau tidak dapat teacher
                   this.setState({
                     preview: this.state.preview.concat(res.data),
                     loading: false,
-                    page: 15
+                    pagemax: 15,
+                    pagemin: 0
                   });
                 }
               });
@@ -150,14 +160,16 @@ export class Browse extends Component {
                   this.setState({
                     preview: this.state.preview.concat(res.data),
                     loading: false,
-                    page: 15,
+                    pagemax: 15,
+                    pagemin: 0,
                     title: `search results for '${this.state.search}'`
                   });
                 } else {
                   this.setState({
                     preview: res.data,
                     loading: false,
-                    page: 15,
+                    pagemax: 15,
+                    pagemin: 0,
                     title: `no result found for keyword '${this.state.search}'`
                   });
                 }
@@ -182,7 +194,7 @@ export class Browse extends Component {
             >
               {val.title}
             </Link>
-            <Link to={`/user/${val.author}`}>
+            <Link onClick={() => this.onOtherProfileClick(val.author)}>
               <p>@{val.author}</p>
             </Link>
             <p>{val.description}</p>
@@ -226,7 +238,7 @@ export class Browse extends Component {
       }
 
       let render = sorted.map((val, idx) => {
-        if (idx < this.state.page) {
+        if (idx >= this.state.pagemin && idx < this.state.pagemax) {
           if (val.title) {
             return (
               <div
@@ -325,7 +337,8 @@ export class Browse extends Component {
                   this.setState({
                     preview: res.data,
                     loading: false,
-                    page: 15
+                    pagemax: 15,
+                    pagemin: 0
                   });
                 });
             }}
@@ -385,240 +398,279 @@ export class Browse extends Component {
     this.setState({ targetUser: user, targetTitle: title, targetId: id });
     this.setState({ redirectToVideo: true });
   };
-
-  render() {
-    if (this.state.redirectToVideo) {
-      return (
-        <Redirect
-          to={`/user/${this.state.targetUser}/${this.state.targetTitle}/${this.state.targetId}`}
-        ></Redirect>
-      );
+  onMyProfile = () => {
+    if (this.props.username) {
+      this.setState({
+        nav: "profile",
+        title: "profile",
+        profile: this.props.username,
+        loading: true
+      });
+      this.onOtherProfileClick(this.props.username);
     } else {
+      this.loginModal();
+    }
+  };
+  loginModal = () => {
+    this.setState(prevState => ({
+      loginModal: !prevState.loginModal
+    }));
+  };
+  handleChange = event => {
+    this.setState({ [event.target.id]: event.target.value });
+  };
+  pagelist = () => {
+    let total = Math.ceil(this.state.preview.length / 15);
+    let pages = [];
+    for (let i = 0; i < total; i++) {
+      pages.push(i + 1);
+    }
+    let render = pages.map((val, idx) => {
       return (
-        <div className="gray-background py-5">
-          <div className="browse-container">
-            <div className="browse-nav">
-              <div>
-                <input type="radio" name="sub-nav" id="myProfile" />
-                <button
-                  className="myprofile"
-                  htmlFor="myProfile"
+        <React.Fragment>
+          {idx === 0 ? (
+            <input
+              type="radio"
+              id={"page" + val}
+              name="page"
+              value={val}
+              defaultChecked
+            />
+          ) : (
+            <input type="radio" id={"page" + val} name="page" value={val} />
+          )}
+          <label
+            onClick={() => {
+              let pagemax = val * this.state.page;
+              let pagemin = val * this.state.page - this.state.page;
+              this.setState({ pagemin, pagemax });
+              console.log(pagemax, pagemin);
+            }}
+            htmlFor={"page" + val}
+          >
+            {val}
+          </label>
+        </React.Fragment>
+      );
+    });
+    return render;
+  };
+  render() {
+    return (
+      <div className="gray-background py-5">
+        {this.state.loginModal ? (
+          <LoginModal
+            username={this.state.username}
+            password={this.state.password}
+            handleChange={e => this.handleChange(e)}
+            onLoginUser={this.props.onLoginUser}
+            history={this.props.history}
+            loginModal={this.loginModal}
+          />
+        ) : null}
+        <div className="browse-container">
+          <div className="browse-nav">
+            <div>
+              <input type="radio" name="sub-nav" id="myProfile" />
+              <button
+                className="myprofile"
+                htmlFor="myProfile"
+                onClick={this.onMyProfile}
+              >
+                My Profile
+              </button>
+              <input type="checkbox" name="home" id="home" defaultChecked />
+              <label htmlFor="home">Home</label>
+              <div className="nav-content">
+                {this.props.username ? (
+                  <React.Fragment>
+                    <input type="radio" name="sub-nav" id="mySubscriptions" />
+                    <label
+                      htmlFor="mySubscriptions"
+                      onClick={() => {
+                        this.setState({
+                          title: "Subscriptions",
+                          loading: true,
+                          nav: "home"
+                        });
+                        if (localStorage.length > 0) {
+                          var loggedId = JSON.parse(localStorage.userData).id;
+                        }
+                        axios
+                          .get(urlApi + `getsubscription/${loggedId}`)
+                          .then(res => {
+                            this.setState({
+                              preview: res.data,
+                              loading: false,
+                              pagemax: 15,
+                              pagemin: 0
+                            });
+                          })
+                          .catch(err => {
+                            alert(err);
+                          });
+                      }}
+                    >
+                      Subscriptions
+                    </label>
+                  </React.Fragment>
+                ) : null}
+                <input type="radio" name="sub-nav" id="newest" />
+                <label
+                  htmlFor="newest"
                   onClick={() => {
                     this.setState({
-                      nav: "profile",
-                      title: "profile",
-                      profile: this.props.username,
+                      nav: "home",
+                      title: "newest",
                       loading: true
                     });
-                    this.onOtherProfileClick(this.props.username);
+                    this.getVideo();
                   }}
                 >
-                  My Profile
-                </button>
-                <input type="checkbox" name="home" id="home" defaultChecked />
-                <label htmlFor="home">Home</label>
-                <div className="nav-content">
-                  {this.props.username ? (
-                    <React.Fragment>
-                      <input type="radio" name="sub-nav" id="mySubscriptions" />
-                      <label
-                        htmlFor="mySubscriptions"
-                        onClick={() => {
-                          this.setState({
-                            title: "Subscriptions",
-                            loading: true,
-                            nav: "home"
-                          });
-                          if (localStorage.length > 0) {
-                            var loggedId = JSON.parse(localStorage.userData).id;
-                          }
-                          axios
-                            .get(urlApi + `getsubscription/${loggedId}`)
-                            .then(res => {
-                              this.setState({
-                                preview: res.data,
-                                loading: false,
-                                page: 15
-                              });
-                            })
-                            .catch(err => {
-                              alert(err);
-                            });
-                        }}
-                      >
-                        Subscriptions
-                      </label>
-                    </React.Fragment>
-                  ) : null}
-                  <input type="radio" name="sub-nav" id="newest" />
-                  <label
-                    htmlFor="newest"
-                    onClick={() => {
-                      this.setState({
-                        nav: "home",
-                        title: "newest",
-                        loading: true
-                      });
-                      this.getVideo();
-                    }}
-                  >
-                    Newest Uploads
-                  </label>
-                  <input type="radio" name="sub-nav" id="most-viewed" />
-                  <label
-                    htmlFor="most-viewed"
-                    onClick={() => {
-                      this.setState({
-                        nav: "home",
-                        title: "most viewed",
-                        loading: true
-                      });
-                      this.getVideo();
-                    }}
-                  >
-                    Most Viewed
-                  </label>
-                </div>
+                  Newest Uploads
+                </label>
+                <input type="radio" name="sub-nav" id="most-viewed" />
+                <label
+                  htmlFor="most-viewed"
+                  onClick={() => {
+                    this.setState({
+                      nav: "home",
+                      title: "most viewed",
+                      loading: true
+                    });
+                    this.getVideo();
+                  }}
+                >
+                  Most Viewed
+                </label>
               </div>
-              {this.props.username ? (
-                <div>
-                  <input
-                    type="checkbox"
-                    name="home"
-                    id="subscriptions"
-                    defaultChecked
-                  />
-                  <label htmlFor="subscriptions">Subscriptions</label>
-                  <div className="nav-content">{this.subscribedTeachers()}</div>
-                </div>
-              ) : null}
+            </div>
+            {this.props.username ? (
               <div>
                 <input
                   type="checkbox"
                   name="home"
-                  id="category"
+                  id="subscriptions"
                   defaultChecked
                 />
-                <label htmlFor="category">Category</label>
-                <div className="nav-content">{this.categories()}</div>
+                <label htmlFor="subscriptions">Subscriptions</label>
+                <div className="nav-content">{this.subscribedTeachers()}</div>
               </div>
-              <div>
-                <input type="checkbox" name="home" id="teachers" />
-                <label
-                  onClick={() => {
-                    this.setState({
-                      title: "Teachers",
-                      loading: true,
-                      nav: "teachers"
-                    });
-                    this.getTeachers();
-                  }}
-                >
-                  Teachers
-                </label>
-              </div>
+            ) : null}
+            <div>
+              <input type="checkbox" name="home" id="category" defaultChecked />
+              <label htmlFor="category">Category</label>
+              <div className="nav-content">{this.categories()}</div>
             </div>
-            <div className="browse-container-content">
-              <div className="browse-search">
-                <form
-                  onSubmit={event => {
-                    event.preventDefault();
-                  }}
-                >
-                  <input
-                    type="text"
-                    id="search"
-                    value={this.state.search}
-                    onChange={this.handleChange}
-                    onSubmit={() => {
-                      this.handleSearch();
-                    }}
-                    placeholder="  Search..."
-                  />
-                  <button type="button" onClick={this.handleSearch}>
-                    Search
-                  </button>
-                </form>
-              </div>
-              {this.state.nav === "profile" ? (
-                <Profile
-                  profile={this.state.profile}
-                  id={this.props.id}
-                  username={this.props.username}
-                  role={this.props.role}
-                  profilepict={this.props.profilepict}
-                  onOtherVideoClick={this.onOtherVideoClick}
-                  onOtherProfileClick={this.onOtherProfileClick}
-                  updateProfile={this.props.updateProfile}
-                  onSubscribe={this.onSubscribe}
-                />
-              ) : null}
-              {this.state.nav === "video" ? (
-                <Video
-                  targetVideo={this.state.targetVideo}
-                  id={this.props.id}
-                  username={this.props.username}
-                  role={this.props.role}
-                  profilepict={this.props.profilepict}
-                  onOtherVideoClick={this.onOtherVideoClick}
-                  onOtherProfileClick={this.onOtherProfileClick}
-                />
-              ) : null}
-              {this.state.nav !== "home" ? null : (
-                <div className="browse-featured-container">
-                  <div className="browse-title">
-                    <h1>Featured Classes</h1>
-                  </div>
-                  <div className="browse-featured">{this.renderFeatured()}</div>
-                </div>
-              )}
-              {this.state.nav === "video" ||
-              this.state.nav === "profile" ? null : (
-                <div className="browse-content-container">
-                  <div className="browse-content">
-                    <div className="browse-title">
-                      <h1>{this.state.title}</h1>
-                      {this.state.nav === "home" ? null : (
-                        <div className="browse-sort">
-                          <button
-                            onClick={() => {
-                              this.setState({ sort: "date" });
-                            }}
-                          >
-                            by date
-                          </button>
-                          <button
-                            onClick={() => {
-                              this.setState({ sort: "views" });
-                            }}
-                          >
-                            by views
-                          </button>
-                        </div>
-                      )}
-                      {this.renderProfileButton()}
-                    </div>
-                    {this.state.loading ? this.loading : this.renderVideos()}
-                    {this.state.preview.length > this.state.page ? (
-                      <div
-                        className="show-more"
-                        onClick={() => {
-                          this.setState({
-                            page: this.state.page + 15
-                          });
-                        }}
-                      >
-                        show more
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
-              )}
+            <div>
+              <input type="checkbox" name="home" id="teachers" />
+              <label
+                onClick={() => {
+                  this.setState({
+                    title: "Teachers",
+                    loading: true,
+                    nav: "teachers"
+                  });
+                  this.getTeachers();
+                }}
+              >
+                Teachers
+              </label>
             </div>
           </div>
+          <div className="browse-container-content">
+            <div className="browse-search">
+              <form
+                onSubmit={event => {
+                  event.preventDefault();
+                }}
+              >
+                <input
+                  type="text"
+                  id="search"
+                  value={this.state.search}
+                  onChange={this.handleChange}
+                  onSubmit={() => {
+                    this.handleSearch();
+                  }}
+                  placeholder="  Search..."
+                />
+                <button type="button" onClick={this.handleSearch}>
+                  Search
+                </button>
+              </form>
+            </div>
+            {this.state.nav === "profile" ? (
+              <Profile
+                loginModal={this.loginModal}
+                profile={this.state.profile}
+                id={this.props.id}
+                username={this.props.username}
+                role={this.props.role}
+                profilepict={this.props.profilepict}
+                onOtherVideoClick={this.onOtherVideoClick}
+                onOtherProfileClick={this.onOtherProfileClick}
+                updateProfile={this.props.updateProfile}
+                onSubscribe={this.onSubscribe}
+              />
+            ) : null}
+            {this.state.nav === "video" ? (
+              <Video
+                loginModal={this.loginModal}
+                targetVideo={this.state.targetVideo}
+                id={this.props.id}
+                username={this.props.username}
+                role={this.props.role}
+                profilepict={this.props.profilepict}
+                onOtherVideoClick={this.onOtherVideoClick}
+                onOtherProfileClick={this.onOtherProfileClick}
+              />
+            ) : null}
+            {this.state.nav !== "home" ? null : (
+              <div className="browse-featured-container">
+                <div className="browse-title">
+                  <h1>Featured Classes</h1>
+                </div>
+                <div className="browse-featured">{this.renderFeatured()}</div>
+              </div>
+            )}
+            {this.state.nav === "video" ||
+            this.state.nav === "profile" ? null : (
+              <div className="browse-content-container">
+                <div className="browse-title">
+                  <h1>{this.state.title}</h1>
+                  {this.renderProfileButton()}
+                  {this.state.nav === "home" ? null : (
+                    <div className="browse-sort">
+                      <button
+                        onClick={() => {
+                          this.setState({ sort: "date" });
+                        }}
+                      >
+                        by date
+                      </button>
+                      <button
+                        onClick={() => {
+                          this.setState({ sort: "views" });
+                        }}
+                      >
+                        by views
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <div className="browse-content">
+                  {this.state.loading ? this.loading : this.renderVideos()}
+                </div>
+                {this.state.preview.length > this.state.page ? (
+                  <div className="browse-pages">{this.pagelist()}</div>
+                ) : null}
+              </div>
+            )}
+          </div>
         </div>
-      );
-    }
+      </div>
+    );
   }
 }
 const mapStateToProps = state => {
@@ -631,5 +683,5 @@ const mapStateToProps = state => {
 };
 export default connect(
   mapStateToProps,
-  { updateProfile }
+  { updateProfile, onLoginUser }
 )(Browse);

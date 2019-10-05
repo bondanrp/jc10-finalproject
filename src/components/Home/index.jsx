@@ -4,6 +4,7 @@ import Axios from "axios";
 import { Link, Redirect } from "react-router-dom";
 import Swal from "sweetalert2";
 
+import { LoginModal } from "../Login/loginModal";
 import { onLoginUser } from "../../actions/login/login";
 import { connect } from "react-redux";
 import { timeSince } from "../../functions";
@@ -149,25 +150,10 @@ export class Home extends Component {
     this.setState({ category: e.target.value, refresh: true, loading: true });
   };
 
-  validateForm() {
-    return this.state.username.length > 0 && this.state.password.length > 0;
-  }
   handleChange = event => {
     this.setState({ [event.target.id]: event.target.value });
   };
 
-  onLoginClick = () => {
-    if (this.validateForm()) {
-      let username = this.state.username;
-      let password = this.state.password;
-      this.props.onLoginUser(username, password);
-      this.props.history.push("/");
-    }
-  };
-
-  handleSubmit = event => {
-    event.preventDefault();
-  };
   render() {
     if (this.state.redirect) {
       return <Redirect to="/browse"></Redirect>;
@@ -176,66 +162,14 @@ export class Home extends Component {
         <React.Fragment>
           <main id="mainContent">
             {this.state.loginModal ? (
-              <div className="loginModal-bg">
-                <div className="loginModal-container">
-                  <div className="loginModal-close" onClick={this.loginModal}>
-                    close
-                  </div>
-                  <div className="login-image text-center">
-                    <img
-                      className="user-icon"
-                      src="http://icons.iconarchive.com/icons/custom-icon-design/silky-line-user/128/user-icon.png"
-                      alt="user"
-                    />
-                  </div>
-                  <h3 className="login-title text-center mt-5">
-                    ACCOUNT LOGIN
-                  </h3>
-                  <div>
-                    <form className="form-group" onSubmit={this.handleSubmit}>
-                      <div className="login-input-title card-title mt-2">
-                        Username
-                      </div>
-                      <input
-                        className="login-input"
-                        id="username"
-                        value={this.state.username}
-                        onChange={this.handleChange}
-                        type="text"
-                        placeholder="username"
-                        autoFocus
-                        required
-                      />
-                      <div className="login-input-title card-title mt-2">
-                        Password
-                      </div>
-                      <input
-                        className="login-input"
-                        id="password"
-                        value={this.state.password}
-                        onChange={this.handleChange}
-                        placeholder="********"
-                        type="password"
-                        required
-                      />
-                      <br />
-                      <div className="text-center">
-                        <button
-                          className="login-btn mb-5"
-                          type="submit"
-                          onClick={this.onLoginClick}
-                        >
-                          Login
-                        </button>
-                      </div>
-                      <p className="login-text">
-                        Don't have an account?{" "}
-                        <Link to="register">Sign Up</Link>!
-                      </p>
-                    </form>
-                  </div>
-                </div>
-              </div>
+              <LoginModal
+                username={this.state.username}
+                password={this.state.password}
+                handleChange={e => this.handleChange(e)}
+                onLoginUser={this.props.onLoginUser}
+                history={this.props.history}
+                loginModal={this.loginModal}
+              />
             ) : null}
             <div className="text-center header">
               <div className="header-item">

@@ -30,7 +30,6 @@ export class Video extends Component {
   timerLogin = null;
   componentDidMount() {
     this.getData();
-    setTimeout(() => {});
   }
   componentDidUpdate() {
     if (this.state.refresh) {
@@ -38,6 +37,7 @@ export class Video extends Component {
         loading: true
       });
       clearTimeout(this.timer);
+      clearTimeout(this.timerLogin);
       this.getData();
     }
   }
@@ -58,7 +58,7 @@ export class Video extends Component {
     Axios.get(urlApi + "getvideo/" + this.props.targetVideo.id).then(res => {
       this.setState({ data: res.data[0], loading: false });
       this.timer = setTimeout(this.addView, 60000);
-      this.timerLogin = setTimeout(this.login, 10000);
+      this.timerLogin = setTimeout(this.login, 20000);
       // NEXT EPISODE
       Axios.get(urlApi + "getepisode", {
         params: {
@@ -374,7 +374,8 @@ export class Video extends Component {
               ) : (
                 <div className="please">
                   <h1 className="text-center">
-                    Please <Link to="/login">sign in</Link> to post comments
+                    Please <Link onClick={this.props.loginModal}>sign in</Link>{" "}
+                    to post comments
                   </h1>
                 </div>
               )}

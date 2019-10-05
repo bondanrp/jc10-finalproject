@@ -102,7 +102,9 @@ export class Profile extends Component {
       userid: this.props.id,
       targetid: this.state.data[0].id
     };
-    if (input.userid !== input.targetid) {
+    if (!this.props.username) {
+      this.props.loginModal();
+    } else if (input.userid !== input.targetid) {
       Axios.post(urlApi + "subscribe", input).then(res => {
         this.setState({ isSubscribed: true });
         this.props.onSubscribe();
