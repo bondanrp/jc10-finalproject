@@ -89,6 +89,7 @@
   padding: 20px;
   margin: auto;
   grid-template-columns: repeat(5, 200px);
+  grid-template-rows: repeat(3, 220px);
   row-gap: 10px;
   column-gap: 10px;
   overflow-x: hidden;

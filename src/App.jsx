@@ -47,14 +47,14 @@ class App extends Component {
           <Redirect exact path="/" to="/Home" />
           <Route path="/Home" component={Home} />
           <Route path="/About" component={About} />
-          <Route exact path="/Browse/" component={Browse} />
-          <Route path="/Browse/:username/:title/:id" component={Browse} />
-          <Route path="/Browse/:username/" component={Browse} />
+          <Route path="/Browse" exact component={Browse} />
+          <Route path="/Browse/user/:username/:title/:id" component={Browse} />
+          <Route path="/Browse/user/:username/" component={Browse} />
           <Route path="/Contact" component={Contact} />
           <Route path="/BecomeATeacher" component={BecomeATeacher} />
           <Route path="/Register" component={Register} />
           <Route path="/Login" component={Login} />
-          <Route path="/upload/:username/manageuploads" component={Upload} />
+          <Route path="/Manageuploads" component={Upload} />
         </Switch>
         <Footer />
       </React.Fragment>

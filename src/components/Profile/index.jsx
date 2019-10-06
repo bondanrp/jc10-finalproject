@@ -13,7 +13,6 @@ export class Profile extends Component {
     teacher: [],
     isSubscribed: [],
     username: "",
-    refresh: false,
     loading: true,
     subscribedTo: [],
     subscribers: 0,
@@ -27,17 +26,25 @@ export class Profile extends Component {
   };
   componentDidMount() {
     this.getData();
+    // this.props.getData();
+    // this.props.getVideo();
+    // this.props.getFeaturedVideos();
   }
-  // componentWillReceiveProps(newProps) {
-  //   this.getData();
-  //   console.log(newProps);
-  //   console.log("componentwillrecieve");
+  // componentWillReceiveProps(newProps, prevProps) {
+  //   if (newProps.params !== this.props.params) {
+  //     console.log(newProps.params, this.props.params);
+
+  //     console.log("componentwillrecieve");
+  //   }
   // }
-  componentDidUpdate() {
-    // refresh page biar sesuai
-    if (this.state.refresh || this.props.refreshProfile) {
-      this.getData();
-      console.log("componendtdidupdate");
+  componentDidUpdate(prevProps) {
+    if (this.props.params.username) {
+      if (prevProps.params.username) {
+        if (this.props.params !== prevProps.params) {
+          this.getData();
+          console.log(this.props.params, prevProps.params);
+        }
+      }
     }
   }
   pagelist = () => {
@@ -65,7 +72,6 @@ export class Profile extends Component {
               let pagemax = val * this.state.page;
               let pagemin = val * this.state.page - this.state.page;
               this.setState({ pagemin, pagemax });
-              console.log(pagemax, pagemin);
             }}
             htmlFor={"page" + val}
           >
@@ -77,8 +83,6 @@ export class Profile extends Component {
     return render;
   };
   getData = () => {
-    this.setState({ refresh: false });
-    this.props.profileRefreshFalse();
     //get user profile
     Axios.get(urlApi + "getusername", {
       params: {
@@ -109,14 +113,14 @@ export class Profile extends Component {
           }).then(res => {
             this.setState({
               subscribedTo: res.data,
-              refresh: false,
               loading: false
             });
           });
         });
       })
       .catch(err => {
-        alert("System Error");
+        alert("err");
+        console.log(err);
       });
     //get videos by this user
     Axios.get(urlApi + "getuservideos", {
@@ -128,7 +132,7 @@ export class Profile extends Component {
         this.setState({ videos: res.data });
       })
       .catch(err => {
-        alert("System Error");
+        alert("System disitu Error");
       });
   };
   handleEdit = () => {
@@ -165,7 +169,6 @@ export class Profile extends Component {
       this.props.onSubscribe();
     });
   };
-
   renderVideos() {
     let render = this.state.videos.map((val, idx) => {
       if (idx >= this.state.pagemin && idx < this.state.pagemax) {
@@ -185,7 +188,9 @@ export class Profile extends Component {
               <div className="preview-episode">Eps #{val.episode}</div>
             </div>
             <p className="text-capitalize preview-title">{val.title}</p>
-            <p className="preview-author text-left">@{val.author}</p>
+            <p className="preview-author text-left">
+              @{val.author} {val.view}
+            </p>
           </Link>
         );
       } else {
@@ -245,7 +250,7 @@ export class Profile extends Component {
           <button
             className="unsubscribe"
             onClick={() => {
-              console.log(JSON.parse(localStorage.getItem("userData")));
+              console.log(this.props);
             }}
           >
             this is you
@@ -396,7 +401,7 @@ export class Profile extends Component {
           <Link
             onClick={() => {
               this.props.onOtherProfileClick(val.username);
-              this.setState({ refresh: true, loading: true });
+              this.setState({ loading: true });
             }}
             className="teacher-test"
           >

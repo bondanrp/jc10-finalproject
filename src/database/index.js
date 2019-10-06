@@ -160,7 +160,7 @@ module.exports = {
   },
   getRelatedVideos: (req, res) => {
     db.query(
-      `select * from uploads where category='${req.query.category}' order by RAND() limit 10`,
+      `select * from uploads where class='${req.query.class}'`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -169,7 +169,7 @@ module.exports = {
   },
   search: (req, res) => {
     db.query(
-      `select * from uploads where title like '%${req.query.search}%'
+      `select * from uploads where title like '%${req.query.search}%' or class like '%${req.query.search}%'
       or description like '%${req.query.search}%' or author like '%${req.query.search}%' or category like '%${req.query.search}%' order by views`,
       (err, result) => {
         if (err) throw err;
@@ -207,7 +207,7 @@ module.exports = {
   },
   getEpisode: (req, res) => {
     db.query(
-      `select title, episode, id from uploads where title = '${req.query.title}' and episode = '${req.query.episode}'`,
+      `select title, episode, id from uploads where class = '${req.query.class}' and episode = '${req.query.episode}'`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -254,7 +254,7 @@ module.exports = {
   },
   getNotifications: (req, res) => {
     db.query(
-      `select * from notifications where user_id = '${req.params.id}' order by timestamp desc`,
+      `select * from notifications where user_id = '${req.params.id}' order by timestamp desc limit 5`,
       (err, result) => {
         if (err) throw err;
         res.send(result);

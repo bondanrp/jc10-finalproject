@@ -81,7 +81,7 @@ export class Home extends Component {
     if (this.state.redirectToVideo) {
       return (
         <Redirect
-          to={`/user/${this.state.targetUser}/${this.state.targetTitle}/${this.state.targetId}`}
+          to={`/browse/user/${this.state.targetUser}/${this.state.targetTitle}/${this.state.targetId}`}
         ></Redirect>
       );
     } else if (this.state.loading) {

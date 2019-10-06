@@ -183,20 +183,26 @@
 .notifications {
   width: 400px;
 }
-.notifications > .notification-content > div:hover {
+
+.notifications > div {
+  border: 1px solid rgba(70, 70, 70, 0.1);
+  position: relative;
+}
+.notifications > div:hover {
   background: #f7f7f7;
 }
-.notifications > .notification-content:hover {
+.notification-content:hover {
   text-decoration: none !important;
 }
-.notifications > .notification-content > div {
+.notification-content > p {
   font-family: "poppins";
   font-weight: 200;
   color: black;
   box-sizing: border-box;
   padding-left: 15px;
   padding-right: 15px;
-  border: 1px solid rgba(70, 70, 70, 0.1);
+
+  position: relative;
 }
 .notification-time {
   padding-top: 10px;
@@ -209,4 +215,12 @@
   width: 100%;
   height: 100%;
   color: #017a84;
+}
+.notification-delete {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: none;
+  border: none;
+  font-weight: 100;
 }

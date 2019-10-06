@@ -52,12 +52,24 @@ class NavBar extends Component {
       let render = this.state.notifications.map(val => {
         var date = timeSince(val.timestamp);
         return (
-          <Link to={`/${val.link}`} className="notification-content">
-            <div>
-              {val.content}
-              <div className="notification-time">{date}</div>
-            </div>
-          </Link>
+          <div>
+            <Link to={`/${val.link}`} className="notification-content">
+              <p>{val.content}</p>
+            </Link>
+            <div className="notification-time">{date}</div>
+            <button
+              className="notification-delete"
+              onClick={() => {
+                Axios.delete(urlApi + "deletenotification/" + val.id).then(
+                  res => {
+                    this.getNotificationData();
+                  }
+                );
+              }}
+            >
+              x
+            </button>
+          </div>
         );
       });
       return render;
@@ -276,11 +288,11 @@ class NavBar extends Component {
             <Link
               className="tautan active"
               onClick={() => {
-                console.log(this.props);
-
                 this.setState({ toggleBurger: false });
+                console.log(this.props);
               }}
-              to="/browse"
+              exact
+              to={{ pathname: "/browse", state: "percobaan" }}
             >
               Browse
             </Link>
@@ -293,7 +305,16 @@ class NavBar extends Component {
               >
                 Become a Teacher
               </Link>
-            ) : null}
+            ) : (
+              <Link
+                className="tautan active"
+                onClick={() => this.setState({ toggleBurger: false })}
+                to="/manageuploads
+            "
+              >
+                Manage Uploads
+              </Link>
+            )}
             <Link
               className="tautan active"
               onClick={() => this.setState({ toggleBurger: false })}

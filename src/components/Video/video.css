@@ -8,13 +8,13 @@
   margin: auto;
 }
 .video-container-container > div:nth-of-type(2) {
-  min-height: 1100px;
+  height: 500px;
 }
 .video-container {
   /* min-height: 1400px; */
   display: grid;
   grid-template-columns: 640px;
-  grid-template-rows: 480px 60px auto auto;
+  grid-template-rows: 480px auto auto auto;
   row-gap: 10px;
   /* width: 80%; */
   margin: 0 auto;
@@ -92,15 +92,13 @@
 .video-related {
   background: white;
   min-width: 500px;
-  min-height: 1098px;
+  height: auto;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.14);
 }
 .video-list {
-  display: grid;
+  height: 500px;
   margin: auto;
-  grid-template-columns: auto;
-  grid-template-rows: repeat(8, 126px);
-  row-gap: 10px;
+  overflow-y: scroll;
   padding-bottom: 20px;
 }
 .video-related > .related-video {
@@ -117,9 +115,18 @@
   padding-left: 20px;
   padding-bottom: 10px;
 }
+.related-preview-selected {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  background: #f7f7f7;
+  height: 126px;
+  margin-bottom: 5px;
+}
 .related-preview {
   display: grid;
   grid-template-columns: 200px 1fr;
+  height: 126px;
+  margin-bottom: 5px;
 }
 .related-preview:hover {
   background: #f7f7f7;
@@ -133,6 +140,9 @@
 }
 .video-title {
   text-transform: capitalize;
+  font-family: "poppins";
+  /* font-weight: 200; */
+  font-size: 20px;
 }
 .video-main {
   grid-column: 1;
@@ -147,6 +157,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   padding: 5px 20px;
+  min-height: 60px;
 }
 .video-episodes > div > h6 {
   font-weight: bold;
@@ -154,6 +165,7 @@
 .video-comment-input {
   height: 200px;
   grid-column: 1;
+  z-index: 2;
 }
 
 .video-comment-input > div {
@@ -213,55 +225,61 @@
 .comment-box {
   grid-column: 1;
   display: grid;
-  grid-template-columns: 200px 1fr;
+  grid-template-columns: 100px auto;
+  grid-template-rows: 50px auto;
   height: auto;
-  animation: fromtransparent 1s;
+  animation: frombottom 0.2s;
+  min-height: 100px;
+  position: relative;
 }
-.comment-header {
-  width: 200px;
-  height: auto;
-  display: grid;
-  grid-template-columns: 100px 100px;
-  grid-template-rows: 50px 50px auto;
+
+@keyframes frombottom {
+  from {
+    transform: translateY(-100px);
+  }
 }
-.comment-header > p {
+
+.comment-header > div {
+  position: absolute;
+  top: 15px;
+  left: 100px;
+}
+.comment-header > div > span {
   font-family: "poppins";
   /* background: skyblue; */
   margin-bottom: 0;
 }
-.comment-header > p:nth-of-type(1) {
-  padding-top: 27px;
+.comment-header > div > span:nth-of-type(1) {
+  top: 10px;
+  left: 100px;
 }
-.comment-header > p:nth-of-type(2) {
+.comment-header > div > span:nth-of-type(2) {
   font-weight: 200;
-  grid-column: 2;
+  /* position: absolute; */
+  top: 34px;
+  left: 120px;
+}
+.comment-header > div > span:nth-of-type(3) {
+  font-weight: 200;
+  font-size: 14px;
 }
 
 .comment-header > img {
   height: 60px;
   width: 60px;
   border-radius: 50%;
-  margin-top: 20px;
-  margin-left: 20px;
-  grid-column: 1;
-  grid-row: 1/-1;
   object-fit: cover;
+  position: absolute;
+  left: 20px;
+  top: 20px;
 }
 .comment-content {
-  position: relative;
+  grid-column: 2;
+  grid-row: 2;
+  overflow: hidden;
+  /* background: #000; */
 }
-.comment-content > p:nth-of-type(1) {
-  margin-top: 27px;
-  margin-bottom: 27px;
-  /* background: #f7f7f7; */
-}
-.comment-content > p:nth-of-type(2) {
-  position: absolute;
-  bottom: -10px;
-  right: 10px;
-  font-family: "poppins";
-  font-size: 12px;
-}
+
 .delete-comment {
   position: absolute;
   top: 10px;

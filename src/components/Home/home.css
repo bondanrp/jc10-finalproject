@@ -147,7 +147,7 @@
   text-shadow: 2px 2px 2px #017a84;
 }
 .preview-thumbnail {
-  height: 70%;
+  height: 55%;
   width: 100%;
   background-size: 100% 50%;
   position: relative;
@@ -231,6 +231,7 @@
 }
 @keyframes fromtransparent {
   from {
+    transform: translateY(-20px);
     opacity: 0;
   }
   100% {

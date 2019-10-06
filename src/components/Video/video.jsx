@@ -19,52 +19,55 @@ export class Video extends Component {
     related: [],
     nextData: [],
     prevData: [],
-    refresh: false,
     loading: true,
     comment: "",
     comments: [],
-    redirectLogin: false
+    redirectLogin: false,
+    newPost: false
   };
 
   timer = null;
   timerLogin = null;
   componentDidMount() {
-    console.log(this.props.params);
-
     this.getData();
   }
-  componentDidUpdate() {
-    if (this.state.refresh) {
-      this.setState({
-        loading: true
-      });
-      clearTimeout(this.timer);
-      clearTimeout(this.timerLogin);
-      this.getData();
+
+  componentDidUpdate(prevProps) {
+    if (this.props.params.title) {
+      if (prevProps.params.title) {
+        if (this.props.params !== prevProps.params) {
+          this.setState({
+            loading: true
+          });
+          clearTimeout(this.timer);
+          clearTimeout(this.timerLogin);
+          this.getData();
+        }
+      }
     }
   }
   componentWillUnmount() {
+    console.log("destroyed");
     clearTimeout(this.timer);
+    clearTimeout(this.timerLogin);
   }
   login = () => {
     this.setState({ redirectLogin: true });
   };
   addView = () => {
     Axios.put(urlApi + "view", { id: this.props.params.id }).then(res => {
-      this.setState({ refresh: false });
       console.log("view added");
     });
   };
   getData = () => {
-    this.setState({ refresh: false });
     Axios.get(urlApi + "getvideo/" + this.props.params.id).then(res => {
-      this.setState({ data: res.data[0], loading: false });
+      this.setState({ data: res.data[0] });
       this.timer = setTimeout(this.addView, 60000);
       this.timerLogin = setTimeout(this.login, 20000);
       // NEXT EPISODE
       Axios.get(urlApi + "getepisode", {
         params: {
-          title: this.state.data.title,
+          class: this.state.data.class,
           episode: parseInt(this.state.data.episode) + 1
         }
       }).then(res => {
@@ -72,19 +75,16 @@ export class Video extends Component {
         // PREVIOUS EPISODE
         Axios.get(urlApi + "getepisode", {
           params: {
-            title: this.state.data.title,
+            class: this.state.data.class,
             episode: parseInt(this.state.data.episode) - 1
           }
         }).then(res => {
           this.setState({ prevData: res.data[0] });
           // RELATED VIDEOS
           Axios.get(urlApi + "getrelatedvideos", {
-            params: { category: this.state.data.category }
+            params: { class: this.state.data.class }
           }).then(res => {
-            let filter = res.data.filter(val => {
-              return val.id !== this.state.data.id;
-            });
-            this.setState({ related: filter });
+            this.setState({ related: res.data });
             // GET COMMENTS
             Axios.get(urlApi + "getcomments", {
               params: {
@@ -94,19 +94,19 @@ export class Video extends Component {
               if (this.props.username) {
                 clearTimeout(this.timerLogin);
               }
-              this.setState({ comments: res.data });
+              this.setState({ comments: res.data, loading: false });
             });
           });
         });
       });
     });
   };
-
   renderComments = () => {
+    let date;
     let render = this.state.comments.map(val => {
-      var date = timeSince(val.timestamp);
+      date = timeSince(val.timestamp);
       return (
-        <div className="comment-box">
+        <div className="comment-box" id={val.id}>
           <Link
             onClick={() => {
               this.props.onOtherProfileClick(val.username);
@@ -115,13 +115,14 @@ export class Video extends Component {
           >
             <div className="comment-header">
               <img src={val.profilepict} alt="" />
-              <p>@{val.username}</p>
-              <p>{val.role}</p>
+              <div>
+                <span>@{val.username}</span> • <span>{val.role}</span> •{" "}
+                <span>{date}</span>
+              </div>
             </div>
           </Link>
           <div className="comment-content">
             <p>{val.comment}</p>
-            <p>{date}</p>
             {this.props.username === val.username ? (
               <button
                 className="delete-comment"
@@ -167,13 +168,42 @@ export class Video extends Component {
   };
   renderRelated = () => {
     let render = this.state.related.map((val, idx) => {
-      if (idx < 8) {
+      if (val.id === this.state.data.id) {
         return (
           <React.Fragment>
             <Link
               onClick={() => {
                 this.props.onOtherVideoClick(val.author, val.title, val.id);
-                this.setState({ refresh: true, loading: true });
+                this.setState({ loading: true });
+              }}
+              className="related-preview-selected linkaja"
+            >
+              <div
+                style={{
+                  background: `url(${val.thumbnail})`
+                }}
+                className="related-preview-thumbnail"
+              >
+                <div className="preview-episode">Eps #{val.episode}</div>
+              </div>
+              <div className="ml-2">
+                <p className="text-capitalize preview-title">
+                  {val.episode}. {val.title}
+                </p>
+                <p className="preview-author">{val.author}</p>
+                <br />
+                <p className="preview-views ml-1">{val.views} views</p>
+              </div>
+            </Link>
+          </React.Fragment>
+        );
+      } else {
+        return (
+          <React.Fragment>
+            <Link
+              onClick={() => {
+                this.props.onOtherVideoClick(val.author, val.title, val.id);
+                this.setState({ loading: true });
               }}
               className="related-preview linkaja"
             >
@@ -187,7 +217,7 @@ export class Video extends Component {
               </div>
               <div className="ml-2">
                 <p className="text-capitalize preview-title">
-                  {val.title} Episode {val.episode}
+                  {val.episode}. {val.title}
                 </p>
                 <p className="preview-author">{val.author}</p>
                 <br />
@@ -196,8 +226,6 @@ export class Video extends Component {
             </Link>
           </React.Fragment>
         );
-      } else {
-        return null;
       }
     });
     return render;
@@ -215,11 +243,11 @@ export class Video extends Component {
                 this.props.params.title,
                 this.state.nextData.id
               );
-              this.setState({ refresh: true, loading: true });
+              this.setState({ loading: true });
             }}
             className="text-capitalize"
           >
-            {this.state.nextData.title} Episode #{this.state.nextData.episode}{" "}
+            {this.state.nextData.episode}. {this.state.nextData.title}
           </Link>
         </React.Fragment>
       );
@@ -237,11 +265,11 @@ export class Video extends Component {
                 this.props.params.title,
                 this.state.prevData.id
               );
-              this.setState({ refresh: true, loading: true });
+              this.setState({ loading: true });
             }}
             className="text-capitalize"
           >
-            {this.state.prevData.title} Episode #{this.state.prevData.episode}{" "}
+            {this.state.prevData.episode}. {this.state.prevData.title}
           </Link>
         </React.Fragment>
       );
@@ -249,6 +277,7 @@ export class Video extends Component {
   };
   handleSubmit = event => {
     if (this.state.comment) {
+      this.setState({ newPost: true });
       Axios.post(urlApi + "postcomment", {
         videoid: this.props.params.id,
         userid: this.props.id,
@@ -268,6 +297,7 @@ export class Video extends Component {
             }
           }).then(res => {
             this.setState({ comments: res.data });
+            this.setState({ newPost: false });
           });
         });
       });
@@ -298,7 +328,7 @@ export class Video extends Component {
             <div>
               <div className="video-related">
                 <div className="related-video">
-                  <h4>Related Videos</h4>
+                  <h4>title</h4>
                 </div>
               </div>
             </div>
@@ -329,8 +359,13 @@ export class Video extends Component {
               </div>
               <div className="video-text">
                 <h1 className="video-title">
-                  {this.state.data.title} Episode #{this.state.data.episode}
+                  {this.state.data.episode}. {this.state.data.title}
                 </h1>
+                <h6>
+                  {this.state.data.views + 1} views •{" "}
+                  {timeSince(this.state.data.timestamp)}
+                </h6>
+                <hr />
                 <Link
                   onClick={() => {
                     this.props.onOtherProfileClick(this.state.data.author);
@@ -339,7 +374,7 @@ export class Video extends Component {
                 >
                   @{this.state.data.author}
                 </Link>
-                <h6>{this.state.data.views + 1} views</h6>
+                <hr />
                 <p className="video-desc">{this.state.data.description}</p>
               </div>
               {this.props.username ? (
@@ -355,7 +390,7 @@ export class Video extends Component {
                         type="text"
                         placeholder="Add a comment"
                         value={this.state.comment}
-                        maxLength="140"
+                        maxLength="139"
                         onChange={e => {
                           this.setState({
                             comment: e.target.value
@@ -381,7 +416,7 @@ export class Video extends Component {
             <div>
               <div className="video-related">
                 <div className="related-video">
-                  <h4>Related Videos</h4>
+                  <h4 className="text-capitalize">{this.state.data.class}</h4>
                 </div>
                 <div className="video-list">{this.renderRelated()}</div>
               </div>

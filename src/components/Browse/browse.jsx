@@ -40,11 +40,51 @@ export class Browse extends Component {
   };
 
   componentDidMount() {
-    this.getData();
+    if (this.props.match.params.username) {
+      if (this.props.match.params.title) {
+        this.onOtherVideoClick(
+          this.props.match.params.username,
+          this.props.match.params.title,
+          this.props.match.params.id
+        );
+      } else {
+        this.onOtherProfileClick(this.props.match.params.username);
+      }
+    } else {
+    }
     this.getVideo();
+    this.getData();
     this.getFeaturedVideos();
-    console.log(this.props.match.params.id);
   }
+  componentWillReceiveProps(nextProps, prevProps) {
+    if (nextProps.location.state === "percobaan") {
+      this.setState({
+        nav: "home",
+        title: "home"
+      });
+      let dom = document.getElementsByName("sub-nav");
+      for (let i = 0; i < dom.length; i++) {
+        dom[i].checked = false;
+      }
+      if (this.props.match.params.username) {
+        if (this.props.match.params.title) {
+          this.onOtherVideoClick(
+            this.props.match.params.username,
+            this.props.match.params.title,
+            this.props.match.params.id
+          );
+        } else {
+          this.onOtherProfileClick(this.props.match.params.username);
+        }
+      } else {
+        this.props.history.push("/browse");
+        this.getData();
+        this.getVideo();
+        this.getFeaturedVideos();
+      }
+    }
+  }
+
   getData = () => {
     axios.get(urlApi + "getcategories").then(res => {
       this.setState({ categories: res.data });
@@ -76,7 +116,6 @@ export class Browse extends Component {
         pagemax: 15,
         pagemin: 0
       });
-      this.props.history.push("/browse");
     });
   };
   getFeaturedVideos = () => {
@@ -84,7 +123,6 @@ export class Browse extends Component {
       this.setState({
         featured: res.data
       });
-      console.log(res.data);
     });
   };
   getTeachers = () => {
@@ -100,11 +138,19 @@ export class Browse extends Component {
 
   onOtherVideoClick = (author, title, id) => {
     this.setState({ targetVideo: { author, title, id }, nav: "video" });
-    this.props.history.push(`/browse/${author}/${title}/${id}`);
+    this.props.history.push(`/browse/user/${author}/${title}/${id}`);
+    let dom = document.getElementsByName("sub-nav");
+    for (let i = 0; i < dom.length; i++) {
+      dom[i].checked = false;
+    }
   };
   onOtherProfileClick = username => {
     this.setState({ profile: username, nav: "profile" });
-    this.props.history.push(`/browse/${username}`);
+    this.props.history.push(`/browse/user/${username}`);
+    let dom = document.getElementsByName("sub-nav");
+    for (let i = 0; i < dom.length; i++) {
+      dom[i].checked = false;
+    }
   };
   onSubscribe = () => {
     axios
@@ -362,7 +408,7 @@ export class Browse extends Component {
         <Link
           onClick={() => {
             this.setState({ nav: "profile" });
-            this.props.history.push(`/browse/${this.state.profile}`);
+            this.props.history.push(`/browse/user/${this.state.profile}`);
           }}
         >
           <button className="browse-profile">profile</button>
@@ -382,13 +428,22 @@ export class Browse extends Component {
             className="text-capitalize"
             htmlFor={`${val.category}`}
             onClick={() => {
-              this.setState({ title: val.category, nav: "category" });
+              this.setState({
+                title: val.category,
+                nav: "category",
+                loading: true
+              });
               axios
                 .get(urlApi + "getpreview", {
                   params: { category: val.category }
                 })
                 .then(res => {
-                  this.setState({ preview: res.data, pagemin: 0, pagemax: 15 });
+                  this.setState({
+                    preview: res.data,
+                    pagemin: 0,
+                    loading: false,
+                    pagemax: 15
+                  });
                 });
             }}
           >
@@ -410,6 +465,10 @@ export class Browse extends Component {
       });
       this.onOtherProfileClick(this.props.username);
       this.profileRefresh();
+      let dom = document.getElementsByName("sub-nav");
+      for (let i = 0; i < dom.length; i++) {
+        dom[i].checked = false;
+      }
     } else {
       this.loginModal();
     }
@@ -447,7 +506,6 @@ export class Browse extends Component {
               let pagemax = val * this.state.page;
               let pagemin = val * this.state.page - this.state.page;
               this.setState({ pagemin, pagemax });
-              console.log(pagemax, pagemin);
             }}
             htmlFor={"page" + val}
           >
@@ -484,7 +542,12 @@ export class Browse extends Component {
               </button>
               <input type="checkbox" name="home" id="home" defaultChecked />
               <label htmlFor="home">Home</label>
-              <div className="nav-content">
+              <div
+                className="nav-content"
+                onClick={() => {
+                  this.props.history.push("/browse");
+                }}
+              >
                 {this.props.username ? (
                   <React.Fragment>
                     <input type="radio" name="sub-nav" id="mySubscriptions" />
@@ -563,7 +626,14 @@ export class Browse extends Component {
             <div>
               <input type="checkbox" name="home" id="category" defaultChecked />
               <label htmlFor="category">Category</label>
-              <div className="nav-content">{this.categories()}</div>
+              <div
+                className="nav-content"
+                onClick={() => {
+                  this.props.history.push("/browse");
+                }}
+              >
+                {this.categories()}
+              </div>
             </div>
             <div>
               <input type="checkbox" name="home" id="teachers" />
@@ -575,6 +645,8 @@ export class Browse extends Component {
                     nav: "teachers"
                   });
                   this.getTeachers();
+
+                  this.props.history.push("/browse");
                 }}
               >
                 Teachers
@@ -605,6 +677,7 @@ export class Browse extends Component {
             </div>
             {this.state.nav === "profile" ? (
               <Profile
+                history={this.props.history}
                 profileRefresh={this.profileRefresh}
                 profileRefreshFalse={this.profileRefreshFalse}
                 refreshProfile={this.state.profileRefresh}
@@ -619,6 +692,9 @@ export class Browse extends Component {
                 onOtherProfileClick={this.onOtherProfileClick}
                 updateProfile={menjadi => this.props.updateProfile(menjadi)}
                 onSubscribe={this.onSubscribe}
+                getData={this.getData}
+                getVideo={this.getVideo}
+                getFeaturedVideos={this.getFeaturedVideos}
               />
             ) : null}
             {this.state.nav === "video" ? (

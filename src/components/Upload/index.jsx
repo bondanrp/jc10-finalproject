@@ -42,23 +42,19 @@ export class Upload extends Component {
     return render;
   };
   render() {
-    if (this.props.role === "teacher") {
-      return (
-        <div className="gray-background py-5">
-          <div className="upload-container">
-            <div className="upload-nav">helo</div>
-            <div className="user-video-container">
-              <div className="uploads-title">
-                <h2>Your Uploads</h2>
-              </div>
-              {this.renderUserVideos()}
+    return (
+      <div className="gray-background py-5">
+        <div className="upload-container">
+          <div className="upload-nav">helo</div>
+          <div className="user-video-container">
+            <div className="uploads-title">
+              <h2>Your Uploads</h2>
             </div>
+            {this.renderUserVideos()}
           </div>
         </div>
-      );
-    } else {
-      return <Redirect to="/"></Redirect>;
-    }
+      </div>
+    );
   }
 }
 
