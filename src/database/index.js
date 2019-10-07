@@ -8,6 +8,13 @@ const db = mysql.createConnection({
   database: "jc10_finalproject",
   port: 3307
 });
+// contoh hosting database
+// const db = mysql.createConnection({
+//   host: "db4free.net",
+//   user: "bondanrp",
+//   password: "assalamualaikum",
+//   database: "jc10finalproject"
+// });
 
 let transporter = nodemailer.createTransport({
   service: "gmail",
@@ -139,7 +146,7 @@ module.exports = {
     db.query(
       `SELECT *
       FROM
-        (SELECT id, title, episode, thumbnail, video, description, author, category, views, timestamp,
+        (SELECT id, title, class, episode, thumbnail, video, description, author, category, views, timestamp,
                      @category_rank := IF(@current_category = category, @category_rank + 1, 1) AS category_rank,
                      @current_category := category 
           FROM uploads
@@ -198,7 +205,7 @@ module.exports = {
   },
   getVideo: (req, res) => {
     db.query(
-      `select j.*, f.id as posterid from uploads j join users f on j.author = f.username where j.id = ${req.params.id}`,
+      `select j.*, f.id as posterid from uploads j join users f on j.author = f.username where j.episode = ${req.params.episode} and j.class = '${req.params.class}' and j.author='${req.params.author}'`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -245,7 +252,7 @@ module.exports = {
   sendCommentNotification: (req, res) => {
     let link = req.headers.referer.replace("http://localhost:3000/", "");
     db.query(
-      `insert into notifications values(0,'${req.body.targetid}','${link}','@${req.body.username} just commented on ${req.body.title} #${req.body.episode} "${req.body.comment}"', CURRENT_TIMESTAMP)`,
+      `insert into notifications values(0,'${req.body.targetid}','${link}','@${req.body.username} just commented on ${req.body.episode}. ${req.body.title}  "${req.body.comment}"', CURRENT_TIMESTAMP)`,
       (err, result) => {
         if (err) throw err;
         res.send(result);

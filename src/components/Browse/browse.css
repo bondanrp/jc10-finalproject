@@ -359,7 +359,6 @@ input[type="radio"]:checked + label {
 }
 
 .browse-preview:hover {
-  cursor: pointer;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.6);
   transition-duration: 0.5s;
 }

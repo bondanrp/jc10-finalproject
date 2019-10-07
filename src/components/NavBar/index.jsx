@@ -289,7 +289,6 @@ class NavBar extends Component {
               className="tautan active"
               onClick={() => {
                 this.setState({ toggleBurger: false });
-                console.log(this.props);
               }}
               exact
               to={{ pathname: "/browse", state: "percobaan" }}

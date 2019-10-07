@@ -25,6 +25,8 @@ export class Profile extends Component {
     pagemax: 15
   };
   componentDidMount() {
+    console.log("profile mounted");
+
     this.getData();
     // this.props.getData();
     // this.props.getVideo();
@@ -37,16 +39,14 @@ export class Profile extends Component {
   //     console.log("componentwillrecieve");
   //   }
   // }
-  componentDidUpdate(prevProps) {
-    if (this.props.params.username) {
-      if (prevProps.params.username) {
-        if (this.props.params !== prevProps.params) {
-          this.getData();
-          console.log(this.props.params, prevProps.params);
-        }
-      }
+  componentDidUpdate(prevProps, newProps) {
+    if (this.props.params !== prevProps.params) {
+      console.log("profile did update, %cdid something", "color: green");
+      this.getData();
     }
   }
+
+  componentWillUnmount() {}
   pagelist = () => {
     let total = Math.ceil(this.state.videos.length / 15);
     let pages = [];
@@ -84,6 +84,8 @@ export class Profile extends Component {
   };
   getData = () => {
     //get user profile
+    console.log(this.props);
+
     Axios.get(urlApi + "getusername", {
       params: {
         username: this.props.params.username
@@ -174,9 +176,7 @@ export class Profile extends Component {
       if (idx >= this.state.pagemin && idx < this.state.pagemax) {
         return (
           <Link
-            onClick={() => {
-              this.props.onOtherVideoClick(val.author, val.title, val.id);
-            }}
+            to={`/browse/user/${val.author}/video/${val.class}/${val.episode}`}
             className="linkaja preview"
           >
             <div
@@ -248,7 +248,7 @@ export class Profile extends Component {
       return (
         <div>
           <button
-            className="unsubscribe"
+            className="subscribe"
             onClick={() => {
               console.log(this.props);
             }}
@@ -271,6 +271,8 @@ export class Profile extends Component {
           </button>
         </div>
       );
+    } else if (this.state.data[0].role === "user" || !this.props.username) {
+      return null;
     } else if (this.state.isSubscribed) {
       return (
         <div>
@@ -398,13 +400,7 @@ export class Profile extends Component {
     if (this.state.subscribedTo.length > 0) {
       let subscribedTo = this.state.subscribedTo.map(val => {
         return (
-          <Link
-            onClick={() => {
-              this.props.onOtherProfileClick(val.username);
-              this.setState({ loading: true });
-            }}
-            className="teacher-test"
-          >
+          <Link to={`/browse/user/${val.username}`} className="teacher-test">
             <div className="teacher-profile">
               <img
                 src={val.profilepict}

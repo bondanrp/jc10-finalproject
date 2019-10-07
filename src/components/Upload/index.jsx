@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import "./upload.css";
 import { connect } from "react-redux";
 import Axios from "axios";
-import { Redirect } from "react-router-dom";
 let urlApi = "http://localhost:3001/";
 
 export class Upload extends Component {

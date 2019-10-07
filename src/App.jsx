@@ -47,9 +47,18 @@ class App extends Component {
           <Redirect exact path="/" to="/Home" />
           <Route path="/Home" component={Home} />
           <Route path="/About" component={About} />
-          <Route path="/Browse" exact component={Browse} />
-          <Route path="/Browse/user/:username/:title/:id" component={Browse} />
-          <Route path="/Browse/user/:username/" component={Browse} />
+          <Route exact path="/Browse" component={Browse} />
+          <Route exact path="/Browse/user/:username" component={Browse} />
+          <Route
+            exact
+            path="/Browse/user/:username/video/:class/:episode"
+            component={Browse}
+          />
+          {/* <Route
+            path="/Browse/user/:username/video/:title/:id"
+            component={Browse}
+          />
+          <Route path="/Browse/user/:username/" component={Browse} /> */}
           <Route path="/Contact" component={Contact} />
           <Route path="/BecomeATeacher" component={BecomeATeacher} />
           <Route path="/Register" component={Register} />

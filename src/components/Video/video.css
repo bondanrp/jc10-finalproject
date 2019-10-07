@@ -122,6 +122,35 @@
   height: 126px;
   margin-bottom: 5px;
 }
+div.related-preview-blocked {
+  position: absolute;
+  height: 126px;
+  width: 200px;
+  background: rgba(0, 0, 0, 0.14);
+  backdrop-filter: blur(8px);
+  z-index: 2;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.video-locked {
+  font-size: 50px;
+  color: white;
+  opacity: 0.5;
+}
+div.related-preview-blocked:hover > .video-locked {
+  opacity: 1;
+}
+
+.related-preview-blocked {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  background: #f7f7f7;
+  height: 126px;
+  margin-bottom: 5px;
+  position: relative;
+}
 .related-preview {
   display: grid;
   grid-template-columns: 200px 1fr;
@@ -326,7 +355,7 @@
 .please > h1 {
   font-family: "poppins";
   font-weight: 200;
-  padding-top: 70px;
+  padding-top: 20px;
   font-size: 20px;
   height: 50px;
 }

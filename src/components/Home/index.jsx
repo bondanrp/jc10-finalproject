@@ -18,8 +18,8 @@ export class Home extends Component {
     category: "semua",
     redirect: false,
     targetUser: "",
-    targetTitle: "",
-    targetId: 0,
+    targetClass: "",
+    targetEpisode: 0,
     redirectToVideo: false,
     refresh: false,
     loading: false,
@@ -63,9 +63,9 @@ export class Home extends Component {
       this.loginModal();
     }
   };
-  goToVideo = (user, title, id) => {
+  goToVideo = (u, c, e) => {
     if (this.props.username) {
-      this.setState({ targetUser: user, targetTitle: title, targetId: id });
+      this.setState({ targetUser: u, targetClass: c, targetEpisode: e });
       this.setState({ redirectToVideo: true });
     } else {
       Swal.fire("Error", "Please sign in to view the video", "error");
@@ -81,7 +81,7 @@ export class Home extends Component {
     if (this.state.redirectToVideo) {
       return (
         <Redirect
-          to={`/browse/user/${this.state.targetUser}/${this.state.targetTitle}/${this.state.targetId}`}
+          to={`/browse/user/${this.state.targetUser}/video/${this.state.targetClass}/${this.state.targetEpisode}`}
         ></Redirect>
       );
     } else if (this.state.loading) {
@@ -93,7 +93,7 @@ export class Home extends Component {
             <div
               onClick={() => {
                 if (this.props.username) {
-                  this.goToVideo(val.author, val.title, val.id);
+                  this.goToVideo(val.author, val.class, val.episode);
                 } else {
                   this.loginModal();
                 }

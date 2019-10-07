@@ -10,6 +10,7 @@ import { updateProfile } from "../../actions/updateprofile/updateprofile";
 import { onLoginUser } from "../../actions/login/login";
 import querystring from "query-string";
 import { LoginModal } from "../Login/loginModal";
+import { Switch, Route } from "react-router-dom";
 
 const urlApi = "http://localhost:3001/";
 
@@ -36,52 +37,23 @@ export class Browse extends Component {
     username: "",
     password: "",
     loginModal: false,
-    profileRefresh: false
+    profileRefresh: false,
+    openBrowse: false
   };
 
   componentDidMount() {
-    if (this.props.match.params.username) {
-      if (this.props.match.params.title) {
-        this.onOtherVideoClick(
-          this.props.match.params.username,
-          this.props.match.params.title,
-          this.props.match.params.id
-        );
-      } else {
-        this.onOtherProfileClick(this.props.match.params.username);
-      }
-    } else {
+    if (this.props.location.pathname === "/browse") {
+      this.setState({ openBrowse: true });
     }
     this.getVideo();
     this.getData();
     this.getFeaturedVideos();
   }
-  componentWillReceiveProps(nextProps, prevProps) {
-    if (nextProps.location.state === "percobaan") {
-      this.setState({
-        nav: "home",
-        title: "home"
-      });
-      let dom = document.getElementsByName("sub-nav");
-      for (let i = 0; i < dom.length; i++) {
-        dom[i].checked = false;
-      }
-      if (this.props.match.params.username) {
-        if (this.props.match.params.title) {
-          this.onOtherVideoClick(
-            this.props.match.params.username,
-            this.props.match.params.title,
-            this.props.match.params.id
-          );
-        } else {
-          this.onOtherProfileClick(this.props.match.params.username);
-        }
-      } else {
-        this.props.history.push("/browse");
-        this.getData();
-        this.getVideo();
-        this.getFeaturedVideos();
-      }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.location.pathname === "/browse") {
+      this.setState({ openBrowse: true });
+    } else {
+      this.setState({ openBrowse: false });
     }
   }
 
@@ -136,22 +108,30 @@ export class Browse extends Component {
     });
   };
 
-  onOtherVideoClick = (author, title, id) => {
-    this.setState({ targetVideo: { author, title, id }, nav: "video" });
-    this.props.history.push(`/browse/user/${author}/${title}/${id}`);
-    let dom = document.getElementsByName("sub-nav");
-    for (let i = 0; i < dom.length; i++) {
-      dom[i].checked = false;
-    }
-  };
-  onOtherProfileClick = username => {
-    this.setState({ profile: username, nav: "profile" });
-    this.props.history.push(`/browse/user/${username}`);
-    let dom = document.getElementsByName("sub-nav");
-    for (let i = 0; i < dom.length; i++) {
-      dom[i].checked = false;
-    }
-  };
+  // onOtherVideoClick = (author, title, id, episode) => {
+  //   this.setState({ targetVideo: { author, title, id }, nav: "video" });
+  //   this.props.history.push(`/browse/user/${author}/video/${title}/${id}`);
+  //   let dom = document.getElementsByName("sub-nav");
+  //   for (let i = 0; i < dom.length; i++) {
+  //     dom[i].checked = false;
+  //   }
+  // };
+  // onOtherProfileClick = username => {
+  //   this.setState({ profile: username, nav: "profile" });
+  //   this.props.history.push(`/browse/user/${username}`);
+  //   let dom = document.getElementsByName("sub-nav");
+  //   for (let i = 0; i < dom.length; i++) {
+  //     dom[i].checked = false;
+  //   }
+  // };
+  // onBrowseClick = () => {
+  //   if (this.props.location.pathname === "/browse") {
+  //     this.setState({ nav: "home" });
+  //     this.props.history.push("/browse");
+  //   } else if (this.props.location.pathname.includes("/video")) {
+  //     this.setState({ nav: "video" });
+  //   }
+  // };
   onSubscribe = () => {
     axios
       .get(urlApi + `subscribedteachers`, {
@@ -240,13 +220,11 @@ export class Browse extends Component {
           <div className="featured-preview">
             <img src={val.thumbnail} alt="preview" />
             <Link
-              onClick={() =>
-                this.onOtherVideoClick(val.author, val.title, val.id)
-              }
+              to={`/browse/user/${val.author}/video/${val.class}/${val.episode}`}
             >
               {val.title}
             </Link>
-            <Link onClick={() => this.onOtherProfileClick(val.author)}>
+            <Link to={`/browse/user/${val.username}`}>
               <p>@{val.author}</p>
             </Link>
             <p>{val.description}</p>
@@ -293,12 +271,7 @@ export class Browse extends Component {
         if (idx >= this.state.pagemin && idx < this.state.pagemax) {
           if (val.title) {
             return (
-              <div
-                onClick={() =>
-                  this.onOtherVideoClick(val.author, val.title, val.id)
-                }
-                className="browse-preview"
-              >
+              <div className="browse-preview">
                 <div
                   style={{
                     background: `url(${val.thumbnail})`
@@ -307,8 +280,15 @@ export class Browse extends Component {
                 >
                   <div className="preview-episode">Eps #{val.episode}</div>
                 </div>
-                <p className="text-capitalize preview-title">{val.title}</p>
-                <p className="preview-author">{val.author}</p>
+                <Link
+                  to={`/browse/user/${val.author}/video/${val.class}/${val.episode}`}
+                  className="linkaja"
+                >
+                  <p className="text-capitalize preview-title">{val.title}</p>
+                </Link>
+                <Link to={`/browse/user/${val.author}`} className="linkaja">
+                  <p className="preview-author">{val.author}</p>
+                </Link>
                 <p className="preview-views">
                   {val.views} views • {timeSince(val.timestamp)}
                 </p>
@@ -316,12 +296,7 @@ export class Browse extends Component {
             );
           } else if (val.username) {
             return (
-              <Link
-                className="linkaja"
-                onClick={() => {
-                  this.onOtherProfileClick(val.username);
-                }}
-              >
+              <Link className="linkaja" to={`/browse/user/${val.username}`}>
                 <div className="text-center browse-user-icon">
                   <img className="browse-dp" src={val.profilepict} alt="DP" />
                   <p className="text-capitalize font-weight-bold">
@@ -454,21 +429,57 @@ export class Browse extends Component {
     });
     return render;
   };
-
+  renderBrowse = () => {
+    if (this.state.openBrowse) {
+      return (
+        <React.Fragment>
+          {this.state.nav !== "home" ? null : (
+            <div className="browse-featured-container">
+              <div className="browse-title">
+                <h1>Featured Classes</h1>
+              </div>
+              <div className="browse-featured">{this.renderFeatured()}</div>
+            </div>
+          )}
+          {this.state.nav === "video" || this.state.nav === "profile" ? null : (
+            <div className="browse-content-container">
+              <div className="browse-title">
+                <h1>{this.state.title}</h1>
+                {this.renderProfileButton()}
+                {this.state.nav === "home" ? null : (
+                  <div className="browse-sort">
+                    <button
+                      onClick={() => {
+                        this.setState({ sort: "date" });
+                      }}
+                    >
+                      by date
+                    </button>
+                    <button
+                      onClick={() => {
+                        this.setState({ sort: "views" });
+                      }}
+                    >
+                      by views
+                    </button>
+                  </div>
+                )}
+              </div>
+              <div className="browse-content">
+                {this.state.loading ? this.loading : this.renderVideos()}
+              </div>
+              {this.state.preview.length > this.state.page ? (
+                <div className="browse-pages">{this.pagelist()}</div>
+              ) : null}
+            </div>
+          )}
+        </React.Fragment>
+      );
+    }
+  };
   onMyProfile = () => {
     if (this.props.username) {
-      this.setState({
-        nav: "profile",
-        title: "profile",
-        profile: this.props.username,
-        loading: true
-      });
-      this.onOtherProfileClick(this.props.username);
-      this.profileRefresh();
-      let dom = document.getElementsByName("sub-nav");
-      for (let i = 0; i < dom.length; i++) {
-        dom[i].checked = false;
-      }
+      this.props.history.push(`/browse/user/${this.props.username}`);
     } else {
       this.loginModal();
     }
@@ -533,10 +544,13 @@ export class Browse extends Component {
           <div className="browse-nav">
             <div>
               <input type="radio" name="sub-nav" id="myProfile" />
+
               <button
                 className="myprofile"
                 htmlFor="myProfile"
-                onClick={this.onMyProfile}
+                onClick={() => {
+                  this.onMyProfile();
+                }}
               >
                 My Profile
               </button>
@@ -620,7 +634,14 @@ export class Browse extends Component {
                   defaultChecked
                 />
                 <label htmlFor="subscriptions">Subscriptions</label>
-                <div className="nav-content">{this.subscribedTeachers()}</div>
+                <div
+                  className="nav-content"
+                  onClick={() => {
+                    this.props.history.push("/browse");
+                  }}
+                >
+                  {this.subscribedTeachers()}
+                </div>
               </div>
             ) : null}
             <div>
@@ -675,82 +696,26 @@ export class Browse extends Component {
                 </button>
               </form>
             </div>
-            {this.state.nav === "profile" ? (
-              <Profile
-                history={this.props.history}
-                profileRefresh={this.profileRefresh}
-                profileRefreshFalse={this.profileRefreshFalse}
-                refreshProfile={this.state.profileRefresh}
-                params={this.props.match.params}
-                loginModal={this.loginModal}
-                profile={this.state.profile}
-                id={this.props.id}
-                username={this.props.username}
-                role={this.props.role}
-                profilepict={this.props.profilepict}
-                onOtherVideoClick={this.onOtherVideoClick}
-                onOtherProfileClick={this.onOtherProfileClick}
-                updateProfile={menjadi => this.props.updateProfile(menjadi)}
-                onSubscribe={this.onSubscribe}
-                getData={this.getData}
-                getVideo={this.getVideo}
-                getFeaturedVideos={this.getFeaturedVideos}
-              />
-            ) : null}
-            {this.state.nav === "video" ? (
-              <Video
-                params={this.props.match.params}
-                loginModal={this.loginModal}
-                targetVideo={this.state.targetVideo}
-                id={this.props.id}
-                username={this.props.username}
-                role={this.props.role}
-                profilepict={this.props.profilepict}
-                onOtherVideoClick={this.onOtherVideoClick}
-                onOtherProfileClick={this.onOtherProfileClick}
-              />
-            ) : null}
-            {this.state.nav !== "home" ? null : (
-              <div className="browse-featured-container">
-                <div className="browse-title">
-                  <h1>Featured Classes</h1>
-                </div>
-                <div className="browse-featured">{this.renderFeatured()}</div>
-              </div>
-            )}
-            {this.state.nav === "video" ||
-            this.state.nav === "profile" ? null : (
-              <div className="browse-content-container">
-                <div className="browse-title">
-                  <h1>{this.state.title}</h1>
-                  {this.renderProfileButton()}
-                  {this.state.nav === "home" ? null : (
-                    <div className="browse-sort">
-                      <button
-                        onClick={() => {
-                          this.setState({ sort: "date" });
-                        }}
-                      >
-                        by date
-                      </button>
-                      <button
-                        onClick={() => {
-                          this.setState({ sort: "views" });
-                        }}
-                      >
-                        by views
-                      </button>
-                    </div>
-                  )}
-                </div>
-                <div className="browse-content">
-                  {this.state.loading ? this.loading : this.renderVideos()}
-                </div>
-                {this.state.preview.length > this.state.page ? (
-                  <div className="browse-pages">{this.pagelist()}</div>
-                ) : null}
-              </div>
-            )}
+            <Switch>
+              <Route exact path="/browse/user/:username">
+                <Profile
+                  params={this.props.match.params}
+                  username={this.props.username}
+                  updateProfile={this.props.updateProfile}
+                  id={this.props.id}
+                />
+              </Route>
+              <Route exact path="/browse/user/:username/video/:class/:episode">
+                <Video
+                  params={this.props.match.params}
+                  username={this.props.username}
+                  profilepict={this.props.profilepict}
+                  id={this.props.id}
+                  loginModal={this.loginModal}
+                />
+              </Route>
+            </Switch>
+            {this.renderBrowse()}
           </div>
         </div>
       </div>

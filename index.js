@@ -3,10 +3,11 @@ var router = express.Router();
 var app = express();
 var bodyParser = require("body-parser");
 var cors = require("cors");
-const port = 3001;
+const port = process.env.PORT || 3001;
 var multer = require("multer");
 var fs = require("fs");
 var mysql = require("mysql");
+var jwt = require("jsonwebtoken");
 const {
   //profile
   verify,
@@ -46,6 +47,7 @@ const {
   unsubscribe,
   view
 } = require("./src/database/index");
+var appKey = "rahasia";
 
 const db = mysql.createConnection({
   host: "localhost",
@@ -54,6 +56,13 @@ const db = mysql.createConnection({
   database: "jc10_finalproject",
   port: 3307
 });
+//contoh kalau pakai hosting database
+// const db = mysql.createConnection({
+//   host: "db4free.net",
+//   user: "bondanrp",
+//   password: "assalamualaikum",
+//   database: "jc10finalproject"
+// });
 app.use(bodyParser.json());
 app.use(cors());
 app.use("/files", express.static("./src/database/uploads"));
@@ -61,6 +70,47 @@ app.use("/files", express.static("./src/database/uploads"));
 app.get("/", (req, res) => {
   res.send(`<h1>Selamat datang di API Final Project Bondan JC10 JKT</h1>`);
 });
+
+//token
+app.post("/gettoken", (req, res) => {
+  let { username, email } = req.body;
+  let token = jwt.sign({ username, email }, appKey, { expiresIn: "12h" });
+  console.log(token);
+  res.send({
+    username,
+    email,
+    token
+  });
+});
+
+app.get(
+  "/verifytoken",
+  (req, res, next) => {
+    if (req.method !== "OPTIONS") {
+      // let success = true
+      console.log(req.headers.authorization);
+      jwt.verify(req.headers.authorization, appKey, (error, decoded) => {
+        if (error) {
+          // success = false
+          return res.status(401).json({
+            message: "User not authorized.",
+            error: "User not authorized."
+          });
+        }
+        console.log({ decoded });
+        req.user = decoded;
+        next();
+      });
+    } else {
+      console.log({ decoded });
+      req.user = decoded;
+      next();
+    }
+  },
+  (req, res) => {
+    res.send("User authorized");
+  }
+);
 
 app.get("/verify", verify);
 // user db
@@ -76,7 +126,7 @@ app.post("/registeruser", registerUser);
 app.get("/browseall", browseAll);
 app.get("/getvideos", getVideos);
 app.get("/getfeaturedvideos", getFeaturedVideos);
-app.get("/getvideo/:id", getVideo);
+app.get("/getvideo/:author/:class/:episode", getVideo);
 app.get("/getepisode", getEpisode);
 app.get("/getrelatedvideos/", getRelatedVideos);
 app.get("/getuservideos", getUserVideos);

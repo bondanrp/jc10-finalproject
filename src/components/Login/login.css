@@ -190,6 +190,10 @@
   background: #017a84;
   color: white;
 }
+.login-btn:disabled {
+  background: #529ea5;
+  color: white;
+}
 
 .loginModal-bg {
   position: fixed;

@@ -7,17 +7,19 @@ import "./login.css";
 class Login extends Component {
   state = {
     username: "",
-    password: ""
+    password: "",
+    wait: false
   };
   validateForm() {
     return this.state.username.length > 0 && this.state.password.length > 0;
   }
   handleChange = event => {
-    this.setState({ [event.target.id]: event.target.value });
+    this.setState({ [event.target.id]: event.target.value, wait: false });
   };
 
   onLoginClick = () => {
     if (this.validateForm()) {
+      this.setState({ wait: true });
       let username = this.state.username;
       let password = this.state.password;
       this.props.onLoginUser(username, password);
@@ -74,6 +76,7 @@ class Login extends Component {
                       className="login-btn mb-5"
                       type="submit"
                       onClick={this.onLoginClick}
+                      disabled={this.state.wait}
                     >
                       login
                     </button>
