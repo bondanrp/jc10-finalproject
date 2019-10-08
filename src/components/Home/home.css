@@ -227,11 +227,10 @@
   /* border-radius: 10px; */
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
   position: relative;
-  animation: fromtransparent 0.5s;
+  animation: fromtransparent 1s;
 }
 @keyframes fromtransparent {
   from {
-    transform: translateY(-20px);
     opacity: 0;
   }
   100% {

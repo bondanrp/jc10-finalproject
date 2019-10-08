@@ -5,8 +5,7 @@ const db = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "assalamualaikum",
-  database: "jc10_finalproject",
-  port: 3307
+  database: "jc10_finalproject"
 });
 // contoh hosting database
 // const db = mysql.createConnection({
@@ -99,7 +98,7 @@ module.exports = {
   },
   getTeacher: (req, res) => {
     db.query(
-      `select p.profilepict, p.firstname,p.lastname,p.username,f.category from users p join uploads f on p.username=f.author group by p.username order by rand()`,
+      `select p.profilepict, p.firstname,p.lastname,p.username, p.role,f.category from users p join uploads f on p.username=f.author group by p.username order by rand()`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -186,8 +185,8 @@ module.exports = {
   },
   searchTeachers: (req, res) => {
     db.query(
-      `select p.username, p.profilepict, p.firstname, p.lastname, f.category from (users p join uploads f on p.username = f.author) 
-      where p.username like '%${req.query.search}%' or p.firstname like '%${req.query.search}%' or p.lastname like '%${req.query.search}%' or f.category like '%${req.query.search}%' group by p.username`,
+      `select username, profilepict, firstname, lastname, role from users 
+      where username like '%${req.query.search}%' or firstname like '%${req.query.search}%' or lastname like '%${req.query.search}%'`,
       (err, result) => {
         if (err) throw err;
         res.send(result);

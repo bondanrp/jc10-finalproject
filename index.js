@@ -53,8 +53,7 @@ const db = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "assalamualaikum",
-  database: "jc10_finalproject",
-  port: 3307
+  database: "jc10_finalproject"
 });
 //contoh kalau pakai hosting database
 // const db = mysql.createConnection({

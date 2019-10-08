@@ -38,7 +38,8 @@ export class Browse extends Component {
     password: "",
     loginModal: false,
     profileRefresh: false,
-    openBrowse: false
+    openBrowse: false,
+    videoOrProfile: false
   };
 
   componentDidMount() {
@@ -168,7 +169,8 @@ export class Browse extends Component {
                     preview: this.state.preview.concat(res.data),
                     loading: false,
                     pagemax: 15,
-                    pagemin: 0
+                    pagemin: 0,
+                    videoOrProfile: true
                   });
                 } else {
                   // kalau tidak dapat teacher
@@ -215,24 +217,20 @@ export class Browse extends Component {
   };
   renderFeatured = () => {
     let render = this.state.featured.map((val, idx) => {
-      if (idx < 3) {
-        return (
-          <div className="featured-preview">
-            <img src={val.thumbnail} alt="preview" />
-            <Link
-              to={`/browse/user/${val.author}/video/${val.class}/${val.episode}`}
-            >
-              {val.title}
+      return (
+        <div className="featured-preview">
+          <img src={val.thumbnail} alt="preview" />
+          <div>
+            <Link to={`/browse/user/${val.author}/video/${val.class}/1`}>
+              {val.class}
             </Link>
             <Link to={`/browse/user/${val.username}`}>
               <p>@{val.author}</p>
             </Link>
             <p>{val.description}</p>
           </div>
-        );
-      } else {
-        return null;
-      }
+        </div>
+      );
     });
     return render;
   };
@@ -248,6 +246,40 @@ export class Browse extends Component {
       </div>
     );
   };
+  handleSortDate = () => {
+    if (this.state.sort !== "date") {
+      this.setState({
+        preview: this.state.preview.sort((a, b) =>
+          a.timestamp < b.timestamp ? 1 : -1
+        ),
+        sort: "date"
+      });
+    } else {
+      this.setState({
+        preview: this.state.preview.sort((a, b) =>
+          a.timestamp > b.timestamp ? 1 : -1
+        ),
+        sort: "views"
+      });
+    }
+  };
+  handleSortViews = () => {
+    if (this.state.sort !== "views") {
+      this.setState({
+        preview: this.state.preview.sort((a, b) =>
+          a.views < b.views ? 1 : -1
+        ),
+        sort: "views"
+      });
+    } else {
+      this.setState({
+        preview: this.state.preview.sort((a, b) =>
+          a.views > b.views ? 1 : -1
+        ),
+        sort: "date"
+      });
+    }
+  };
   renderVideos = () => {
     if (this.state.preview.length > 0) {
       let sorted = this.state.preview;
@@ -256,17 +288,6 @@ export class Browse extends Component {
           a.views < b.views ? 1 : -1
         );
       }
-      if (this.state.sort === "date") {
-        sorted = this.state.preview.sort((a, b) =>
-          a.timestamp < b.timestamp ? 1 : -1
-        );
-      }
-      if (this.state.sort === "views") {
-        sorted = this.state.preview.sort((a, b) =>
-          a.views < b.views ? 1 : -1
-        );
-      }
-
       let render = sorted.map((val, idx) => {
         if (idx >= this.state.pagemin && idx < this.state.pagemax) {
           if (val.title) {
@@ -304,7 +325,10 @@ export class Browse extends Component {
                   </p>
                   <p>@{val.username}</p>
                   <p className="text-capitalize font-weight-light">
-                    {val.category}
+                    {val.role}
+                    {val.category ? (
+                      <React.Fragment> • {val.category}</React.Fragment>
+                    ) : null}
                   </p>
                 </div>
               </Link>
@@ -446,22 +470,12 @@ export class Browse extends Component {
               <div className="browse-title">
                 <h1>{this.state.title}</h1>
                 {this.renderProfileButton()}
-                {this.state.nav === "home" ? null : (
+
+                {this.state.nav === "home" ||
+                this.state.nav === "teachers" ? null : (
                   <div className="browse-sort">
-                    <button
-                      onClick={() => {
-                        this.setState({ sort: "date" });
-                      }}
-                    >
-                      by date
-                    </button>
-                    <button
-                      onClick={() => {
-                        this.setState({ sort: "views" });
-                      }}
-                    >
-                      by views
-                    </button>
+                    <button onClick={this.handleSortDate}>by date</button>
+                    <button onClick={this.handleSortViews}>by views</button>
                   </div>
                 )}
               </div>

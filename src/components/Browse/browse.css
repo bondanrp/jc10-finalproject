@@ -20,7 +20,6 @@
 @keyframes coba {
   from {
     opacity: 0;
-    transform: translateY(-20px);
   }
 }
 
@@ -86,9 +85,15 @@
 }
 .browse-featured {
   width: 1080px;
+  height: 270px;
+  overflow-x: scroll;
+  overflow-y: hidden;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: repeat(9, 320px);
+  grid-template-rows: 250px;
   column-gap: 10px;
+  box-sizing: content-box;
+  padding-bottom: 20px;
   grid-template-rows: 270px;
 }
 .featured-preview > img {
@@ -109,7 +114,7 @@
   text-decoration: none;
   color: black;
 }
-.featured-preview > a {
+.featured-preview > div > a {
   font-size: 17px;
   font-family: "poppins";
   font-weight: 400;
@@ -118,7 +123,15 @@
   padding-top: 5px;
   color: black;
 }
-.featured-preview > a > p {
+.featured-preview > div > p {
+  padding: 10px 20px;
+  font-family: "poppins";
+  font-size: 14px;
+  font-weight: 200;
+  text-align: justify;
+  margin: 0;
+}
+.featured-preview > div > a > p {
   padding: 10px 20px;
   font-family: "poppins";
   font-size: 14px;
@@ -129,16 +142,29 @@
 .featured-preview:hover {
   box-shadow: 0 4px 6px 0 rgba(0, 0, 0, 0.1);
 }
-.featured-preview:hover > img {
-  height: 0;
-  transition: 0.5s ease-in;
+.featured-preview > div {
+  background: white;
+  transition: 2s;
+  overflow-y: scroll;
+  padding-right: 17px;
+  position: absolute;
+  height: 270px;
+  top: 160px;
+  left: 0;
+  right: -17px;
+  padding-bottom: 20px;
+}
+.featured-preview:hover > div {
+  transform: translateY(-160px);
+  transition: 2s;
 }
 .featured-preview {
   background: white;
   width: 100%;
-  height: 100%;
+  height: 270px;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  position: relative;
 }
 .browse-featured-container {
   padding-top: 20px;
@@ -263,17 +289,26 @@ input[type="radio"]:checked + label {
   height: 30px;
   align-self: center;
 }
-.browse-sort > button {
+.browse-sort > button,
+.browse-filter > button {
   border: none;
   color: #017a84;
   font-family: "poppins";
   font-weight: 500;
   background: none;
+  width: auto;
+  width: 100px;
 }
 .browse-sort {
   position: absolute;
-  top: 17px;
+  top: 27px;
   right: 0;
+}
+
+.browse-filter {
+  position: absolute;
+  top: 0px;
+  right: 0px;
 }
 .browse-title > h1 {
   font-family: "poppins";
