@@ -25,6 +25,12 @@
   border: 1px solid #017a84;
   text-decoration: none;
 }
+.upload-container > div:nth-of-type(2) > form > textarea {
+  resize: none;
+  border: 1px solid #017a84;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
 .upload-container > div:nth-of-type(2) > form > button {
   text-align: right !important;
   border: 1px solid #017a84;
@@ -33,10 +39,6 @@
   color: #017a84;
   text-decoration: none;
 }
-.upload-container > div:nth-of-type(2) > form > input:nth-last-of-type(1) {
-  height: 50px;
-  word-wrap: normal;
-}
 .upload-title {
   font-family: "poppins";
   margin-top: 170px;
@@ -44,14 +46,32 @@
 .upload-container > div:nth-of-type(3) {
   display: grid;
   grid-template-columns: 200px 200px 200px;
-  grid-template-rows: auto;
+  grid-template-rows: 70px auto;
   column-gap: 10px;
   row-gap: 10px;
   margin: auto;
   padding: 10px;
 }
+.upload-container > div:nth-of-type(3) > h1 {
+  grid-column: 1/-1;
+  text-align: center;
+  font-family: "poppins";
+  font-weight: 100;
+  letter-spacing: 5px;
+  padding-top: 10px;
+}
 .upload-container > div:nth-of-type(3) > div {
   border: 1px solid #017a84;
+}
+.upload-preview > a:nth-of-type(1) {
+  text-transform: capitalize;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 0 5px;
+}
+.upload-preview > p:nth-of-type(1) {
+  font-size: 12px;
+  padding: 0 5px;
 }
 .upload-preview {
   height: 200px;

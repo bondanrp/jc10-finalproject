@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./upload.css";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 import Axios from "axios";
 import swal from "sweetalert2";
@@ -51,7 +51,7 @@ export class Upload extends Component {
             />
             <Link
               to={`/browse/user/${val.author}/video/${val.class}/${val.episode}`}
-              className=" linkaja text-capitalize user-vid-title m-0"
+              className="linkaja"
             >
               {val.title} #{val.episode}
             </Link>
@@ -119,7 +119,7 @@ export class Upload extends Component {
                 }}
               >
                 {this.renderClass()}
-                <option value="">New Class</option>
+                <option value="">New Class Name</option>
               </select>
               <input
                 type="text"
@@ -131,11 +131,14 @@ export class Upload extends Component {
               <h6>Episode</h6>
               <input type="text" />
               <h6>Description</h6>
-              <input type="text" />
+              <textarea />
               <button>Submit</button>
             </form>
           </div>
-          <div>{this.renderUserVideos()}</div>
+          <div>
+            <h1>Your Uploads</h1>
+            {this.renderUserVideos()}
+          </div>
           <div></div>
         </div>
       </div>
@@ -150,7 +153,9 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  null
-)(Upload);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    null
+  )(Upload)
+);
