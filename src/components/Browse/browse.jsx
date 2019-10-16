@@ -11,6 +11,8 @@ import { onLoginUser } from "../../actions/login/login";
 import querystring from "query-string";
 import { LoginModal } from "../Login/loginModal";
 import { Switch, Route } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
 
 const urlApi = "http://localhost:3001/";
 
@@ -108,31 +110,6 @@ export class Browse extends Component {
       });
     });
   };
-
-  // onOtherVideoClick = (author, title, id, episode) => {
-  //   this.setState({ targetVideo: { author, title, id }, nav: "video" });
-  //   this.props.history.push(`/browse/user/${author}/video/${title}/${id}`);
-  //   let dom = document.getElementsByName("sub-nav");
-  //   for (let i = 0; i < dom.length; i++) {
-  //     dom[i].checked = false;
-  //   }
-  // };
-  // onOtherProfileClick = username => {
-  //   this.setState({ profile: username, nav: "profile" });
-  //   this.props.history.push(`/browse/user/${username}`);
-  //   let dom = document.getElementsByName("sub-nav");
-  //   for (let i = 0; i < dom.length; i++) {
-  //     dom[i].checked = false;
-  //   }
-  // };
-  // onBrowseClick = () => {
-  //   if (this.props.location.pathname === "/browse") {
-  //     this.setState({ nav: "home" });
-  //     this.props.history.push("/browse");
-  //   } else if (this.props.location.pathname.includes("/video")) {
-  //     this.setState({ nav: "video" });
-  //   }
-  // };
   onSubscribe = () => {
     axios
       .get(urlApi + `subscribedteachers`, {
@@ -224,7 +201,7 @@ export class Browse extends Component {
             <Link to={`/browse/user/${val.author}/video/${val.class}/1`}>
               {val.class}
             </Link>
-            <Link to={`/browse/user/${val.username}`}>
+            <Link to={`/browse/user/${val.author}`}>
               <p>@{val.author}</p>
             </Link>
             <p>{val.description}</p>
@@ -293,18 +270,19 @@ export class Browse extends Component {
           if (val.title) {
             return (
               <div className="browse-preview">
-                <div
-                  style={{
-                    background: `url(${val.thumbnail})`
-                  }}
-                  className="preview-thumbnail"
-                >
-                  <div className="preview-episode">Eps #{val.episode}</div>
-                </div>
                 <Link
                   to={`/browse/user/${val.author}/video/${val.class}/${val.episode}`}
                   className="linkaja"
                 >
+                  <div
+                    style={{
+                      background: `url(${val.thumbnail})`
+                    }}
+                    className="preview-thumbnail"
+                  >
+                    <FontAwesomeIcon icon={faPlay} className="video-play" />
+                    <div className="preview-episode">Eps #{val.episode}</div>
+                  </div>
                   <p className="text-capitalize preview-title">{val.title}</p>
                 </Link>
                 <Link to={`/browse/user/${val.author}`} className="linkaja">

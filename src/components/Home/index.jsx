@@ -8,6 +8,8 @@ import { LoginModal } from "../Login/loginModal";
 import { onLoginUser } from "../../actions/login/login";
 import { connect } from "react-redux";
 import { timeSince } from "../../functions";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay } from "@fortawesome/free-solid-svg-icons";
 
 let urlPreviewApi = "http://localhost:3001/";
 
@@ -106,6 +108,7 @@ export class Home extends Component {
                 }}
                 className="preview-thumbnail"
               >
+                <FontAwesomeIcon icon={faPlay} className="video-play" />
                 <div className="preview-episode">Eps #{val.episode}</div>
               </div>
               <p className="text-capitalize preview-title">{val.title}</p>

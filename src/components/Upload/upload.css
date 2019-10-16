@@ -1,38 +1,63 @@
 .upload-container {
-  height: auto;
   margin: auto;
   display: grid;
-  grid-template-columns: 1fr 1200px;
-  grid-template-rows: auto;
-  column-gap: 20px;
-  row-gap: 20px;
-  width: 80%;
+  grid-template-columns: 640px 1fr;
+  grid-template-rows: 480px auto;
+  column-gap: 10px;
+  row-gap: 10px;
+  width: 1000px;
+  /* background: red; */
 }
-.user-video-container {
-  padding: 50px 0;
+.upload-container > div {
   background: white;
-  display: grid;
-  grid-template-rows: 50px repeat(auto-fill, 250px);
-  grid-template-columns: repeat(auto-fit, 200px);
-  row-gap: 20px;
-  column-gap: 20px;
-  justify-content: center;
+  border: 1px solid #017a84;
 }
-.user-video-container > .uploads-title {
-  grid-column: 1/-1;
+.upload-container > div:nth-of-type(2) {
+  padding: 30px;
+  font-family: "poppins";
+}
+.upload-container > div:nth-of-type(2) > form > input,
+.upload-container > div:nth-of-type(2) > form > select {
+  margin-bottom: 20px;
+  height: 35px;
   width: 100%;
+  border-radius: 5px;
+  border: 1px solid #017a84;
+  text-decoration: none;
+}
+.upload-container > div:nth-of-type(2) > form > button {
+  text-align: right !important;
+  border: 1px solid #017a84;
+  border-radius: 5px;
+  background: none;
+  color: #017a84;
+  text-decoration: none;
+}
+.upload-container > div:nth-of-type(2) > form > input:nth-last-of-type(1) {
   height: 50px;
+  word-wrap: normal;
+}
+.upload-title {
+  font-family: "poppins";
+  margin-top: 170px;
+}
+.upload-container > div:nth-of-type(3) {
+  display: grid;
+  grid-template-columns: 200px 200px 200px;
+  grid-template-rows: auto;
+  column-gap: 10px;
+  row-gap: 10px;
+  margin: auto;
   padding: 10px;
 }
-.user-video-container > div {
-  background: white;
-  height: 250px;
+.upload-container > div:nth-of-type(3) > div {
+  border: 1px solid #017a84;
+}
+.upload-preview {
+  height: 200px;
   width: 200px;
-  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
 }
-.upload-nav {
-  background: white;
-}
-.user-video-thumb {
-  width: 100%;
+.upload-preview > img {
+  height: 50%;
+  width: 200px;
 }

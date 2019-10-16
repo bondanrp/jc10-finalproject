@@ -285,9 +285,10 @@ module.exports = {
       }
     );
   },
-  uploadVideo: (req, res) => {
+
+  getClass: (req, res) => {
     db.query(
-      `insert into uploads values (0,'${req.body.title}','${req.body.episode}','${req.body.thumbnail}', '${req.body.video}','${req.body.description}','${req.body.author}','${req.body.category}')`,
+      `select class from uploads where author = '${req.query.username}' group by class`,
       (err, result) => {
         if (err) throw err;
         res.send(result);

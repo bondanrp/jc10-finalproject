@@ -1,5 +1,5 @@
-﻿import React, { Component } from "react";
-import { Route, Switch, Redirect } from "react-router-dom";
+import React, { Component } from "react";
+import { withRouter, Route, Switch, Redirect } from "react-router-dom";
 import "./App.css";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
@@ -54,16 +54,11 @@ class App extends Component {
             path="/Browse/user/:username/video/:class/:episode"
             component={Browse}
           />
-          {/* <Route
-            path="/Browse/user/:username/video/:title/:id"
-            component={Browse}
-          />
-          <Route path="/Browse/user/:username/" component={Browse} /> */}
           <Route path="/Contact" component={Contact} />
           <Route path="/BecomeATeacher" component={BecomeATeacher} />
           <Route path="/Register" component={Register} />
           <Route path="/Login" component={Login} />
-          <Route path="/Manageuploads" component={Upload} />
+          <Route path="/manageuploads" component={Upload} />
         </Switch>
         <Footer />
       </React.Fragment>
@@ -71,7 +66,9 @@ class App extends Component {
   }
 }
 
-export default connect(
-  null,
-  { keepLogin }
-)(App);
+export default withRouter(
+  connect(
+    null,
+    { keepLogin }
+  )(App)
+);

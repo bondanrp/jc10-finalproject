@@ -35,8 +35,8 @@ const {
   deleteComment,
   search,
   searchTeachers,
-  uploadVideo,
   getCategories,
+  getClass,
   getPreview,
   //subscription
   getSubscription,
@@ -135,8 +135,8 @@ app.post("/sendcommentnotification", sendCommentNotification);
 app.get("/getnotifications/:id", getNotifications);
 app.delete("/deletenotification/:id", deleteNotification);
 app.delete("/deletecomment/:id", deleteComment);
-app.get("/uploadvideo", uploadVideo);
 app.get("/getcategories", getCategories);
+app.get("/getclass", getClass);
 app.get("/getpreview", getPreview);
 app.get("/search", search);
 app.get("/searchteachers", searchTeachers);
@@ -186,6 +186,54 @@ app.post("/uploadimage", upload.single("profpict"), (req, res) => {
     db.query(
       `update users set profilepict = '${"http://localhost:3001/files/" +
         req.file.filename}' where username = '${data.username}'`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(req.file);
+      }
+    );
+  } catch (error) {
+    fs.unlinkSync(req.file.path);
+    console.log(error);
+  }
+});
+
+//VIDEO
+let multerStorageConfigVideo = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./src/database/uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(null, `VID-${Date.now()}.${file.mimetype.split("/")[1]}`);
+  }
+});
+
+let filterConfigVideo = (req, file, cb) => {
+  if (file.mimetype.split("/")[1] == "mp4") {
+    cb(null, true);
+  } else {
+    req.validation = { error: true, msg: "file format must be mp4" };
+    cb(null, false);
+  }
+};
+
+let uploadVideo = multer({
+  storage: multerStorageConfigVideo,
+  fileFilter: filterConfigVideo
+});
+
+app.post("/uploadvideo", uploadVideo.single("video"), (req, res) => {
+  try {
+    if (req.validation) throw req.validation;
+    if ((req.file, req.file.size > 5000000))
+      throw { error: true, message: "file size exceeds the maximum limit" };
+    let data = JSON.parse(req.body.data);
+    db.query(
+      `insert into uploads values ('0', '${data.title}', '${data.class}', '${
+        data.episode
+      }','${data.thumbnail}','${"http://localhost:3001/files/" +
+        req.file.filename}','${data.description}','${
+        data.author
+      }','0',CURRENT_TIMESTAMP`,
       (err, result) => {
         if (err) throw err;
         res.send(req.file);
