@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import "./upload.css";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Axios from "axios";
 import swal from "sweetalert2";
@@ -152,10 +152,7 @@ const mapStateToProps = state => {
     role: state.auth.role
   };
 };
-
-export default withRouter(
-  connect(
-    mapStateToProps,
-    null
-  )(Upload)
-);
+export default connect(
+  mapStateToProps,
+  null
+)(Upload);

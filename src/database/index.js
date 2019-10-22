@@ -26,6 +26,22 @@ let transporter = nodemailer.createTransport({
 module.exports = db;
 
 module.exports = {
+  contact: (req, res) => {
+    let mailOptions = {
+      from: '"Bagi Bakat Contact" <bondanrp@gmail.com>',
+      to: "bondanrp@gmail.com",
+      subject: "Bagi Bakat Contact",
+      html: `<p>${req.query.firstName} ${req.query.lastName} (${req.query.email}) asked:</p>
+      <p>"${req.query.content}"</p>`
+    };
+    transporter.sendMail(mailOptions, (err, info) => {
+      if (err) {
+        console.log(err);
+      }
+      console.log(info);
+    });
+    res.send("success");
+  },
   verify: (req, res) => {
     let username = req.query.username;
     db.query(

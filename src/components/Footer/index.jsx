@@ -4,8 +4,8 @@ import styles from "./footer.module.css";
 export default function Footer() {
   return (
     <footer className={styles.footer}>
-      <div className="container-fluid">
-        <div className="row justify-content-around">
+      <div className={styles.container}>
+        <div className="row justify-content-around w-100">
           <div className="col-8 col-md-5">
             <h5 className="judul">Bagi Bakat</h5>
             <p className="text-justify">

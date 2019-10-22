@@ -1,10 +1,8 @@
-﻿.footer {
-  background-color: #e7e7e7;
+﻿.container {
+  background: #e7e7e7;
+  padding-bottom: 1rem;
   padding-top: 2rem;
-  padding-bottom: 4rem;
-  z-index: 2;
 }
-
 .title {
   color: black;
 }

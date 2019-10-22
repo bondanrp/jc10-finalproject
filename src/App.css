@@ -31,5 +31,6 @@ button:active {
 .gray-background {
   background: #f7f7f7;
   width: 100%;
-  min-height: 100vh;
+  min-height: 80vh;
+  position: relative;
 }

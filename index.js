@@ -9,6 +9,8 @@ var fs = require("fs");
 var mysql = require("mysql");
 var jwt = require("jsonwebtoken");
 const {
+  //contact
+  contact,
   //profile
   verify,
   updateDP,
@@ -111,6 +113,7 @@ app.get(
   }
 );
 
+app.get("/contact", contact);
 app.get("/verify", verify);
 // user db
 app.put("/updatedp", updateDP);

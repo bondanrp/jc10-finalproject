@@ -308,8 +308,7 @@ class NavBar extends Component {
               <Link
                 className="tautan active"
                 onClick={() => this.setState({ toggleBurger: false })}
-                to="/manageuploads
-            "
+                to="/manageuploads"
               >
                 Manage Uploads
               </Link>
