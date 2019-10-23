@@ -35,7 +35,17 @@ export class Contact extends Component {
   render() {
     return (
       <div className="gray-background">
-        <div className="contact-bg"></div>
+        <img
+          className="contact-bg"
+          src="https://images.unsplash.com/photo-1536489318149-dc9f8920c4fd?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1489&q=80"
+          alt="telpon"
+        />
+        <img
+          className="contact-bg2"
+          src="https://images.unsplash.com/photo-1483070421852-a142ce0a385d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
+          alt="telpon"
+        />
+
         <div className="contact">
           <h1>Contact Us</h1>
           <div className="contact-container">

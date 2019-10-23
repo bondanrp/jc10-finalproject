@@ -695,6 +695,7 @@ export class Browse extends Component {
                   username={this.props.username}
                   updateProfile={this.props.updateProfile}
                   id={this.props.id}
+                  onSubscribe={this.onSubscribe}
                 />
               </Route>
               <Route exact path="/browse/user/:username/video/:class/:episode">

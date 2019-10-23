@@ -47,7 +47,9 @@ const {
   isSubscribed,
   subscribe,
   unsubscribe,
-  view
+  view,
+  //upload
+  uploadVideoData
 } = require("./src/database/index");
 var appKey = "rahasia";
 
@@ -152,6 +154,9 @@ app.get("/issubscribed", isSubscribed);
 app.post("/subscribe", subscribe);
 app.delete("/unsubscribe/:userid/:targetid", unsubscribe);
 app.put("/view", view);
+
+//upload db
+app.post("/uploadvideodata", uploadVideoData);
 
 //multer
 let multerStorageConfig = multer.diskStorage({
