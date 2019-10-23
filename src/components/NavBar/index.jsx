@@ -101,51 +101,7 @@ class NavBar extends Component {
     );
   };
   dropDown = () => {
-    if (this.props.role === "user") {
-      return (
-        <Dropdown
-          isOpen={this.state.dropdownOpen}
-          toggle={this.toggleDropdown}
-          className="nav3-3"
-        >
-          <DropdownToggle
-            tag="span"
-            data-toggle="dropdown"
-            aria-expanded={this.state.dropdownOpen}
-          >
-            <div className="userIcon">
-              <img
-                src={userIcon}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  overflow: "hidden",
-                  borderRadius: "50%"
-                }}
-                alt=""
-              />
-            </div>
-          </DropdownToggle>
-          <DropdownMenu right className="text-right">
-            <DropdownItem header className="text-capitalize">
-              Hello, {this.props.username}!
-            </DropdownItem>
-            <Link
-              to={`/user/${this.props.username}`}
-              className="text-decoration-none text-dark"
-            >
-              <DropdownItem tag="div">Profile</DropdownItem>
-            </Link>
-            <Link to="#" className="text-decoration-none text-dark">
-              <DropdownItem tag="div">Manage Subscription</DropdownItem>
-            </Link>
-            <DropdownItem divider />
-            <DropdownItem onClick={this.logOut}>Logout</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      );
-    } else if (this.props.role === "teacher") {
+    if (this.props.username) {
       return (
         <Dropdown
           isOpen={this.state.dropdownOpen}
@@ -176,60 +132,10 @@ class NavBar extends Component {
               Hello, {this.props.username}!
             </DropdownItem>
             <Link
-              to={`/user/${this.props.username}`}
+              to={`/browse/user/${this.props.username}`}
               className="text-decoration-none text-dark"
             >
               <DropdownItem tag="div">Profile</DropdownItem>
-            </Link>
-            <Link
-              to={`/user/${this.props.username}/manageuploads`}
-              className="text-decoration-none text-dark"
-            >
-              <DropdownItem tag="div">Manage Uploads</DropdownItem>
-            </Link>
-            <DropdownItem divider />
-            <DropdownItem onClick={this.logOut}>Logout</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      );
-    } else if (this.props.role === "admin") {
-      return (
-        <Dropdown
-          isOpen={this.state.dropdownOpen}
-          toggle={this.toggleDropdown}
-          className="nav3-3"
-        >
-          <DropdownToggle
-            tag="span"
-            data-toggle="dropdown"
-            aria-expanded={this.state.dropdownOpen}
-          >
-            <div className="userIcon">
-              <img
-                src={userIcon}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  overflow: "hidden",
-                  borderRadius: "50%"
-                }}
-                alt=""
-              />
-            </div>
-          </DropdownToggle>
-          <DropdownMenu right className="text-right">
-            <DropdownItem header className="text-capitalize">
-              Hello, {this.props.username}!
-            </DropdownItem>
-            <Link
-              to={`/user/${this.props.username}`}
-              className="text-decoration-none text-dark"
-            >
-              <DropdownItem tag="div">Profile</DropdownItem>
-            </Link>
-            <Link to="#" className="text-decoration-none text-dark">
-              <DropdownItem tag="div">Admin Dashboard</DropdownItem>
             </Link>
             <DropdownItem divider />
             <DropdownItem onClick={this.logOut}>Logout</DropdownItem>

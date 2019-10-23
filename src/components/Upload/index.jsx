@@ -3,11 +3,20 @@ import "./upload.css";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import Axios from "axios";
+
 import swal from "sweetalert2";
+
+import { Player } from "video-react";
 let urlApi = "http://localhost:3001/";
 
 export class Upload extends Component {
-  state = { didUpdate: false, userVid: [], class: [], selectedClass: "" };
+  state = {
+    didUpdate: false,
+    userVid: [],
+    class: [],
+    video: "",
+    thumbnail: ""
+  };
   componentDidMount() {
     console.log(this.props.username);
     this.getUserVideo();
@@ -21,6 +30,12 @@ export class Upload extends Component {
       this.setState({ didUpdate: true });
     }
   }
+  handleSubmit = () => {
+    if (this.state.video.length > 0 && this.state.thumbnail.length > 0) {
+    } else {
+      swal.fire("Error", "Please fill out all of the forms", "error");
+    }
+  };
   getUserVideo() {
     Axios.get(urlApi + "getuservideos", {
       params: { username: this.props.username }
@@ -69,77 +84,141 @@ export class Upload extends Component {
   };
   renderClass = () => {
     let render = this.state.class.map(val => {
-      return <option value={val.class}>{val.class}</option>;
+      return <option value={val.class} />;
     });
     return render;
   };
 
-  onSubmit = () => {
-    var fd = new FormData();
-    fd.append("video", this.state.selectedFile, this.state.selectedFile.name);
-    fd.append(
-      "data",
-      JSON.stringify({
-        username: this.props.username
-      })
+  handleUploadVideo = e => {
+    let format = e.target.files[0].name.substr(
+      e.target.files[0].name.length - 3
     );
-    Axios.post(urlApi + "uploadvideo", fd).then(res => {
-      let menjadi = urlApi + "files/" + res.data.filename;
-      this.setState({});
-      swal.fire("Success", "Video Uploaded!", "success");
-      this.props.updateProfile(menjadi);
-    });
+    if (format === "mp4") {
+      this.setState({
+        selectedFile: e.target.files[0],
+        edit: true
+      });
+      var fd = new FormData();
+      fd.append("video", e.target.files[0], e.target.files[0].name);
+      Axios.post(urlApi + "uploadvideo", fd)
+        .then(res => {
+          console.log(res);
+          let hasil = urlApi + "files/" + res.data.filename;
+          this.setState({ video: hasil });
+          swal.fire("Success", "Video Uploaded!", "success");
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } else {
+      swal.fire("Error", "File format must be mp4", "error");
+    }
+  };
+  handleUploadThumbnail = e => {
+    let format = e.target.files[0].name.split(".")[1];
+    if (format === "jpg" || format === "jpeg" || format === "png") {
+      this.setState({
+        selectedFile: e.target.files[0],
+        edit: true
+      });
+      var fd = new FormData();
+      fd.append("thumbnail", e.target.files[0], e.target.files[0].name);
+      Axios.post(urlApi + "uploadthumbnail", fd)
+        .then(res => {
+          console.log(res);
+          let hasil = urlApi + "files/" + res.data.filename;
+          console.log(hasil);
+
+          this.setState({ thumbnail: hasil });
+          swal.fire("Success", "Thumbnail Uploaded!", "success");
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    } else {
+      swal.fire("Error", "File format must be jpg/png", "error");
+    }
   };
   render() {
     return (
       <div className="gray-background py-5">
         <div className="upload-container">
-          <div className="text-center">
-            <h1 className="upload-title">Upload a Video</h1>
-            <input
-              onChange={e => {
-                this.setState({
-                  selectedFile: e.target.files[0],
-                  edit: true
-                });
-              }}
-              type="file"
-              ref="uploadvideo"
-              className=""
-            />
+          <div className="upload-vid">
+            {this.state.video ? (
+              <Player
+                playsInline
+                src={this.state.video}
+                fluid={false}
+                width={600}
+              />
+            ) : (
+              <React.Fragment>
+                <h1 className="upload-title">Upload a Video</h1>
+                <input
+                  onChange={e => {
+                    this.handleUploadVideo(e);
+                  }}
+                  type="file"
+                  ref="uploadvideo"
+                />
+              </React.Fragment>
+            )}
           </div>
-          <div>
+          <div className="upload-input">
             <form>
+              <h6>Thumbnail</h6>
+              {this.state.thumbnail ? (
+                <div className="upload-thumbnail">
+                  <button
+                    onClick={() => {
+                      this.setState({ thumbnail: "" });
+                    }}
+                    className="cancel-thumbnail"
+                  >
+                    X
+                  </button>
+                  <img src={this.state.thumbnail} alt="thumb" />
+                </div>
+              ) : (
+                <div>
+                  <input
+                    onChange={e => {
+                      this.handleUploadThumbnail(e);
+                    }}
+                    type="file"
+                    ref="uploadthumbnail"
+                  />
+                </div>
+              )}
+              <br />
               <h6>Class</h6>
-              <select
-                id="class"
-                defaultValue=""
-                onChange={e => {
-                  this.setState({ selectedClass: e.target.value });
-                }}
-              >
-                {this.renderClass()}
-                <option value="">New Class Name</option>
-              </select>
               <input
+                list="ice-cream-flavors"
                 type="text"
                 placeholder="New Class..."
-                disabled={this.state.selectedClass}
               />
+              <datalist id="ice-cream-flavors">{this.renderClass()}</datalist>
               <h6>Title</h6>
               <input type="text" />
               <h6>Episode</h6>
               <input type="text" />
               <h6>Description</h6>
               <textarea />
-              <button>Submit</button>
+              <button
+                onClick={e => {
+                  e.preventDefault();
+                  this.handleSubmit();
+                }}
+              >
+                Submit
+              </button>
             </form>
           </div>
-          <div>
+          )
+          <div className="upload-upload">
             <h1>Your Uploads</h1>
             {this.renderUserVideos()}
           </div>
-          <div></div>
         </div>
       </div>
     );
