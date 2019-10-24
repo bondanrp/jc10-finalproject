@@ -30,7 +30,8 @@ export const onLoginUser = (USERNAME, PASSWORD) => {
             role,
             firstname,
             lastname,
-            profilepict
+            profilepict,
+            premium
           } = hasil[0];
           localStorage.setItem(
             "userData",
@@ -40,7 +41,8 @@ export const onLoginUser = (USERNAME, PASSWORD) => {
               role,
               firstname,
               lastname,
-              profilepict
+              profilepict,
+              premium
             })
           );
 
@@ -52,7 +54,8 @@ export const onLoginUser = (USERNAME, PASSWORD) => {
               role,
               firstname,
               lastname,
-              profilepict
+              profilepict,
+              premium
             }
           });
         } else {

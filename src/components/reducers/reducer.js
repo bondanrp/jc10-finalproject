@@ -4,7 +4,8 @@ const init = {
   id: "",
   username: "",
   role: "",
-  profilepict: ""
+  profilepict: "",
+  premium: ""
 };
 
 const AuthReducer = (state = init, action) => {
@@ -15,7 +16,8 @@ const AuthReducer = (state = init, action) => {
         id: action.payload.id,
         username: action.payload.username,
         role: action.payload.role,
-        profilepict: action.payload.profilepict
+        profilepict: action.payload.profilepict,
+        premium: action.payload.premium
       };
     case "PROFILE_UPDATED":
       return {

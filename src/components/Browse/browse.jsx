@@ -703,6 +703,7 @@ export class Browse extends Component {
                   username={this.props.username}
                   profilepict={this.props.profilepict}
                   id={this.props.id}
+                  premium={this.props.premium}
                   loginModal={this.loginModal}
                 />
               </Route>
@@ -719,7 +720,8 @@ const mapStateToProps = state => {
     username: state.auth.username,
     id: state.auth.id,
     profilepict: state.auth.profilepict,
-    role: state.auth.role
+    role: state.auth.role,
+    premium: state.auth.premium
   };
 };
 export default connect(

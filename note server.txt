@@ -1,2 +1,0 @@
-menggunakan schema dari data.sql
-port 3307

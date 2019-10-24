@@ -26,7 +26,8 @@ export class Video extends Component {
     comments: [],
     redirectLogin: false,
     newPost: false,
-    refresh: false
+    refresh: false,
+    redirectPremium: false,
   };
 
   timer = null;
@@ -48,6 +49,9 @@ export class Video extends Component {
     }
   }
 
+  redirectPremium=()=>{
+    this.setState({redirectPremium:true})
+  }
   componentWillUnmount() {
     console.log("video unmounted");
     clearTimeout(this.timer);
@@ -183,7 +187,7 @@ export class Video extends Component {
       });
   };
   renderRelated = () => {
-    if (!this.props.username) {
+    if (!this.props.premium) {
       return this.state.related.map((val, idx) => {
         if (idx === 0) {
           return (
@@ -220,7 +224,7 @@ export class Video extends Component {
               <Link className="related-preview-blocked linkaja">
                 <div
                   className="related-preview-blocked"
-                  onClick={this.props.loginModal}
+                  onClick={this.props.username ? this.redirectPremium : this.props.loginModal}
                 >
                   <FontAwesomeIcon icon={faLock} className="video-locked" />
                 </div>
@@ -308,8 +312,7 @@ export class Video extends Component {
         }
       });
     }
-  };
-
+  };  
   nextEps = () => {
     if (this.state.nextData) {
       if (!this.props.username) {
@@ -326,7 +329,21 @@ export class Video extends Component {
             </Link>
           </React.Fragment>
         );
-      } else {
+      } 
+      else if (!this.props.premium) {
+        return (
+          <React.Fragment>
+            <h6>Next Episode</h6>
+            <Link
+              onClick={this.redirectPremium}
+              className="text-capitalize"
+            >
+              {this.state.nextData.episode}. {this.state.nextData.title}
+            </Link>
+          </React.Fragment>
+        );
+      } 
+      else {
         return (
           <React.Fragment>
             <h6>Next Episode</h6>
@@ -393,13 +410,14 @@ export class Video extends Component {
     event.preventDefault();
   };
   render() {
-    if (!this.props.username && parseInt(this.props.params.episode) !== 1) {
+    if (!this.props.premium && parseInt(this.props.params.episode) !== 1) {
       return (
         <Redirect
           to={`/browse/user/${this.props.params.username}/video/${this.props.params.class}/1`}
         ></Redirect>
       );
-    } else if (this.state.loading) {
+    } else if (this.state.redirectPremium) {return <Redirect to='/premium'></Redirect>}
+    else if (this.state.loading) {
       return (
         <div className="gray-background">
           <div className="video-container-container">

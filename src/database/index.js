@@ -4,7 +4,7 @@ var nodemailer = require("nodemailer");
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "assalamualaikum",
+  password: "password",
   database: "jc10_finalproject"
 });
 // contoh hosting database

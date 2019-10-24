@@ -224,3 +224,21 @@
   border: none;
   font-weight: 100;
 }
+.nav-premium{
+  background: black !important;
+  color: white;
+  height: 30px;
+  position: fixed;
+  width: 100%;
+  text-align: center;
+  z-index: 1;
+  letter-spacing: 2px;
+}
+.nav-premium-button{
+  color: white;
+  position: fixed;
+  right: 0;
+  background: none;
+  border: none;
+  z-index: 2;
+}

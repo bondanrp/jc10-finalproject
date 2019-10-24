@@ -11,6 +11,7 @@ import Browse from "./components/Browse/browse";
 import Contact from "./components/Contact";
 import BecomeATeacher from "./components/BecomeATeacher";
 import Register from "./components/Register";
+import Premium from "./components/Premium";
 import Login from "./components/Login";
 import Upload from "./components/Upload/index";
 
@@ -21,7 +22,8 @@ const keepLogin = objUser => {
       id: objUser.id,
       username: objUser.username,
       role: objUser.role,
-      profilepict: objUser.profilepict
+      profilepict: objUser.profilepict,
+      premium: objUser.premium
     }
   };
 };
@@ -57,6 +59,7 @@ class App extends Component {
           <Route path="/Contact" component={Contact} />
           <Route path="/BecomeATeacher" component={BecomeATeacher} />
           <Route path="/Register" component={Register} />
+          <Route path="/Premium" component={Premium} />
           <Route path="/Login" component={Login} />
           <Route path="/manageuploads" component={Upload} />
         </Switch>
