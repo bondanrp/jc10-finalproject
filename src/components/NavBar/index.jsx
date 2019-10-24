@@ -138,6 +138,11 @@ class NavBar extends Component {
             >
               <DropdownItem tag="div">Profile</DropdownItem>
             </Link>
+            {this.props.premium ? null : (
+              <Link to={`/premium`} className="text-decoration-none text-dark">
+                <DropdownItem tag="div">Get Premium</DropdownItem>
+              </Link>
+            )}
             <DropdownItem divider />
             <DropdownItem onClick={this.logOut}>Logout</DropdownItem>
           </DropdownMenu>
@@ -185,9 +190,12 @@ class NavBar extends Component {
     const anim = this.state.toggleBurger ? "burger change" : "burger";
     return (
       <React.Fragment>
-        <div className="navBar" onClick={()=>this.setState({premiumToggle: true})}>
+        <div
+          className="navBar"
+          onClick={() => this.setState({ premiumToggle: true })}
+        >
           <div className=" nav1">
-            <Link className="judul" to="/" >
+            <Link className="judul" to="/">
               Bagi Bakat
             </Link>
           </div>
@@ -238,7 +246,28 @@ class NavBar extends Component {
             </div>
           </div>
         </div>
-        {this.props.premium || !this.props.username? null :<React.Fragment> <div className={this.state.premiumToggle? 'nav-premium' : 'd-none'}>Upgrade to <Link to='/premium' className='text-white'>premium</Link> and get full access to unlimited classes!</div><button onClick={()=>this.setState({premiumToggle: false})} className={this.state.premiumToggle ? 'nav-premium-button': 'd-none'}>X</button></React.Fragment>}
+        {this.props.premium || !this.props.username ? null : (
+          <React.Fragment>
+            {" "}
+            <div
+              className={this.state.premiumToggle ? "nav-premium" : "d-none"}
+            >
+              Upgrade to{" "}
+              <Link to="/premium" className="text-white">
+                premium
+              </Link>{" "}
+              and get full access to unlimited classes!
+            </div>
+            <button
+              onClick={() => this.setState({ premiumToggle: false })}
+              className={
+                this.state.premiumToggle ? "nav-premium-button" : "d-none"
+              }
+            >
+              X
+            </button>
+          </React.Fragment>
+        )}
       </React.Fragment>
     );
   }

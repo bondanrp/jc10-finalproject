@@ -4,6 +4,9 @@ import "./profile.css";
 import { Link } from "react-router-dom";
 import swal from "sweetalert2";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlay, faLock } from "@fortawesome/free-solid-svg-icons";
+
 const urlApi = "http://localhost:3001/";
 
 export class Profile extends Component {
@@ -185,12 +188,20 @@ export class Profile extends Component {
               }}
               className="preview-thumbnail"
             >
+              {!this.props.premium && val.episode > 3 ? (
+                <FontAwesomeIcon icon={faLock} className="video-play" />
+              ) : (
+                <FontAwesomeIcon icon={faPlay} className="video-play" />
+              )}
               <div className="preview-episode">Eps #{val.episode}</div>
             </div>
             <p className="text-capitalize preview-title">{val.title}</p>
             <p className="preview-author text-left">
               @{val.author} {val.view}
             </p>
+            {!this.props.premium && val.episode > 3 ? (
+              <p className="premium-only">Premium</p>
+            ) : null}
           </Link>
         );
       } else {
@@ -367,7 +378,12 @@ export class Profile extends Component {
 
               <div>
                 <span>
-                  @{val.username} | {val.role === 'teacher' ? "Teacher":(val.premium ? "Premium User" : "Free User")}
+                  @{val.username} |{" "}
+                  {val.role === "teacher"
+                    ? "Teacher"
+                    : val.premium
+                    ? "Premium User"
+                    : "Free User"}
                 </span>
                 <br />
                 <span style={{ fontSize: "12px" }}>

@@ -271,3 +271,13 @@
   grid-column: 3;
   grid-row: 1/-1;
 }
+.premium-only {
+  position: absolute;
+  bottom: 0;
+  right: 2px;
+  margin: 2px;
+  text-align: right;
+  font-size: 11px;
+  color: #017a84;
+  font-family: monospace;
+}

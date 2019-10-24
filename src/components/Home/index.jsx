@@ -9,7 +9,7 @@ import { onLoginUser } from "../../actions/login/login";
 import { connect } from "react-redux";
 import { timeSince } from "../../functions";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { faLock, faPlay } from "@fortawesome/free-solid-svg-icons";
 
 let urlPreviewApi = "http://localhost:3001/";
 
@@ -108,7 +108,11 @@ export class Home extends Component {
                 }}
                 className="preview-thumbnail"
               >
-                <FontAwesomeIcon icon={faPlay} className="video-play" />
+                {!this.props.premium && val.episode > 3 ? (
+                  <FontAwesomeIcon icon={faLock} className="video-play" />
+                ) : (
+                  <FontAwesomeIcon icon={faPlay} className="video-play" />
+                )}
                 <div className="preview-episode">Eps #{val.episode}</div>
               </div>
               <p className="text-capitalize preview-title">{val.title}</p>
@@ -116,6 +120,9 @@ export class Home extends Component {
               <p className="preview-views">
                 {val.views} views • {timeSince(val.timestamp)}
               </p>
+              {!this.props.premium && val.episode > 3 ? (
+                <p className="premium-only">Premium</p>
+              ) : null}
             </div>
           );
         } else {

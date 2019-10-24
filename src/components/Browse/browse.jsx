@@ -12,7 +12,7 @@ import querystring from "query-string";
 import { LoginModal } from "../Login/loginModal";
 import { Switch, Route } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faLock } from "@fortawesome/free-solid-svg-icons";
 
 const urlApi = "http://localhost:3001/";
 
@@ -280,7 +280,11 @@ export class Browse extends Component {
                     }}
                     className="preview-thumbnail"
                   >
-                    <FontAwesomeIcon icon={faPlay} className="video-play" />
+                    {!this.props.premium && val.episode > 3 ? (
+                      <FontAwesomeIcon icon={faLock} className="video-play" />
+                    ) : (
+                      <FontAwesomeIcon icon={faPlay} className="video-play" />
+                    )}
                     <div className="preview-episode">Eps #{val.episode}</div>
                   </div>
                   <p className="text-capitalize preview-title">{val.title}</p>
@@ -291,6 +295,9 @@ export class Browse extends Component {
                 <p className="preview-views">
                   {val.views} views • {timeSince(val.timestamp)}
                 </p>
+                {!this.props.premium && val.episode > 3 ? (
+                  <p className="premium-only">Premium</p>
+                ) : null}
               </div>
             );
           } else if (val.username) {
