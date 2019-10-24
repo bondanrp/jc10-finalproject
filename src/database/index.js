@@ -238,7 +238,7 @@ module.exports = {
   },
   getUserVideos: (req, res) => {
     db.query(
-      `select * from uploads where author = '${req.query.username}' order by timestamp`,
+      `select * from uploads where author = '${req.query.username}' order by timestamp desc`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -304,7 +304,7 @@ module.exports = {
 
   getClass: (req, res) => {
     db.query(
-      `select class from uploads where author = '${req.query.username}' group by class`,
+      `select class, count(class) as episode from uploads where author = '${req.query.username}' group by class`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -398,35 +398,24 @@ module.exports = {
         res.send("Update Success!");
       }
     );
+  },
+  uploadVideoData: (req, res) => {
+    let {
+      inputTitle,
+      inputClass,
+      inputEpisode,
+      thumbnail,
+      video,
+      inputDesc,
+      author,
+      inputCategory
+    } = req.body;
+    db.query(
+      `insert into uploads values (0,'${inputTitle}','${inputClass}',${inputEpisode},'${thumbnail}','${video}','${inputDesc}','${author}','${inputCategory}',0,CURRENT_TIMESTAMP)`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
   }
 };
-// CLOSING EXPORT
-
-//   editTodo: (req, res) => {
-//     db.query(
-//       `update todo set action = '${req.body.action}' where id = ${req.body.id}`,
-//       (err, result) => {
-//         if (err) throw err;
-//         res.send("Update Success!");
-//       }
-//     );
-//   },
-
-//   kochengOren: (req, res) => {
-//     db.query(
-//       `update todo set isCompleted = 1 where id = ${req.body.id}`,
-//       (err, result) => {
-//         if (err) throw err;
-//         res.send("Update Success!");
-//       }
-//     );
-//   },
-
-//   deleteTodo: (req, res) => {
-//     var id = req.params.terserah;
-//     db.query(`delete from todo where id = ${id}`, (err, result) => {
-//       if (err) throw err;
-//       res.send(result);
-//     });
-//   }
-// };

@@ -6,6 +6,8 @@ import Swal from "sweetalert2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
 
+import { Player } from "video-react";
+
 import { timeSince } from "../../functions/index";
 const swalWithButtons = Swal.mixin({
   customClass: {
@@ -72,7 +74,7 @@ export class Video extends Component {
     )
       .then(res => {
         this.setState({ data: res.data[0] });
-        this.timer = setTimeout(this.addView, 60000);
+        this.timer = setTimeout(this.addView, 10000);
         // NEXT EPISODE
         Axios.get(urlApi + "getepisode", {
           params: {
@@ -443,15 +445,25 @@ export class Video extends Component {
           <div className="video-container-container">
             <div className="video-container">
               <div className="video-main">
-                <iframe
-                  title={this.state.data.title}
-                  width="640"
-                  height="480"
-                  src={this.state.data.video}
-                  frameborder="0"
-                  allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                  allowfullscreen
-                ></iframe>
+                {this.state.data.video.includes("youtube") ? (
+                  <iframe
+                    title={this.state.data.title}
+                    width="640"
+                    height="480"
+                    src={this.state.data.video}
+                    frameborder="0"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen
+                  ></iframe>
+                ) : (
+                  <Player
+                    playsInline
+                    src={this.state.data.video}
+                    fluid={false}
+                    width={640}
+                    height={480}
+                  />
+                )}
               </div>
               <div>
                 <div className="video-episodes">
@@ -464,7 +476,7 @@ export class Video extends Component {
                   {this.state.data.episode}. {this.state.data.title}
                 </h1>
                 <h6>
-                  {this.state.data.views + 1} views •{" "}
+                  {this.state.data.views} views •{" "}
                   {timeSince(this.state.data.timestamp)}
                 </h6>
                 <hr />

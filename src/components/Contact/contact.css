@@ -69,3 +69,17 @@
   font-weight: 100;
   margin-bottom: 0;
 }
+.contact-bg {
+  position: absolute;
+  top: 100px;
+  right: 100px;
+  width: 500px;
+  /* z-index: 2; */
+}
+.contact-bg2 {
+  position: absolute;
+  top: 300px;
+  right: 250px;
+  width: 500px;
+  /* z-index: 1; */
+}

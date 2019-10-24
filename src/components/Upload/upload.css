@@ -1,3 +1,12 @@
+@import "~video-react/dist/video-react.css";
+
+.upload-vid {
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
 .upload-container {
   margin: auto;
   display: grid;
@@ -12,12 +21,14 @@
   background: white;
   border: 1px solid #017a84;
 }
-.upload-container > div:nth-of-type(2) {
+.upload-input {
   padding: 30px;
   font-family: "poppins";
+  grid-row: 1/-1;
+  grid-column: 2;
 }
-.upload-container > div:nth-of-type(2) > form > input,
-.upload-container > div:nth-of-type(2) > form > select {
+.upload-input > form > input,
+.upload-input > form > select {
   margin-bottom: 20px;
   height: 35px;
   width: 100%;
@@ -25,13 +36,13 @@
   border: 1px solid #017a84;
   text-decoration: none;
 }
-.upload-container > div:nth-of-type(2) > form > textarea {
+.upload-input > form > textarea {
   resize: none;
   border: 1px solid #017a84;
   border-radius: 5px;
   margin-bottom: 20px;
 }
-.upload-container > div:nth-of-type(2) > form > button {
+.upload-input > form > button {
   text-align: right !important;
   border: 1px solid #017a84;
   border-radius: 5px;
@@ -41,9 +52,8 @@
 }
 .upload-title {
   font-family: "poppins";
-  margin-top: 170px;
 }
-.upload-container > div:nth-of-type(3) {
+.upload-upload {
   display: grid;
   grid-template-columns: 200px 200px 200px;
   grid-template-rows: 70px auto;
@@ -51,8 +61,10 @@
   row-gap: 10px;
   margin: auto;
   padding: 10px;
+
+  grid-row: 2;
 }
-.upload-container > div:nth-of-type(3) > h1 {
+.upload-upload > h1 {
   grid-column: 1/-1;
   text-align: center;
   font-family: "poppins";
@@ -79,5 +91,22 @@
 }
 .upload-preview > img {
   height: 50%;
-  width: 200px;
+  width: 198px;
+}
+.upload-thumbnail {
+  position: relative;
+  width: 350px;
+  height: 200px;
+  overflow: hidden;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+.cancel-thumbnail {
+  border: none;
+  color: red;
+  font-weight: 900;
+  position: absolute;
+  top: 0;
+  right: 0;
 }

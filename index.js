@@ -47,7 +47,9 @@ const {
   isSubscribed,
   subscribe,
   unsubscribe,
-  view
+  view,
+  //upload
+  uploadVideoData
 } = require("./src/database/index");
 var appKey = "rahasia";
 
@@ -153,6 +155,9 @@ app.post("/subscribe", subscribe);
 app.delete("/unsubscribe/:userid/:targetid", unsubscribe);
 app.put("/view", view);
 
+//upload db
+app.post("/uploadvideodata", uploadVideoData);
+
 //multer
 let multerStorageConfig = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -227,26 +232,50 @@ let uploadVideo = multer({
 app.post("/uploadvideo", uploadVideo.single("video"), (req, res) => {
   try {
     if (req.validation) throw req.validation;
-    if ((req.file, req.file.size > 5000000))
-      throw { error: true, message: "file size exceeds the maximum limit" };
-    let data = JSON.parse(req.body.data);
-    db.query(
-      `insert into uploads values ('0', '${data.title}', '${data.class}', '${
-        data.episode
-      }','${data.thumbnail}','${"http://localhost:3001/files/" +
-        req.file.filename}','${data.description}','${
-        data.author
-      }','0',CURRENT_TIMESTAMP`,
-      (err, result) => {
-        if (err) throw err;
-        res.send(req.file);
-      }
-    );
+    res.send(req.file);
   } catch (error) {
-    fs.unlinkSync(req.file.path);
     console.log(error);
   }
 });
+//Thumbnail
+let multerStorageConfigThumbnail = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./src/database/uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(null, `THUMB-${Date.now()}.${file.mimetype.split("/")[1]}`);
+  }
+});
+
+let filterConfigThumbnail = (req, file, cb) => {
+  if (
+    file.mimetype.split("/")[1] === "jpeg" ||
+    file.mimetype.split("/")[1] === "png"
+  ) {
+    cb(null, true);
+  } else {
+    req.validation = { error: true, msg: "file format must be jpg/png" };
+    cb(null, false);
+  }
+};
+
+let uploadThumbnail = multer({
+  storage: multerStorageConfigThumbnail,
+  fileFilter: filterConfigThumbnail
+});
+
+app.post(
+  "/uploadthumbnail",
+  uploadThumbnail.single("thumbnail"),
+  (req, res) => {
+    try {
+      if (req.validation) throw req.validation;
+      res.send(req.file);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
 
 // mail
 app.listen(port, console.log("Listening in port " + port));
