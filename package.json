@@ -31,7 +31,8 @@
     "reactstrap": "^8.0.1",
     "redux": "^4.0.4",
     "redux-thunk": "^2.3.0",
-    "sweetalert2": "^8.17.1"
+    "sweetalert2": "^8.17.1",
+    "video-react": "^0.14.1"
   },
   "scripts": {
     "start": "concurrently \"yarn start-frontend || npm run start-frontend\" \"yarn start-backend || npm run start-backend\"",

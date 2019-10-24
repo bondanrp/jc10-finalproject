@@ -31,15 +31,15 @@ export class Video extends Component {
     refresh: false,
     redirectPremium: false,
   };
-
+  
   timer = null;
   componentDidMount() {
     console.log(this.props);
-
+    
     console.log("video mounted");
     this.getData();
   }
-
+  
   componentDidUpdate(nextProps) {
     if (
       this.state.refresh ||
@@ -56,6 +56,7 @@ export class Video extends Component {
   }
   componentWillUnmount() {
     console.log("video unmounted");
+    console.log("timerended");
     clearTimeout(this.timer);
   }
   login = () => {
@@ -68,13 +69,15 @@ export class Video extends Component {
   };
   getData = () => {
     this.setState({ refresh: false });
+    this.timer = setTimeout(this.addView, 10000);
+    console.log('timerstart');
     Axios.get(
       urlApi +
         `getvideo/${this.props.params.username}/${this.props.params.class}/${this.props.params.episode}`
     )
       .then(res => {
         this.setState({ data: res.data[0] });
-        this.timer = setTimeout(this.addView, 10000);
+        
         // NEXT EPISODE
         Axios.get(urlApi + "getepisode", {
           params: {
@@ -189,9 +192,72 @@ export class Video extends Component {
       });
   };
   renderRelated = () => {
-    if (!this.props.premium) {
+    if(!this.props.username){
       return this.state.related.map((val, idx) => {
         if (idx === 0) {
+          return (
+            <React.Fragment>
+              <Link
+                to={`/browse/user/${val.author}/video/${val.class}/${val.episode}`}
+                onClick={() => {
+                  this.setState({ loading: true, refresh: true });
+                }}
+                className="related-preview-selected linkaja"
+              >
+                <div
+                  style={{
+                    background: `url(${val.thumbnail})`
+                  }}
+                  className="related-preview-thumbnail"
+                >
+                  <div className="preview-episode">Eps #{val.episode}</div>
+                </div>
+                <div className="ml-2">
+                  <p className="text-capitalize preview-title">
+                    {val.episode}. {val.title}
+                  </p>
+                  <p className="preview-author">{val.author}</p>
+                  <br />
+                  <p className="preview-views ml-1">{val.views} views</p>
+                </div>
+              </Link>
+            </React.Fragment>
+          );
+        } else {
+          return (
+            <React.Fragment>
+              <Link className="related-preview-blocked linkaja">
+                <div
+                  className="related-preview-blocked"
+                  onClick={this.props.username ? this.redirectPremium : this.props.loginModal}
+                >
+                  <FontAwesomeIcon icon={faLock} className="video-locked" />
+                </div>
+                <div
+                  style={{
+                    background: `url(${val.thumbnail})`
+                  }}
+                  className="related-preview-thumbnail"
+                >
+                  <div className="preview-episode">Eps #{val.episode}</div>
+                </div>
+                <div className="ml-2">
+                  <p className="text-capitalize preview-title">
+                    {val.episode}. {val.title}
+                  </p>
+                  <p className="preview-author">{val.author}</p>
+                  <br />
+                  <p className="preview-views ml-1">{val.views} views</p>
+                </div>
+              </Link>
+            </React.Fragment>
+          );
+        }
+      });
+    }
+    else if (!this.props.premium) {
+      return this.state.related.map((val, idx) => {
+        if (idx < 3) {
           return (
             <React.Fragment>
               <Link
@@ -333,6 +399,7 @@ export class Video extends Component {
         );
       } 
       else if (!this.props.premium) {
+        if(this.state.nextData.episode > 3){
         return (
           <React.Fragment>
             <h6>Next Episode</h6>
@@ -343,7 +410,18 @@ export class Video extends Component {
               {this.state.nextData.episode}. {this.state.nextData.title}
             </Link>
           </React.Fragment>
-        );
+        )} else {return <React.Fragment>
+          <h6>Next Episode</h6>
+          <Link
+            to={`/browse/user/${this.state.data.author}/video/${this.state.data.class}/${this.state.nextData.episode}`}
+            onClick={() => {
+              this.setState({ loading: true, refresh: true });
+            }}
+            className="text-capitalize"
+          >
+            {this.state.nextData.episode}. {this.state.nextData.title}
+          </Link>
+        </React.Fragment>}
       } 
       else {
         return (
@@ -412,13 +490,19 @@ export class Video extends Component {
     event.preventDefault();
   };
   render() {
-    if (!this.props.premium && parseInt(this.props.params.episode) !== 1) {
+    if (!this.props.username && parseInt(this.props.params.episode) !== 1) {
       return (
         <Redirect
           to={`/browse/user/${this.props.params.username}/video/${this.props.params.class}/1`}
         ></Redirect>
-      );
-    } else if (this.state.redirectPremium) {return <Redirect to='/premium'></Redirect>}
+      )} else if (!this.props.premium && parseInt(this.props.params.episode) > 3) {
+        return (
+          <Redirect
+          to={`/premium`}
+          ></Redirect>
+          );
+        } else if (this.state.redirectPremium) {
+    return <Redirect to='/premium'></Redirect>}
     else if (this.state.loading) {
       return (
         <div className="gray-background">

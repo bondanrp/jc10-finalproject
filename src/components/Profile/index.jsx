@@ -367,7 +367,7 @@ export class Profile extends Component {
 
               <div>
                 <span>
-                  @{val.username} | {val.role}
+                  @{val.username} | {val.role === 'teacher' ? "Teacher":(val.premium ? "Premium User" : "Free User")}
                 </span>
                 <br />
                 <span style={{ fontSize: "12px" }}>

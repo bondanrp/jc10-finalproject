@@ -12,6 +12,7 @@ import Contact from "./components/Contact";
 import BecomeATeacher from "./components/BecomeATeacher";
 import Register from "./components/Register";
 import Premium from "./components/Premium";
+import Payment from "./components/Premium/Payment";
 import Login from "./components/Login";
 import Upload from "./components/Upload/index";
 
@@ -59,7 +60,8 @@ class App extends Component {
           <Route path="/Contact" component={Contact} />
           <Route path="/BecomeATeacher" component={BecomeATeacher} />
           <Route path="/Register" component={Register} />
-          <Route path="/Premium" component={Premium} />
+          <Route exact path="/Premium" component={Premium} />
+          <Route exact path="/Premium/payment" component={Payment} />
           <Route path="/Login" component={Login} />
           <Route path="/manageuploads" component={Upload} />
         </Switch>

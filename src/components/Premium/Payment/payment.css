@@ -1,0 +1,9 @@
+.payment-container{
+    padding-top: 150px;
+}
+.payment-card{
+    margin: auto;
+    background: white;
+    width: 800px;
+    min-height: 200px;
+}

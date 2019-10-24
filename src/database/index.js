@@ -96,7 +96,7 @@ module.exports = {
   },
   getUserName: (req, res) => {
     db.query(
-      `select * from users where username = '${req.query.username}'`,
+      `select id, username, role, premium, profilepict, firstname, lastname from users where username = '${req.query.username}'`,
       (err, result) => {
         if (err) throw err;
         res.send(result);

@@ -56,7 +56,7 @@ var appKey = "rahasia";
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "assalamualaikum",
+  password: "password",
   database: "jc10_finalproject"
 });
 //contoh kalau pakai hosting database
