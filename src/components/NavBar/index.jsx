@@ -245,13 +245,12 @@ class NavBar extends Component {
             </div>
           </div>
         </div>
-        {this.props.premium || !this.props.username ? null : (
+        {this.props.premium ? null : (
           <React.Fragment>
-            {" "}
             <div
               className={this.state.premiumToggle ? "nav-premium" : "d-none"}
             >
-              Upgrade to{" "}
+              {this.props.username ? "Upgrade to " : "Sign In and get "}
               <Link to="/premium" className="text-white">
                 premium
               </Link>{" "}

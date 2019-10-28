@@ -276,6 +276,38 @@ app.post(
     }
   }
 );
+//CV
+let multerStorageConfigCV = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./src/database/uploads");
+  },
+  filename: (req, file, cb) => {
+    cb(null, `CV-${Date.now()}.${file.mimetype.split("/")[1]}`);
+  }
+});
+
+let filterConfigCV = (req, file, cb) => {
+  if (file.mimetype.split("/")[1] === "pdf") {
+    cb(null, true);
+  } else {
+    req.validation = { error: true, msg: "file format must be PDF" };
+    cb(null, false);
+  }
+};
+
+let uploadCV = multer({
+  storage: multerStorageConfigCV,
+  fileFilter: filterConfigCV
+});
+
+app.post("/uploadcv", uploadCV.single("cv"), (req, res) => {
+  try {
+    if (req.validation) throw req.validation;
+    res.send(req.file);
+  } catch (error) {
+    console.log(error);
+  }
+});
 
 // mail
 app.listen(port, console.log("Listening in port " + port));

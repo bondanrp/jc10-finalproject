@@ -602,7 +602,6 @@ export class Video extends Component {
                       </div>
                     </form>
                   </div>
-                  {this.renderComments()}
                 </React.Fragment>
               ) : (
                 <div className="please">
@@ -620,6 +619,7 @@ export class Video extends Component {
                   )}
                 </div>
               )}
+              {this.renderComments()}
             </div>
             <div>
               <div className="video-related">
