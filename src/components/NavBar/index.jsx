@@ -214,8 +214,7 @@ class NavBar extends Component {
               <Link
                 className="tautan active"
                 onClick={() => this.setState({ toggleBurger: false })}
-                to="/becomeateacher
-                "
+                to="/becomeateacher"
               >
                 Become a Teacher
               </Link>

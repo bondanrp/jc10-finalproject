@@ -10,6 +10,7 @@ import About from "./components/About";
 import Browse from "./components/Browse/browse";
 import Contact from "./components/Contact";
 import BecomeATeacher from "./components/BecomeATeacher";
+import RegisterTeacher from "./components/BecomeATeacher/RegisterTeacher/index";
 import Register from "./components/Register";
 import Premium from "./components/Premium";
 import Payment from "./components/Premium/Payment";
@@ -58,7 +59,8 @@ class App extends Component {
             component={Browse}
           />
           <Route path="/Contact" component={Contact} />
-          <Route path="/BecomeATeacher" component={BecomeATeacher} />
+          <Route exact path="/BecomeATeacher" component={BecomeATeacher} />
+          <Route exact path="/BecomeATeacher/register" component={RegisterTeacher} />
           <Route path="/Register" component={Register} />
           <Route exact path="/Premium" component={Premium} />
           <Route exact path="/Premium/payment" component={Payment} />

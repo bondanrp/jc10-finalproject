@@ -1,0 +1,65 @@
+.teacher-header {   
+    padding-top: 3em;
+    margin-top: -3em;
+    height: 32em;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+      url(https://images.unsplash.com/photo-1522071901873-411886a10004?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: bottom;
+    background-attachment: fixed;
+    background-blend-mode: darken;
+    position: relative;
+  }
+.teacher-header>div{
+    font-family: 'poppins';
+    position: absolute;
+    top: 200px;
+    left: 250px;
+    color: white;
+}
+.teacher-header>div>h2{
+    font-weight: 900;
+    font-size: 50px;
+    letter-spacing: 2px;
+}
+.teacher-container{
+    width: 800px;
+    margin: auto;
+    padding: 50px 0;
+    display: flex;
+    flex-direction: column;
+}
+.teacher-container>h2{
+    text-align: center;
+    font-weight: 700;
+    letter-spacing: 3px;
+    padding-bottom: 30px;
+    
+}
+.teacher-container>p{
+    text-align: justify;
+    line-height: 30px;
+    font-family: 'poppins';
+    font-weight: 100;
+    font-size: 20px;
+}
+.teacher-container:nth-child(3){
+    padding-bottom: 50px;
+}
+
+.teacher-container>a{
+    border: 2px solid #017a84;
+    border-radius: 5px;
+    padding: 10px;
+    font-family: 'poppins';
+    font-weight: 500;
+    width: 160px;
+    text-align: center;
+    margin: 50px auto;
+}
+.teacher-container>a:hover{
+    background: #017a84;
+    color: white;
+    text-decoration: none;
+}

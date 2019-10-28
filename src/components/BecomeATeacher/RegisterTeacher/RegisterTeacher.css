@@ -1,0 +1,28 @@
+.register-teacher-container{
+    width: 800px;
+    margin: auto;
+    padding: 100px;
+}
+
+.register-teacher-card{
+background: white;  
+box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+.register-teacher-content{
+    padding: 50px 0;
+    width: 400px;
+    margin: 0 auto;;
+}
+.register-teacher-content > p {
+    margin: 10px;
+    font-family: 'poppins';
+}
+.register-teacher-content > input{
+    width: 100%;
+}
+.register-teacher-content >textarea{
+    width: 100%;
+    height: 300px;
+    resize: none;
+    padding: 10px;
+}
