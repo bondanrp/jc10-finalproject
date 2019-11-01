@@ -49,7 +49,9 @@ const {
   unsubscribe,
   view,
   //upload
-  uploadVideoData
+  uploadVideoData,
+  //admin
+  registerTeacher
 } = require("./src/database/index");
 var appKey = "rahasia";
 
@@ -158,10 +160,13 @@ app.put("/view", view);
 //upload db
 app.post("/uploadvideodata", uploadVideoData);
 
+//admin
+app.post("/registerteacher", registerTeacher);
+
 //multer
 let multerStorageConfig = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./src/database/uploads");
+    cb(null, "./src/database/uploads/DP");
   },
   filename: (req, file, cb) => {
     cb(null, `DP-${Date.now()}.${file.mimetype.split("/")[1]}`);
@@ -208,7 +213,7 @@ app.post("/uploadimage", upload.single("profpict"), (req, res) => {
 //VIDEO
 let multerStorageConfigVideo = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./src/database/uploads");
+    cb(null, "./src/database/uploads/video");
   },
   filename: (req, file, cb) => {
     cb(null, `VID-${Date.now()}.${file.mimetype.split("/")[1]}`);
@@ -240,7 +245,7 @@ app.post("/uploadvideo", uploadVideo.single("video"), (req, res) => {
 //Thumbnail
 let multerStorageConfigThumbnail = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./src/database/uploads");
+    cb(null, "./src/database/uploads/video");
   },
   filename: (req, file, cb) => {
     cb(null, `THUMB-${Date.now()}.${file.mimetype.split("/")[1]}`);
@@ -279,7 +284,7 @@ app.post(
 //CV
 let multerStorageConfigCV = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "./src/database/uploads");
+    cb(null, "./src/database/uploads/cv");
   },
   filename: (req, file, cb) => {
     cb(null, `CV-${Date.now()}.${file.mimetype.split("/")[1]}`);
@@ -309,5 +314,40 @@ app.post("/uploadcv", uploadCV.single("cv"), (req, res) => {
   }
 });
 
+// buktitransfer
+let multerStorageConfigPayment = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "./src/database/uploads/payment");
+  },
+  filename: (req, file, cb) => {
+    cb(null, `PAY-${Date.now()}.${file.mimetype.split("/")[1]}`);
+  }
+});
+
+let filterConfigPayment = (req, file, cb) => {
+  if (
+    file.mimetype.split("/")[1] === "jpeg" ||
+    file.mimetype.split("/")[1] === "png"
+  ) {
+    cb(null, true);
+  } else {
+    req.validation = { error: true, msg: "file format must be jpg/png" };
+    cb(null, false);
+  }
+};
+
+let uploadPayment = multer({
+  storage: multerStorageConfigPayment,
+  fileFilter: filterConfigPayment
+});
+
+app.post("/uploadpayment", uploadPayment.single("payment"), (req, res) => {
+  try {
+    if (req.validation) throw req.validation;
+    res.send(req.file);
+  } catch (error) {
+    console.log(error);
+  }
+});
 // mail
 app.listen(port, console.log("Listening in port " + port));

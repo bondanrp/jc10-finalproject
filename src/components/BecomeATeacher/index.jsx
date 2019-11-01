@@ -38,6 +38,7 @@ export class BecomeATeacher extends Component {
             minus minima, eveniet, nesciunt dolor fuga possimus perspiciatis
             tempora nulla veritatis esse?
           </p>
+          <h2>Gratis upgrade premium untuk teacher kami</h2>
           <Link to="/becomeateacher/register">Daftar Sekarang</Link>
         </div>
       </div>

@@ -242,7 +242,7 @@ export class Profile extends Component {
       })
     );
     Axios.post(urlApi + "uploadimage", fd).then(res => {
-      let menjadi = urlApi + "files/" + res.data.filename;
+      let menjadi = urlApi + "files/DP/" + res.data.filename;
       this.setState({
         edit: false,
         profpict: menjadi

@@ -30,7 +30,6 @@ export class RegisterTeacher extends Component {
 
   getData = () => {
     this.setState({ refresh: false });
-    console.log("getdata");
     Axios.get(urlApi + "getusername", {
       params: { username: this.props.username }
     }).then(res => {
@@ -53,7 +52,7 @@ export class RegisterTeacher extends Component {
       Axios.post(urlApi + "uploadcv", fd)
         .then(res => {
           console.log(res);
-          let hasil = urlApi + "files/" + res.data.filename;
+          let hasil = urlApi + "files/cv/" + res.data.filename;
           console.log(hasil);
           this.setState({ CV: hasil });
           swal.fire("Success", "CV Uploaded!", "success");
@@ -67,9 +66,24 @@ export class RegisterTeacher extends Component {
   };
   handleSubmit = () => {
     if (this.state.experiences && this.state.reason && this.state.CV) {
+      Axios.post(urlApi + "registerteacher", {
+        id: this.props.id,
+        content1: this.state.experiences,
+        content2: this.state.reason,
+        attachment: this.state.CV
+      }).then(res => {
+        swal.fire(
+          "Success!",
+          "Your Application have been submitted! Please wait for a response.",
+          "success"
+        );
+      });
     } else {
       swal.fire("error", "Please fill out all of the forms", "error");
     }
+  };
+  handleChange = e => {
+    this.setState({ [e.target.id]: e.target.value });
   };
   termsModal = () => {
     this.setState({ termsModal: !this.state.termsModal });
@@ -97,7 +111,7 @@ export class RegisterTeacher extends Component {
               <p>Experiences</p>
               <textarea
                 value={this.state.experiences}
-                onChange={this.handleChange}
+                onChange={e => this.handleChange(e)}
                 id="experiences"
                 maxLength="200"
                 placeholder="Tell us your experiences! (200 words)"
@@ -105,7 +119,7 @@ export class RegisterTeacher extends Component {
               <p>Why do you want to join us?</p>
               <textarea
                 value={this.state.reason}
-                onChange={this.handleChange}
+                onChange={e => this.handleChange(e)}
                 id="reason"
                 maxLength="200"
                 placeholder="Tell us why do you want to join! (200 words)"

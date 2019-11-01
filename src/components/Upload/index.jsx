@@ -143,7 +143,7 @@ export class Upload extends Component {
       fd.append("video", e.target.files[0], e.target.files[0].name);
       Axios.post(urlApi + "uploadvideo", fd)
         .then(res => {
-          let hasil = urlApi + "files/" + res.data.filename;
+          let hasil = urlApi + "files/video/" + res.data.filename;
           this.setState({ video: hasil });
           swal.fire("Success", "Video Uploaded!", "success");
         })
@@ -166,7 +166,7 @@ export class Upload extends Component {
       Axios.post(urlApi + "uploadthumbnail", fd)
         .then(res => {
           console.log(res);
-          let hasil = urlApi + "files/" + res.data.filename;
+          let hasil = urlApi + "files/video/" + res.data.filename;
           console.log(hasil);
           this.setState({ thumbnail: hasil });
           swal.fire("Success", "Thumbnail Uploaded!", "success");

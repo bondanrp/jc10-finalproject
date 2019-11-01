@@ -7,14 +7,6 @@ const db = mysql.createConnection({
   password: "password",
   database: "jc10_finalproject"
 });
-// contoh hosting database
-// const db = mysql.createConnection({
-//   host: "db4free.net",
-//   user: "bondanrp",
-//   password: "assalamualaikum",
-//   database: "jc10finalproject"
-// });
-
 let transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -412,6 +404,27 @@ module.exports = {
     } = req.body;
     db.query(
       `insert into uploads values (0,'${inputTitle}','${inputClass}',${inputEpisode},'${thumbnail}','${video}','${inputDesc}','${author}','${inputCategory}',0,CURRENT_TIMESTAMP)`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  //ADMIN
+  // 1 = teacher request
+  // 2 = pembayaran
+  registerTeacher: (req, res) => {
+    db.query(
+      `insert into admin values (0, '1', '${req.body.id}', '${req.body.content1}', '${req.body.content2}', '${req.body.attachment}', CURRENT_TIMESTAMP)`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  registerTeacher: (req, res) => {
+    db.query(
+      `insert into admin values (0, '2', '${req.body.id}', '${req.body.content1}', '${req.body.content2}', '${req.body.attachment}', CURRENT_TIMESTAMP)`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
