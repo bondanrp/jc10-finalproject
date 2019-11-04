@@ -13,7 +13,7 @@ const {
   contact,
   //profile
   verify,
-  updateDP,
+  updateProfile,
   getAllUserData,
   getUserName,
   getTeacher,
@@ -44,14 +44,19 @@ const {
   getSubscription,
   countSubscribers,
   subscribedTeachers,
+  subscribedUsers,
   isSubscribed,
   subscribe,
   unsubscribe,
   view,
   //upload
   uploadVideoData,
+  sendUploadNotification,
   //admin
-  registerTeacher
+  registerTeacher,
+  registerTeacherNotification,
+  registerPremium,
+  registerPremiumNotification
 } = require("./src/database/index");
 var appKey = "rahasia";
 
@@ -120,7 +125,7 @@ app.get(
 app.get("/contact", contact);
 app.get("/verify", verify);
 // user db
-app.put("/updatedp", updateDP);
+app.patch("/updateprofile", updateProfile);
 app.get("/getalluserdata", getAllUserData);
 app.get("/getteacher", getTeacher);
 app.get("/login", login);
@@ -152,6 +157,7 @@ app.get("/searchteachers", searchTeachers);
 app.get("/getsubscription/:id", getSubscription);
 app.get("/countsubscribers/:id", countSubscribers);
 app.get("/subscribedTeachers", subscribedTeachers);
+app.get("/subscribedusers", subscribedUsers);
 app.get("/issubscribed", isSubscribed);
 app.post("/subscribe", subscribe);
 app.delete("/unsubscribe/:userid/:targetid", unsubscribe);
@@ -159,9 +165,13 @@ app.put("/view", view);
 
 //upload db
 app.post("/uploadvideodata", uploadVideoData);
+app.post("/senduploadnotification", sendUploadNotification);
 
 //admin
 app.post("/registerteacher", registerTeacher);
+app.post("/registerteachernotification", registerTeacherNotification);
+app.post("/registerpremium", registerPremium);
+app.post("/registerpremiumnotification", registerPremiumNotification);
 
 //multer
 let multerStorageConfig = multer.diskStorage({
@@ -197,7 +207,7 @@ app.post("/uploadimage", upload.single("profpict"), (req, res) => {
       throw { error: true, message: "file size exceeds the maximum limit" };
     let data = JSON.parse(req.body.data);
     db.query(
-      `update users set profilepict = '${"http://localhost:3001/files/" +
+      `update users set profilepict = '${"http://localhost:3001/files/DP/" +
         req.file.filename}' where username = '${data.username}'`,
       (err, result) => {
         if (err) throw err;
@@ -345,6 +355,7 @@ app.post("/uploadpayment", uploadPayment.single("payment"), (req, res) => {
   try {
     if (req.validation) throw req.validation;
     res.send(req.file);
+    console.log(req.file.path);
   } catch (error) {
     console.log(error);
   }

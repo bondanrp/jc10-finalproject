@@ -192,3 +192,18 @@
 .profpict:hover ~ .upload-dp {
   display: block !important;
 }
+.pencil-icon {
+  font-size: 20px;
+  color: rgba(0, 0, 0, 0.4);
+}
+.pencil-icon:hover {
+  font-size: 20px;
+  color: rgba(0, 0, 0, 1);
+  cursor: pointer;
+}
+.profile-input {
+  width: 200px;
+  height: 38.4px !important;
+  border-radius: 5px;
+  border: 1px solid #017a84;
+}

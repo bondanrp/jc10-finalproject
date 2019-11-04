@@ -152,7 +152,6 @@ export class Browse extends Component {
                 } else {
                   // kalau tidak dapat teacher
                   this.setState({
-                    preview: this.state.preview.concat(res.data),
                     loading: false,
                     pagemax: 15,
                     pagemin: 0
@@ -169,7 +168,7 @@ export class Browse extends Component {
                 // kalau dapat teacher
                 if (res.data.length > 0) {
                   this.setState({
-                    preview: this.state.preview.concat(res.data),
+                    preview: res.data,
                     loading: false,
                     pagemax: 15,
                     pagemin: 0,
@@ -703,6 +702,7 @@ export class Browse extends Component {
                   updateProfile={this.props.updateProfile}
                   id={this.props.id}
                   onSubscribe={this.onSubscribe}
+                  premium={this.props.premium}
                 />
               </Route>
               <Route exact path="/browse/user/:username/video/:class/:episode">

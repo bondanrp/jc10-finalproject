@@ -210,11 +210,35 @@ export class Home extends Component {
                 Mengapa <span className="judul-brand">Bagi Bakat</span>
               </h2>
               <div className="product-desc">
-                <div></div>
-                <div></div>
-                <div></div>
+                <div>
+                  <div></div>
+                  <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Id
+                    veritatis laudantium consequatur aspernatur quam
+                    perspiciatis explicabo quasi eaque consequuntur quisquam
+                    nesciunt, amet doloremque!
+                  </p>
+                </div>
+                <div>
+                  <div></div>
+                  <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Dignissimos, eum? Tenetur distinctio ipsa atque saepe quam
+                    neque, obcaecati optio, fugiat fuga harum aperiam nulla in
+                    ipsum ullam unde nihil expedita!
+                  </p>
+                </div>
+                <div>
+                  <div></div>
+                  <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Sunt, ipsa similique nobis et illo sit asperiores facere
+                    adipisci fuga odio.
+                  </p>
+                </div>
               </div>
             </div>
+            <div className="home-gallery"></div>
           </main>
         </React.Fragment>
       );

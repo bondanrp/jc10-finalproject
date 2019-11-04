@@ -43,25 +43,27 @@
   padding-top: 50px;
   grid-template-columns: 300px 300px 300px;
   grid-template-rows: 200px;
-  column-gap: 40px;
+  column-gap: 100px;
 }
-.product-desc > div:nth-of-type(1) {
+.product-desc > div:nth-of-type(1) > div {
   background: url(https://static.skillshare.com/assets/images/homepage/how-it-works/hand-picked_2x.png)
     no-repeat;
-
   background-size: contain;
   background-position: bottom;
+  height: 250px;
 }
-.product-desc > div:nth-of-type(2) {
+.product-desc > div:nth-of-type(2) > div {
   background: url(https://static.skillshare.com/assets/images/homepage/how-it-works/community_2x.png)
     no-repeat;
 
   background-size: contain;
   background-position: bottom;
+  height: 250px;
 }
-.product-desc > div:nth-of-type(3) {
+.product-desc > div:nth-of-type(3) > div {
   background: url(https://static.skillshare.com/assets/images/homepage/how-it-works/reminders_2x.png)
     no-repeat;
+  height: 250px;
 
   background-size: contain;
   background-position: bottom;
@@ -280,4 +282,7 @@
   font-size: 11px;
   color: #017a84;
   font-family: monospace;
+}
+.home-gallery {
+  height: 200px;
 }

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import swal from "sweetalert2";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faLock } from "@fortawesome/free-solid-svg-icons";
+import { faPlay, faLock, faPencilAlt } from "@fortawesome/free-solid-svg-icons";
 
 const urlApi = "http://localhost:3001/";
 
@@ -25,7 +25,12 @@ export class Profile extends Component {
     profpict: "",
     page: 15,
     pagemin: 0,
-    pagemax: 15
+    pagemax: 15,
+    editName: false,
+    editFirstname: "",
+    editLastname: "",
+    initFirstname: "",
+    initLastname: ""
   };
   componentDidMount() {
     console.log("profile mounted");
@@ -42,6 +47,16 @@ export class Profile extends Component {
   //     console.log("componentwillrecieve");
   //   }
   // }
+  editName = (x, y) => {
+    this.setState({
+      editName: true,
+      edit: true,
+      editFirstname: x,
+      editLastname: y,
+      initFirstname: x,
+      initLastname: y
+    });
+  };
   componentDidUpdate(prevProps, newProps) {
     if (this.props.params !== prevProps.params) {
       console.log("profile did update, %cdid something", "color: green");
@@ -144,11 +159,10 @@ export class Profile extends Component {
     this.setState({ edit: true });
   };
   handleSave = () => {
-    this.setState({ edit: false });
     this.onSubmit();
   };
   handleCancel = () => {
-    this.setState({ edit: false });
+    this.setState({ edit: false, selectedFile: "", editName: false });
   };
 
   handleSubscribe = () => {
@@ -188,8 +202,12 @@ export class Profile extends Component {
               }}
               className="preview-thumbnail"
             >
-              {!this.props.premium && val.episode > 3 ? (
-                <FontAwesomeIcon icon={faLock} className="video-play" />
+              {val.episode > 3 ? (
+                this.props.premium ? (
+                  <FontAwesomeIcon icon={faPlay} className="video-play" />
+                ) : (
+                  <FontAwesomeIcon icon={faLock} className="video-play" />
+                )
               ) : (
                 <FontAwesomeIcon icon={faPlay} className="video-play" />
               )}
@@ -229,27 +247,43 @@ export class Profile extends Component {
     }
   };
   onSubmit = () => {
-    var fd = new FormData();
-    fd.append(
-      "profpict",
-      this.state.selectedFile,
-      this.state.selectedFile.name
-    );
-    fd.append(
-      "data",
-      JSON.stringify({
-        username: this.props.username
-      })
-    );
-    Axios.post(urlApi + "uploadimage", fd).then(res => {
-      let menjadi = urlApi + "files/DP/" + res.data.filename;
-      this.setState({
-        edit: false,
-        profpict: menjadi
+    this.setState({ edit: false, editName: false, selectedFile: "" });
+    if (this.state.selectedFile) {
+      var fd = new FormData();
+      fd.append(
+        "profpict",
+        this.state.selectedFile,
+        this.state.selectedFile.name
+      );
+      fd.append(
+        "data",
+        JSON.stringify({
+          username: this.props.username
+        })
+      );
+      Axios.post(urlApi + "uploadimage", fd).then(res => {
+        let menjadi = urlApi + "files/DP/" + res.data.filename;
+        this.setState({
+          edit: false,
+          profpict: menjadi
+        });
+        swal.fire("Success", "Profile Updated!", "success");
+        this.props.updateProfile(menjadi);
       });
-      swal.fire("Success", "Profile Updated!", "success");
-      this.props.updateProfile(menjadi);
-    });
+    }
+    if (
+      this.state.editFirstname !== this.state.initFirstname ||
+      this.state.editLastname !== this.state.initLastname
+    ) {
+      Axios.patch(urlApi + "updateprofile", {
+        id: this.props.id,
+        firstname: this.state.editFirstname,
+        lastname: this.state.editLastname
+      }).then(res => {
+        this.getData();
+        swal.fire("Success", "Profile Updated!", "success");
+      });
+    }
   };
   subscribeButton = () => {
     if (
@@ -338,18 +372,33 @@ export class Profile extends Component {
                   position: "relative"
                 }}
               >
-                <img
-                  src={this.state.profpict}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    overflow: "hidden",
-                    borderRadius: "50%"
-                  }}
-                  className="profpict"
-                  alt=""
-                />
+                {this.state.selectedFile ? (
+                  <img
+                    src={URL.createObjectURL(this.state.selectedFile)}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      overflow: "hidden",
+                      borderRadius: "50%"
+                    }}
+                    className="profpict"
+                    alt=""
+                  />
+                ) : (
+                  <img
+                    src={this.state.profpict}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "cover",
+                      overflow: "hidden",
+                      borderRadius: "50%"
+                    }}
+                    className="profpict"
+                    alt=""
+                  />
+                )}
                 <input
                   onChange={e => {
                     this.setState({
@@ -373,7 +422,38 @@ export class Profile extends Component {
             )}
             <div className="profile-name">
               <h2>
-                {val.firstname} {val.lastname}
+                {this.state.editName ? (
+                  <>
+                    <input
+                      value={this.state.editFirstname}
+                      onChange={e => {
+                        this.setState({ editFirstname: e.target.value });
+                      }}
+                      className="profile-input"
+                    />{" "}
+                    <input
+                      value={this.state.editLastname}
+                      onChange={e => {
+                        this.setState({ editLastname: e.target.value });
+                      }}
+                      className="profile-input"
+                    />
+                  </>
+                ) : (
+                  <>
+                    {val.firstname} {val.lastname}{" "}
+                    {this.props.username !==
+                    this.state.data[0].username ? null : (
+                      <FontAwesomeIcon
+                        icon={faPencilAlt}
+                        className="pencil-icon"
+                        onClick={() =>
+                          this.editName(val.firstname, val.lastname)
+                        }
+                      />
+                    )}
+                  </>
+                )}
               </h2>
 
               <div>

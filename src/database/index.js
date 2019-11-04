@@ -44,11 +44,12 @@ module.exports = {
       }
     );
   },
-  updateDP: (req, res) => {
-    let username = req.body.username;
-    let picture = req.body.profilepict;
+  updateProfile: (req, res) => {
+    let id = req.body.id;
+    let firstname = req.body.firstname;
+    let lastname = req.body.lastname;
     db.query(
-      `update users set profilepict = '${picture}' where username = '${username}'`,
+      `update users set firstname = '${firstname}' , lastname = '${lastname}' where id = '${id}'`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -88,7 +89,7 @@ module.exports = {
   },
   getUserName: (req, res) => {
     db.query(
-      `select id, username, role, premium, profilepict, firstname, lastname from users where username = '${req.query.username}'`,
+      `select id, username, role, premium, profilepict, firstname, lastname, statusdaftarpremium, statusdaftarteacher from users where username = '${req.query.username}'`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -348,6 +349,15 @@ module.exports = {
       }
     );
   },
+  subscribedUsers: (req, res) => {
+    db.query(
+      `select * from subscription where subscribe_id = '${req.query.id}'`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
   subscribedTeachers: (req, res) => {
     db.query(
       `SELECT f.username, f.profilepict
@@ -410,6 +420,15 @@ module.exports = {
       }
     );
   },
+  sendUploadNotification: (req, res) => {
+    console.log(req.body);
+    for (let i = 0; i < req.body.data.length; i++) {
+      db.query(
+        `insert into notifications values (0,${req.body.data[i].user_id},'browse/user/${req.body.username}/video/${req.body.class}/${req.body.episode}','@${req.body.username} just uploaded a video "${req.body.title}". Watch it now!', CURRENT_TIMESTAMP)`
+      );
+    }
+    res.send({ message: "asd", status: 200 });
+  },
   //ADMIN
   // 1 = teacher request
   // 2 = pembayaran
@@ -417,14 +436,48 @@ module.exports = {
     db.query(
       `insert into admin values (0, '1', '${req.body.id}', '${req.body.content1}', '${req.body.content2}', '${req.body.attachment}', CURRENT_TIMESTAMP)`,
       (err, result) => {
+        db.query(
+          `update users set statusdaftarteacher = 1 where id='${req.body.id}'`
+        ),
+          (err2, result2) => {
+            if (err2) throw err2;
+            res.send(result2);
+          };
+
         if (err) throw err;
         res.send(result);
       }
     );
   },
-  registerTeacher: (req, res) => {
+  registerTeacherNotification: (req, res) => {
+    db.query(
+      `insert into notifications values (0,'${req.body.id}','becomeateacher/register','Your teacher application have been sent! Please wait while our team reviews your application', CURRENT_TIMESTAMP)`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+
+  registerPremium: (req, res) => {
     db.query(
       `insert into admin values (0, '2', '${req.body.id}', '${req.body.content1}', '${req.body.content2}', '${req.body.attachment}', CURRENT_TIMESTAMP)`,
+      (err, result) => {
+        db.query(
+          `update users set statusdaftarpremium = 1 where id='${req.body.id}'`
+        ),
+          (err2, result2) => {
+            if (err2) throw err2;
+            res.send(result2);
+          };
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  registerPremiumNotification: (req, res) => {
+    db.query(
+      `insert into notifications values (0,'${req.body.id}','premium/payment','Mohon tunggu beberapa saat untuk konfirmasi pembayaran dari tim kami', CURRENT_TIMESTAMP)`,
       (err, result) => {
         if (err) throw err;
         res.send(result);

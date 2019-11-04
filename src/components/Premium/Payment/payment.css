@@ -24,13 +24,14 @@
   margin: 0;
 }
 .payment-input {
-  height: 70px;
+  min-height: 70px;
   width: 100%;
   /* margin: auto; */
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px dashed black;
+  position: relative;
 }
 .payment-title {
   text-transform: uppercase;
@@ -86,4 +87,18 @@
 .payment-button > button:hover {
   background: #017a84;
   color: white;
+}
+.payment-bukti {
+  height: 100%;
+}
+.payment-x:hover {
+  cursor: pointer;
+}
+.payment-x {
+  position: absolute;
+  top: 0;
+  right: 20px;
+  color: red;
+  font-size: 50px;
+  font-family: "arial";
 }

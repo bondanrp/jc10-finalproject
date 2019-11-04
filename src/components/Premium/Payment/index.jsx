@@ -13,7 +13,11 @@ export class Payment extends Component {
     paket: 0,
     bank: 0,
     selectedFile: "",
-    bukti: ""
+    bukti: "",
+    loading: true,
+    status: 0,
+    hapus: "",
+    img: ""
   };
   componentWillMount() {
     if (this.props.username) {
@@ -33,7 +37,9 @@ export class Payment extends Component {
     }).then(res => {
       this.setState({
         firstname: res.data[0].firstname,
-        lastname: res.data[0].lastname
+        lastname: res.data[0].lastname,
+        status: res.data[0].statusdaftarpremium,
+        loading: false
       });
     });
   };
@@ -61,7 +67,7 @@ export class Payment extends Component {
         <div className="payment-paket">
           <h3>Total Pembayaran:</h3>
           <h2> Rp.999,000/Hari</h2>
-          <span>Paket paling hemat!</span>
+          <span style={{ color: "green" }}>Paket paling hemat!</span>
         </div>
       );
     }
@@ -156,21 +162,10 @@ export class Payment extends Component {
     let format = e.target.files[0].name.split(".")[1];
     if (format === "jpg" || format === "jpeg" || format === "png") {
       this.setState({
-        selectedFile: e.target.files[0]
+        // selectedFile: e.target.files[0]
+        selectedFile: e.target.files[0],
+        img: URL.createObjectURL(e.target.files[0])
       });
-      var fd = new FormData();
-      fd.append("payment", e.target.files[0], e.target.files[0].name);
-      Axios.post(urlApi + "uploadpayment", fd)
-        .then(res => {
-          console.log(res);
-          let hasil = urlApi + "files/payment/" + res.data.filename;
-          console.log(hasil);
-          this.setState({ bukti: hasil });
-          swal.fire("Success", "Bukti Transfer Berhasil Di Upload!", "success");
-        })
-        .catch(err => {
-          console.log(err);
-        });
     } else {
       swal.fire("Error", "File format must be jpg/png", "error");
     }
@@ -183,21 +178,52 @@ export class Payment extends Component {
         "error"
       );
     } else {
-      Axios.post(urlApi + "uploadpayment", {
-        id: this.props.id,
-        content1: this.state.paket,
-        content2: this.state.bank,
-        attachment: this.state.selectedFile
-      }).then(res => {
-        // PAYMENT STATUS
-      });
+      var fd = new FormData();
+      fd.append(
+        "payment",
+        this.state.selectedFile,
+        this.state.selectedFile.name
+      );
+      Axios.post(urlApi + "uploadpayment", fd)
+        .then(res => {
+          console.log(res);
+          let hasil = urlApi + "files/payment/" + res.data.filename;
+          Axios.post(urlApi + "registerpremium", {
+            id: this.props.id,
+            content1: this.state.paket,
+            content2: this.state.bank,
+            attachment: hasil
+          }).then(res => {
+            // PAYMENT STATUS
+            Axios.post(urlApi + "registerpremiumnotification", {
+              id: this.props.id
+            });
+            this.getData();
+            swal.fire(
+              "Success",
+              "Mohon tunggu beberapa saat untuk konfirmasi pembayaran",
+              "success"
+            );
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   };
 
   render() {
-    if (this.props.premium) {
+    if (this.state.loading) {
+      return (
+        <div className="gray-background">
+          <h1 style={{ textAlign: "center", paddingTop: 300 }}>loading...</h1>
+        </div>
+      );
+    } else if (!this.props.username) {
+      return <Redirect to="/login" />;
+    } else if (this.props.premium) {
       return <Redirect to="/"></Redirect>;
-    } else {
+    } else if (!this.state.status) {
       return (
         <div className="gray-background">
           <div className="payment-container">
@@ -277,7 +303,28 @@ export class Payment extends Component {
                     <br />
                     <p>Upload Bukti Pembayaran (JPG, PNG)</p>
                     <div className="payment-input">
-                      <input type="file" onChange={this.handleUploadPayment} />
+                      {this.state.selectedFile ? (
+                        <>
+                          <img
+                            src={this.state.img}
+                            alt="bukti"
+                            className="payment-bukti"
+                          />
+                          <div
+                            className="payment-x"
+                            onClick={() => {
+                              this.setState({ img: "", selectedFile: "" });
+                            }}
+                          >
+                            X
+                          </div>
+                        </>
+                      ) : (
+                        <input
+                          type="file"
+                          onChange={this.handleUploadPayment}
+                        />
+                      )}
                     </div>
                     <div className="payment-button">
                       <button
@@ -296,10 +343,27 @@ export class Payment extends Component {
           </div>
         </div>
       );
+    } else if (this.state.status === 1) {
+      return (
+        <div className="gray-background">
+          <div className="payment-container">
+            <div className="payment-card">
+              <h3 className="payment-title">Please Wait</h3>
+              <div className="payment-instruction">
+                Pembayaran anda sedang dikonfirmasi oleh tim terkait (Max. 2 x
+                24 Jam).
+                <br />
+                <hr />
+                Mohon hubungi <strong>support@bagibakat.com</strong> jika
+                memerlukan bantuan lebih lanjut.
+              </div>
+            </div>
+          </div>
+        </div>
+      );
     }
   }
 }
-
 const mapStateToProps = state => {
   return {
     username: state.auth.username,

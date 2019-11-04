@@ -21,7 +21,8 @@ export class Upload extends Component {
     inputClass: "",
     inputCategory: "",
     inputDesc: "",
-    inputEpisode: ""
+    inputEpisode: "",
+    selectedThumbnail: ""
   };
   componentDidMount() {
     this.getUserVideo();
@@ -36,36 +37,72 @@ export class Upload extends Component {
   }
   handleSubmit = () => {
     if (
-      this.state.video.length > 0 &&
-      this.state.thumbnail.length > 0 &&
-      this.state.inputTitle.length > 0 &&
-      this.state.inputClass.length > 0 &&
-      this.state.inputCategory.length > 0 &&
-      this.state.inputDesc.length > 0 &&
-      this.state.inputEpisode.length > 0
+      this.state.video &&
+      this.state.selectedThumbnail &&
+      this.state.inputTitle &&
+      this.state.inputClass &&
+      this.state.inputCategory &&
+      this.state.inputDesc &&
+      this.state.inputEpisode
     ) {
       let {
         inputTitle,
         inputClass,
         inputEpisode,
         inputDesc,
-        thumbnail,
         video,
         inputCategory
       } = this.state;
-      Axios.post(urlApi + "uploadvideodata", {
-        inputTitle,
-        inputClass,
-        inputEpisode,
-        inputDesc,
-        thumbnail,
-        video,
-        author: this.props.username,
-        inputCategory
+      var fd = new FormData();
+      fd.append(
+        "thumbnail",
+        this.state.selectedThumbnail,
+        this.state.selectedThumbnail.name
+      );
+      Axios.get(urlApi + "subscribedUsers", {
+        params: { id: this.props.id }
       }).then(res => {
-        this.getUserVideo();
-        swal.fire("Success", "Your video have been uploaded!", "success");
+        Axios.post(urlApi + "senduploadnotification", {
+          data: res.data,
+          username: this.props.username,
+          class: this.state.inputClass,
+          title: this.state.inputTitle,
+          episode: this.state.inputEpisode
+        });
       });
+      Axios.post(urlApi + "uploadthumbnail", fd)
+        .then(res => {
+          console.log(res);
+          let hasil = urlApi + "files/video/" + res.data.filename;
+          console.log(hasil);
+          this.setState({ thumbnail: hasil });
+          Axios.post(urlApi + "uploadvideodata", {
+            inputTitle,
+            inputClass,
+            inputEpisode,
+            inputDesc,
+            thumbnail: hasil,
+            video,
+            author: this.props.username,
+            inputCategory
+          }).then(res => {
+            this.getUserVideo();
+            this.setState({
+              video: "",
+              thumbnail: "",
+              InputTitle: "",
+              inputClass: "",
+              inputCategory: "",
+              inputDesc: "",
+              inputEpisode: "",
+              selectedThumbnail: ""
+            });
+            swal.fire("Success", "Your video have been uploaded!", "success");
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     } else {
       swal.fire("Error", "Please fill out all of the forms", "error");
     }
@@ -158,22 +195,9 @@ export class Upload extends Component {
     let format = e.target.files[0].name.split(".")[1];
     if (format === "jpg" || format === "jpeg" || format === "png") {
       this.setState({
-        selectedFile: e.target.files[0],
+        selectedThumbnail: e.target.files[0],
         edit: true
       });
-      var fd = new FormData();
-      fd.append("thumbnail", e.target.files[0], e.target.files[0].name);
-      Axios.post(urlApi + "uploadthumbnail", fd)
-        .then(res => {
-          console.log(res);
-          let hasil = urlApi + "files/video/" + res.data.filename;
-          console.log(hasil);
-          this.setState({ thumbnail: hasil });
-          swal.fire("Success", "Thumbnail Uploaded!", "success");
-        })
-        .catch(err => {
-          console.log(err);
-        });
     } else {
       swal.fire("Error", "File format must be jpg/png", "error");
     }
@@ -207,17 +231,20 @@ export class Upload extends Component {
             <div className="upload-input">
               <form>
                 <h6>Thumbnail</h6>
-                {this.state.thumbnail ? (
+                {this.state.selectedThumbnail ? (
                   <div className="upload-thumbnail">
                     <button
                       onClick={() => {
-                        this.setState({ thumbnail: "" });
+                        this.setState({ selectedThumbnail: "" });
                       }}
                       className="cancel-thumbnail"
                     >
                       X
                     </button>
-                    <img src={this.state.thumbnail} alt="thumb" />
+                    <img
+                      src={URL.createObjectURL(this.state.selectedThumbnail)}
+                      alt="thumb"
+                    />
                   </div>
                 ) : (
                   <div>
@@ -301,7 +328,8 @@ export class Upload extends Component {
 const mapStateToProps = state => {
   return {
     username: state.auth.username,
-    role: state.auth.role
+    role: state.auth.role,
+    id: state.auth.id
   };
 };
 export default connect(
