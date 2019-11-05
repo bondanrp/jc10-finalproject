@@ -126,7 +126,7 @@ module.exports = {
           });
         } else {
           db.query(
-            `insert into users values (0,'${req.body.username}','${req.body.email}','${req.body.password}', 'user','${req.body.firstname}','${req.body.lastname}','https://www.thispersondoesnotexist.com/image')`,
+            `insert into users values (0,'${req.body.username}','${req.body.email}','${req.body.password}', 'user','${req.body.firstname}','${req.body.lastname}','http://localhost:3001/files/uploads.png',0,0,0)`,
             (err2, result) => {
               if (err2) throw err2;
               let mailOptions = {
@@ -212,14 +212,40 @@ module.exports = {
     );
   },
   getVideo: (req, res) => {
+    if (req.params.author) {
+      db.query(
+        `select j.*, f.id as posterid from uploads j join users f on j.author = f.username where j.episode = ${req.params.episode} and j.class = '${req.params.class}' and j.author='${req.params.author}'`,
+        (err, result) => {
+          if (err) throw err;
+          res.send(result);
+        }
+      );
+    } else if (req.query.id) {
+      db.query(`select * uploads where id =${req.body.id}`, (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      });
+    }
+  },
+  deleteVideo: (req, res) => {
     db.query(
-      `select j.*, f.id as posterid from uploads j join users f on j.author = f.username where j.episode = ${req.params.episode} and j.class = '${req.params.class}' and j.author='${req.params.author}'`,
+      `delete from uploads where id = '${req.params.id}'`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
       }
     );
   },
+  updateVideo: (req, res) => {
+    db.query(
+      `update uploads set title = '${req.body.title}', class='${req.body.class}', episode='${req.body.episode}',category='${req.body.category}' where id = '${req.body.id}'`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+
   getEpisode: (req, res) => {
     db.query(
       `select title, episode, id from uploads where class = '${req.query.class}' and episode = '${req.query.episode}'`,
@@ -260,7 +286,7 @@ module.exports = {
   sendCommentNotification: (req, res) => {
     let link = req.headers.referer.replace("http://localhost:3000/", "");
     db.query(
-      `insert into notifications values(0,'${req.body.targetid}','${link}','@${req.body.username} just commented on ${req.body.episode}. ${req.body.title}  "${req.body.comment}"', CURRENT_TIMESTAMP)`,
+      `insert into notifications values(0,'${req.body.targetid}','${link}','@${req.body.username} just commented on ${req.body.episode}. ${req.body.title}  "${req.body.comment}"', CURRENT_TIMESTAMP,0)`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -270,6 +296,15 @@ module.exports = {
   getNotifications: (req, res) => {
     db.query(
       `select * from notifications where user_id = '${req.params.id}' order by timestamp desc limit 5`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  clearSeen: (req, res) => {
+    db.query(
+      `update notifications set seen = 1 where user_id ='${req.body.id}'`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -424,7 +459,7 @@ module.exports = {
     console.log(req.body);
     for (let i = 0; i < req.body.data.length; i++) {
       db.query(
-        `insert into notifications values (0,${req.body.data[i].user_id},'browse/user/${req.body.username}/video/${req.body.class}/${req.body.episode}','@${req.body.username} just uploaded a video "${req.body.title}". Watch it now!', CURRENT_TIMESTAMP)`
+        `insert into notifications values (0,${req.body.data[i].user_id},'browse/user/${req.body.username}/video/${req.body.class}/${req.body.episode}','@${req.body.username} just uploaded a video "${req.body.title}". Watch it now!', CURRENT_TIMESTAMP,0)`
       );
     }
     res.send({ message: "asd", status: 200 });
@@ -451,7 +486,7 @@ module.exports = {
   },
   registerTeacherNotification: (req, res) => {
     db.query(
-      `insert into notifications values (0,'${req.body.id}','becomeateacher/register','Your teacher application have been sent! Please wait while our team reviews your application', CURRENT_TIMESTAMP)`,
+      `insert into notifications values (0,'${req.body.id}','becomeateacher/register','Your teacher application have been sent! Please wait while our team reviews your application', CURRENT_TIMESTAMP,0)`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -477,7 +512,7 @@ module.exports = {
   },
   registerPremiumNotification: (req, res) => {
     db.query(
-      `insert into notifications values (0,'${req.body.id}','premium/payment','Mohon tunggu beberapa saat untuk konfirmasi pembayaran dari tim kami', CURRENT_TIMESTAMP)`,
+      `insert into notifications values (0,'${req.body.id}','premium/payment','Mohon tunggu beberapa saat untuk konfirmasi pembayaran dari tim kami', CURRENT_TIMESTAMP,0)`,
       (err, result) => {
         if (err) throw err;
         res.send(result);

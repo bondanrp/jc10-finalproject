@@ -108,8 +108,12 @@ export class Home extends Component {
                 }}
                 className="preview-thumbnail"
               >
-                {!this.props.premium && val.episode > 3 ? (
-                  <FontAwesomeIcon icon={faLock} className="video-play" />
+                {val.episode > 3 ? (
+                  this.props.premium ? (
+                    <FontAwesomeIcon icon={faPlay} className="video-play" />
+                  ) : (
+                    <FontAwesomeIcon icon={faLock} className="video-play" />
+                  )
                 ) : (
                   <FontAwesomeIcon icon={faPlay} className="video-play" />
                 )}
@@ -248,7 +252,8 @@ export class Home extends Component {
 
 const mapStateToProps = state => {
   return {
-    username: state.auth.username
+    username: state.auth.username,
+    premium: state.auth.premium
   };
 };
 export default connect(

@@ -34,3 +34,16 @@ button:active {
   min-height: 80vh;
   position: relative;
 }
+
+/* supaya swal ga ancurin */
+.swal2-container {
+  padding: 0 !important;
+}
+body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
+  overflow-y: auto !important;
+  padding-right: 0 !important;
+}
+.video-react-big-play-button {
+  top: 50% !important;
+  left: 50% !important;
+}

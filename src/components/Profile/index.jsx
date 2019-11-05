@@ -166,17 +166,25 @@ export class Profile extends Component {
   };
 
   handleSubscribe = () => {
-    let input = {
-      userid: this.props.id,
-      targetid: this.state.data[0].id
-    };
-    if (!this.props.username) {
-      this.props.loginModal();
-    } else if (input.userid !== input.targetid) {
-      Axios.post(urlApi + "subscribe", input).then(res => {
-        this.setState({ isSubscribed: true });
-        this.props.onSubscribe();
-      });
+    if (this.props.premium) {
+      let input = {
+        userid: this.props.id,
+        targetid: this.state.data[0].id
+      };
+      if (!this.props.username) {
+        this.props.loginModal();
+      } else if (input.userid !== input.targetid) {
+        Axios.post(urlApi + "subscribe", input).then(res => {
+          this.setState({ isSubscribed: true });
+          this.props.onSubscribe();
+        });
+      }
+    } else {
+      swal.fire(
+        "Error",
+        "Sorry you need to have a premium account to subscribe!",
+        "error"
+      );
     }
   };
   handleUnsubscribe = () => {
@@ -292,14 +300,7 @@ export class Profile extends Component {
     ) {
       return (
         <div>
-          <button
-            className="subscribe"
-            onClick={() => {
-              console.log(this.props);
-            }}
-          >
-            this is you
-          </button>
+          <button className="subscribe">this is you</button>
         </div>
       );
     } else if (

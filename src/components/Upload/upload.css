@@ -111,3 +111,104 @@
   top: 0;
   right: 0;
 }
+.edit {
+  border: none;
+  background: none;
+}
+.edit:hover {
+  color: #017a84;
+}
+.delete {
+  border: none;
+  background: none;
+}
+.delete:hover {
+  color: tomato;
+}
+.edit-modal-container {
+  width: 100vw;
+  height: auto;
+  position: fixed;
+  top: 3em;
+  left: 0;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.3);
+  display: grid;
+  grid-template-rows: 3fr 1fr;
+  padding-top: 50px;
+  grid-template-columns: 800px;
+  row-gap: 10px;
+  justify-content: center;
+}
+.edit-card {
+  padding-top: 30px;
+  width: 700px;
+  min-height: 400px;
+  background: white;
+  position: relative;
+  display: grid;
+  grid-template-columns: 640px;
+  grid-template-rows: 360px auto 70px;
+  justify-content: center;
+}
+.edit-button {
+  display: grid;
+  grid-template-columns: repeat(4, 100px);
+  justify-content: center;
+  column-gap: 50px;
+}
+.edit-x:hover {
+  cursor: pointer;
+  color: tomato;
+}
+.edit-x {
+  position: absolute;
+  /* color: red; */
+  right: 10px;
+  top: -10px;
+  font-size: 30px;
+}
+.edit-form {
+  padding: 50px 0;
+  width: 80%;
+  margin: auto;
+  align-self: flex-start;
+}
+.edit-form > input,
+.edit-form > select {
+  height: 28px;
+  width: 100%;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+.edit-form > p {
+  margin-bottom: 2px;
+  font-family: "poppins";
+  font-weight: 200;
+}
+.edit-cancel,
+.edit-save,
+.edit-delete {
+  height: 35px !important;
+  width: 100px;
+  background: none;
+  border-radius: 5px;
+  background: #017a84;
+  color: white;
+  border: 2px solid #017a84;
+  font-weight: 500;
+  font-family: "poppins";
+  letter-spacing: 2px;
+  transition: 0.5s;
+}
+.edit-delete:hover {
+  background: tomato;
+  border: 2px solid tomato;
+}
+.edit-cancel:hover,
+.edit-save:hover {
+  background: white;
+  color: #017a84;
+  border: 2px solid #017a84;
+}

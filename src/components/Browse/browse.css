@@ -144,7 +144,7 @@
 }
 .featured-preview > div {
   background: white;
-  transition: .2s;
+  transition: 0.2s;
   overflow-y: scroll;
   padding-right: 17px;
   position: absolute;
@@ -156,7 +156,7 @@
 }
 .featured-preview:hover > div {
   transform: translateY(-160px);
-  transition: .5s;
+  transition: 0.5s;
 }
 .featured-preview {
   background: white;
@@ -396,4 +396,18 @@ input[type="radio"]:checked + label {
 .browse-preview:hover {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.6);
   transition-duration: 0.5s;
+}
+.no-video {
+  font-family: "poppins";
+  font-weight: 100;
+  letter-spacing: 5px;
+}
+.nav-icon {
+  margin: 0;
+  color: rgba(0, 0, 0, 0.2);
+  /* padding-right: 10px; */
+  /* background: red; */
+  width: 30px !important;
+  text-align: center;
+  display: inline-block;
 }

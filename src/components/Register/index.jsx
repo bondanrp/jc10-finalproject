@@ -66,6 +66,7 @@ class Register extends Component {
           } else if (res.data.status === "201") {
             console.log(res);
             swal.fire("Account Created!", `${res.data.message}`, "success");
+            this.props.history.push("/login");
           }
         })
         .catch(err => {

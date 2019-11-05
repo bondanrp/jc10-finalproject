@@ -23,6 +23,8 @@ const {
   //video
   browseAll,
   getVideos,
+  deleteVideo,
+  updateVideo,
   getRelatedVideos,
   getVideo,
   getFeaturedVideos,
@@ -33,6 +35,7 @@ const {
   postComment,
   sendCommentNotification,
   getNotifications,
+  clearSeen,
   deleteNotification,
   deleteComment,
   search,
@@ -136,6 +139,8 @@ app.post("/registeruser", registerUser);
 // video db
 app.get("/browseall", browseAll);
 app.get("/getvideos", getVideos);
+app.delete("/deletevideo/:id", deleteVideo);
+app.patch("/updatevideo/", updateVideo);
 app.get("/getfeaturedvideos", getFeaturedVideos);
 app.get("/getvideo/:author/:class/:episode", getVideo);
 app.get("/getepisode", getEpisode);
@@ -144,6 +149,7 @@ app.get("/getuservideos", getUserVideos);
 app.get("/getcomments", getComments);
 app.post("/postcomment", postComment);
 app.post("/sendcommentnotification", sendCommentNotification);
+app.patch("/clearseen", clearSeen);
 app.get("/getnotifications/:id", getNotifications);
 app.delete("/deletenotification/:id", deleteNotification);
 app.delete("/deletecomment/:id", deleteComment);

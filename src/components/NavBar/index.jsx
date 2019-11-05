@@ -24,7 +24,8 @@ class NavBar extends Component {
     dropdownOpen: false,
     notificationOpen: false,
     notifications: [],
-    premiumToggle: true
+    premiumToggle: true,
+    newNotif: 0
   };
   toggleDropdown = () => {
     this.setState(prevState => ({
@@ -41,6 +42,11 @@ class NavBar extends Component {
     Axios.get(urlApi + `getnotifications/${this.props.id}`).then(res => {
       if (res.data.length > 0) {
         this.setState({ notifications: res.data });
+        for (let i = 0; i < res.data.length; i++) {
+          if (!res.data[i].seen) {
+            this.setState({ newNotif: "!" });
+          }
+        }
       } else {
         this.setState({ notifications: "no notification" });
       }
@@ -78,13 +84,22 @@ class NavBar extends Component {
       return <div className="text-center">loading notifications</div>;
     }
   };
+  clearNotif = () => {
+    Axios.patch(urlApi + "clearseen", { id: this.props.id }).then(res => {
+      this.setState({ newNotif: 0 });
+    });
+  };
+
   renderNotification = () => {
     return (
       <Dropdown
         isOpen={this.state.notificationOpen}
         toggle={this.toggleNotification}
         className="nav3-2"
-        onClick={this.getNotificationData}
+        onClick={() => {
+          this.getNotificationData();
+          this.clearNotif();
+        }}
       >
         <DropdownToggle
           tag="span"
@@ -98,6 +113,9 @@ class NavBar extends Component {
         <DropdownMenu right className="notifications">
           {this.mapNotification()}
         </DropdownMenu>
+        <div className={this.state.newNotif ? "new-notification" : "d-none"}>
+          {this.state.newNotif}
+        </div>
       </Dropdown>
     );
   };
@@ -192,7 +210,12 @@ class NavBar extends Component {
       <React.Fragment>
         <div
           className="navBar"
-          onClick={() => this.setState({ premiumToggle: true })}
+          onClick={() => {
+            if (this.props.username) {
+              this.getNotificationData();
+            }
+            this.setState({ premiumToggle: true });
+          }}
         >
           <div className=" nav1">
             <Link className="judul" to="/">

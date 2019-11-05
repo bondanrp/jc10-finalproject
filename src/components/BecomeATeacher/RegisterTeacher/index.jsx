@@ -22,11 +22,15 @@ export class RegisterTeacher extends Component {
   componentWillMount() {
     if (this.props.username) {
       this.getData();
+    } else {
+      this.setState({ loading: false });
     }
   }
   componentDidUpdate(prevProps, nextProps) {
     if (this.props.username !== prevProps.username) {
       this.getData();
+    } else if (!this.props.username) {
+      this.setState({ loading: false });
     }
   }
 

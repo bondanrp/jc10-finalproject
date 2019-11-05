@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import "./browse.css";
 import { timeSince } from "../../functions/index";
 import { Video } from "../Video/video.jsx";
@@ -12,7 +12,14 @@ import querystring from "query-string";
 import { LoginModal } from "../Login/loginModal";
 import { Switch, Route } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlay, faLock } from "@fortawesome/free-solid-svg-icons";
+import {
+  faPlay,
+  faLock,
+  faFire,
+  faHome,
+  faUserGraduate,
+  faCrown
+} from "@fortawesome/free-solid-svg-icons";
 
 const urlApi = "http://localhost:3001/";
 
@@ -41,10 +48,11 @@ export class Browse extends Component {
     loginModal: false,
     profileRefresh: false,
     openBrowse: false,
-    videoOrProfile: false
+    videoOrProfile: false,
+    redirectToPremium: false
   };
 
-  componentDidMount() {
+  componentWillMount() {
     if (this.props.location.pathname === "/browse") {
       this.setState({ openBrowse: true });
     }
@@ -341,8 +349,8 @@ export class Browse extends Component {
       return null;
     } else {
       return (
-        <div style={{ gridColumn: "1/-1", margin: "auto", gridRow: "3" }}>
-          No videos to show
+        <div style={{ gridColumn: "1/-1", margin: "auto", gridRow: "1" }}>
+          <h1 className="no-video">No videos to show</h1>
         </div>
       );
     }
@@ -505,6 +513,7 @@ export class Browse extends Component {
               id={"page" + val}
               name="page"
               value={val}
+              checked={this.state.pagemax === 15}
               defaultChecked
             />
           ) : (
@@ -526,201 +535,238 @@ export class Browse extends Component {
     return render;
   };
   render() {
-    return (
-      <div className="gray-background py-5">
-        {this.state.loginModal ? (
-          <LoginModal
-            username={this.state.username}
-            password={this.state.password}
-            handleChange={e => this.handleChange(e)}
-            onLoginUser={this.props.onLoginUser}
-            history={this.props.history}
-            loginModal={this.loginModal}
-          />
-        ) : null}
-        <div className="browse-container">
-          <div className="browse-nav">
-            <div>
-              <input type="radio" name="sub-nav" id="myProfile" />
-
-              <button
-                className="myprofile"
-                htmlFor="myProfile"
-                onClick={() => {
-                  this.onMyProfile();
-                }}
-              >
-                My Profile
-              </button>
-              <input type="checkbox" name="home" id="home" defaultChecked />
-              <label htmlFor="home">Home</label>
-              <div
-                className="nav-content"
-                onClick={() => {
-                  this.props.history.push("/browse");
-                }}
-              >
-                {this.props.username ? (
-                  <React.Fragment>
-                    <input type="radio" name="sub-nav" id="mySubscriptions" />
-                    <label
-                      htmlFor="mySubscriptions"
-                      onClick={() => {
-                        this.setState({
-                          title: "Subscriptions",
-                          loading: true,
-                          nav: "home"
-                        });
-                        if (localStorage.length > 0) {
-                          var loggedId = JSON.parse(localStorage.userData).id;
-                        }
-                        axios
-                          .get(urlApi + `getsubscription/${loggedId}`)
-                          .then(res => {
-                            this.setState({
-                              preview: res.data,
-                              loading: false,
-                              pagemax: 15,
-                              pagemin: 0
-                            });
-                          })
-                          .catch(err => {
-                            alert(err);
-                          });
-                      }}
-                    >
-                      Subscriptions
-                    </label>
-                  </React.Fragment>
-                ) : null}
-                <input type="radio" name="sub-nav" id="newest" />
-                <label
-                  htmlFor="newest"
-                  onClick={() => {
-                    this.setState({
-                      nav: "home",
-                      title: "newest",
-                      loading: true
-                    });
-                    this.getVideo();
-                  }}
-                >
-                  Newest Uploads
-                </label>
-                <input type="radio" name="sub-nav" id="most-viewed" />
-                <label
-                  htmlFor="most-viewed"
-                  onClick={() => {
-                    this.setState({
-                      nav: "home",
-                      title: "most viewed",
-                      loading: true
-                    });
-                    this.getVideo();
-                  }}
-                >
-                  Most Viewed
-                </label>
-              </div>
-            </div>
-            {this.props.username ? (
+    if (this.state.redirectToPremium) {
+      return <Redirect to="/premium" />;
+    } else {
+      return (
+        <div className="gray-background py-5">
+          {this.state.loginModal ? (
+            <LoginModal
+              username={this.state.username}
+              password={this.state.password}
+              handleChange={e => this.handleChange(e)}
+              onLoginUser={this.props.onLoginUser}
+              history={this.props.history}
+              loginModal={this.loginModal}
+            />
+          ) : null}
+          <div className="browse-container">
+            <div className="browse-nav">
               <div>
-                <input
-                  type="checkbox"
-                  name="home"
-                  id="subscriptions"
-                  defaultChecked
-                />
-                <label htmlFor="subscriptions">Subscriptions</label>
+                <input type="radio" name="sub-nav" id="myProfile" />
+
+                <button
+                  className="myprofile"
+                  htmlFor="myProfile"
+                  onClick={() => {
+                    this.onMyProfile();
+                  }}
+                >
+                  My Profile
+                </button>
+                <input type="checkbox" name="home" id="home" defaultChecked />
+                <label htmlFor="home">Home</label>
                 <div
                   className="nav-content"
                   onClick={() => {
                     this.props.history.push("/browse");
                   }}
                 >
-                  {this.subscribedTeachers()}
+                  {this.props.username && this.props.premium ? (
+                    <React.Fragment>
+                      <input type="radio" name="sub-nav" id="mySubscriptions" />
+                      <label
+                        htmlFor="mySubscriptions"
+                        onClick={() => {
+                          this.setState({
+                            title: "Subscriptions",
+                            loading: true,
+                            nav: "home"
+                          });
+                          if (localStorage.length > 0) {
+                            var loggedId = JSON.parse(localStorage.userData).id;
+                          }
+                          axios
+                            .get(urlApi + `getsubscription/${loggedId}`)
+                            .then(res => {
+                              this.setState({
+                                preview: res.data,
+                                loading: false,
+                                pagemax: 15,
+                                pagemin: 0
+                              });
+                            })
+                            .catch(err => {
+                              alert(err);
+                            });
+                        }}
+                      >
+                        <i className="nav-icon">
+                          <FontAwesomeIcon icon={faUserGraduate} />
+                        </i>
+                        Subscriptions
+                      </label>
+                    </React.Fragment>
+                  ) : null}
+                  <input type="radio" name="sub-nav" id="newest" />
+                  <label
+                    htmlFor="newest"
+                    onClick={() => {
+                      this.setState({
+                        nav: "home",
+                        title: "newest",
+                        loading: true
+                      });
+                      this.getVideo();
+                    }}
+                  >
+                    <i className="nav-icon">
+                      <FontAwesomeIcon icon={faHome} />
+                    </i>
+                    Newest Uploads
+                  </label>
+                  <input type="radio" name="sub-nav" id="most-viewed" />
+                  <label
+                    htmlFor="most-viewed"
+                    onClick={() => {
+                      this.setState({
+                        nav: "home",
+                        title: "most viewed",
+                        loading: true
+                      });
+                      this.getVideo();
+                    }}
+                  >
+                    <i className="nav-icon">
+                      <FontAwesomeIcon icon={faFire} />
+                    </i>
+                    Most Viewed
+                  </label>
                 </div>
               </div>
-            ) : null}
-            <div>
-              <input type="checkbox" name="home" id="category" defaultChecked />
-              <label htmlFor="category">Category</label>
-              <div
-                className="nav-content"
-                onClick={() => {
-                  this.props.history.push("/browse");
-                }}
-              >
-                {this.categories()}
+              {this.props.username ? (
+                <div>
+                  <input
+                    type="checkbox"
+                    name="home"
+                    id="subscriptions"
+                    defaultChecked
+                  />
+                  <label htmlFor="subscriptions">Subscriptions</label>
+                  <div
+                    className="nav-content"
+                    onClick={() => {
+                      this.props.history.push("/browse");
+                    }}
+                  >
+                    {this.props.premium ? (
+                      this.subscribedTeachers()
+                    ) : (
+                      <React.Fragment>
+                        <input type="radio" name="sub-nav" />
+                        <label
+                          onClick={() => {
+                            this.setState({ redirectToPremium: true });
+                          }}
+                        >
+                          <i className="nav-icon">
+                            <FontAwesomeIcon icon={faCrown} />
+                          </i>
+                          Upgrade to Premium
+                        </label>
+                      </React.Fragment>
+                    )}
+                  </div>
+                </div>
+              ) : null}
+              <div>
+                <input
+                  type="checkbox"
+                  name="home"
+                  id="category"
+                  defaultChecked
+                />
+                <label htmlFor="category">Category</label>
+                <div
+                  className="nav-content"
+                  onClick={() => {
+                    this.props.history.push("/browse");
+                  }}
+                >
+                  {this.categories()}
+                </div>
+              </div>
+              <div>
+                <input type="checkbox" name="home" id="teachers" />
+                <label
+                  onClick={() => {
+                    this.setState({
+                      title: "Teachers",
+                      loading: true,
+                      nav: "teachers"
+                    });
+                    this.getTeachers();
+
+                    this.props.history.push("/browse");
+                  }}
+                >
+                  Teachers
+                </label>
               </div>
             </div>
-            <div>
-              <input type="checkbox" name="home" id="teachers" />
-              <label
-                onClick={() => {
-                  this.setState({
-                    title: "Teachers",
-                    loading: true,
-                    nav: "teachers"
-                  });
-                  this.getTeachers();
-
-                  this.props.history.push("/browse");
-                }}
-              >
-                Teachers
-              </label>
-            </div>
-          </div>
-          <div className="browse-container-content">
-            <div className="browse-search">
-              <form
-                onSubmit={event => {
-                  event.preventDefault();
-                }}
-              >
-                <input
-                  type="text"
-                  id="search"
-                  value={this.state.search}
-                  onChange={this.handleChange}
-                  onSubmit={() => {
-                    this.handleSearch();
+            <div className="browse-container-content">
+              <div className="browse-search">
+                <form
+                  onSubmit={event => {
+                    event.preventDefault();
                   }}
-                  placeholder="  Search..."
-                />
-                <button type="button" onClick={this.handleSearch}>
-                  Search
-                </button>
-              </form>
+                >
+                  <input
+                    type="text"
+                    id="search"
+                    value={this.state.search}
+                    onChange={this.handleChange}
+                    onSubmit={() => {
+                      this.handleSearch();
+                    }}
+                    placeholder="  Search..."
+                  />
+                  <button type="button" onClick={this.handleSearch}>
+                    Search
+                  </button>
+                </form>
+              </div>
+              <Switch>
+                <Route exact path="/browse/user/:username">
+                  <Profile
+                    params={this.props.match.params}
+                    username={this.props.username}
+                    updateProfile={this.props.updateProfile}
+                    id={this.props.id}
+                    onSubscribe={this.onSubscribe}
+                    premium={this.props.premium}
+                  />
+                </Route>
+                <Route
+                  exact
+                  path="/browse/user/:username/video/:class/:episode"
+                >
+                  <Video
+                    params={this.props.match.params}
+                    username={this.props.username}
+                    profilepict={this.props.profilepict}
+                    id={this.props.id}
+                    premium={this.props.premium}
+                    loginModal={this.loginModal}
+                  />
+                </Route>
+              </Switch>
+              {this.renderBrowse()}
             </div>
-            <Switch>
-              <Route exact path="/browse/user/:username">
-                <Profile
-                  params={this.props.match.params}
-                  username={this.props.username}
-                  updateProfile={this.props.updateProfile}
-                  id={this.props.id}
-                  onSubscribe={this.onSubscribe}
-                  premium={this.props.premium}
-                />
-              </Route>
-              <Route exact path="/browse/user/:username/video/:class/:episode">
-                <Video
-                  params={this.props.match.params}
-                  username={this.props.username}
-                  profilepict={this.props.profilepict}
-                  id={this.props.id}
-                  premium={this.props.premium}
-                  loginModal={this.loginModal}
-                />
-              </Route>
-            </Switch>
-            {this.renderBrowse()}
           </div>
         </div>
-      </div>
-    );
+      );
+    }
   }
 }
 const mapStateToProps = state => {

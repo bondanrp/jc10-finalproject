@@ -33,7 +33,7 @@ export class Video extends Component {
   };
 
   timer = null;
-  componentDidMount() {
+  componentWillMount() {
     console.log(this.props);
 
     console.log("video mounted");
@@ -69,63 +69,65 @@ export class Video extends Component {
   };
   getData = () => {
     this.setState({ refresh: false });
-    this.timer = setTimeout(this.addView, 10000);
-    console.log("timerstart");
     Axios.get(
       urlApi +
         `getvideo/${this.props.params.username}/${this.props.params.class}/${this.props.params.episode}`
     )
       .then(res => {
         this.setState({ data: res.data[0] });
-
-        // NEXT EPISODE
-        Axios.get(urlApi + "getepisode", {
-          params: {
-            class: this.state.data.class,
-            episode: parseInt(this.state.data.episode) + 1
-          }
-        })
-          .then(res => {
-            this.setState({ nextData: res.data[0] });
-            // PREVIOUS EPISODE
-            Axios.get(urlApi + "getepisode", {
-              params: {
-                class: this.state.data.class,
-                episode: parseInt(this.state.data.episode) - 1
-              }
-            })
-              .then(res => {
-                this.setState({ prevData: res.data[0] });
-                // RELATED VIDEOS
-                Axios.get(urlApi + "getrelatedvideos", {
-                  params: { class: this.state.data.class }
-                })
-                  .then(res => {
-                    this.setState({ related: res.data });
-                    // GET COMMENTS
-                    Axios.get(urlApi + "getcomments", {
-                      params: {
-                        id: this.state.data.id
-                      }
-                    })
-                      .then(res => {
-                        this.setState({ comments: res.data, loading: false });
-                      })
-                      .catch(err => {
-                        console.log(err);
-                      });
-                  })
-                  .catch(err => {
-                    console.log(err);
-                  });
-              })
-              .catch(err => {
-                console.log(err);
-              });
+        if (res.data.length > 0) {
+          this.timer = setTimeout(this.addView, 10000);
+          // NEXT EPISODE
+          Axios.get(urlApi + "getepisode", {
+            params: {
+              class: this.state.data.class,
+              episode: parseInt(this.state.data.episode) + 1
+            }
           })
-          .catch(err => {
-            console.log(err);
-          });
+            .then(res => {
+              this.setState({ nextData: res.data[0] });
+              // PREVIOUS EPISODE
+              Axios.get(urlApi + "getepisode", {
+                params: {
+                  class: this.state.data.class,
+                  episode: parseInt(this.state.data.episode) - 1
+                }
+              })
+                .then(res => {
+                  this.setState({ prevData: res.data[0] });
+                  // RELATED VIDEOS
+                  Axios.get(urlApi + "getrelatedvideos", {
+                    params: { class: this.state.data.class }
+                  })
+                    .then(res => {
+                      this.setState({ related: res.data });
+                      // GET COMMENTS
+                      Axios.get(urlApi + "getcomments", {
+                        params: {
+                          id: this.state.data.id
+                        }
+                      })
+                        .then(res => {
+                          this.setState({ comments: res.data, loading: false });
+                        })
+                        .catch(err => {
+                          console.log(err);
+                        });
+                    })
+                    .catch(err => {
+                      console.log(err);
+                    });
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+            })
+            .catch(err => {
+              console.log(err);
+            });
+        } else {
+          this.setState({ loading: false });
+        }
       })
       .catch(err => {
         console.log(err);
@@ -497,17 +499,7 @@ export class Video extends Component {
     event.preventDefault();
   };
   render() {
-    if (!this.props.username && parseInt(this.props.params.episode) !== 1) {
-      return (
-        <Redirect
-          to={`/browse/user/${this.props.params.username}/video/${this.props.params.class}/1`}
-        ></Redirect>
-      );
-    } else if (!this.props.premium && parseInt(this.props.params.episode) > 3) {
-      return <Redirect to={`/premium`}></Redirect>;
-    } else if (this.state.redirectPremium) {
-      return <Redirect to="/premium"></Redirect>;
-    } else if (this.state.loading) {
+    if (this.state.loading) {
       return (
         <div className="gray-background">
           <div className="video-container-container">
@@ -527,6 +519,28 @@ export class Video extends Component {
           </div>
         </div>
       );
+    } else if (!this.state.data) {
+      return (
+        <div className="gray-background">
+          <div className="container pt-5">
+            <h1>404</h1>
+            <h6>Video Not Found</h6>
+          </div>
+        </div>
+      );
+    } else if (
+      !this.props.username &&
+      parseInt(this.props.params.episode) !== 1
+    ) {
+      return (
+        <Redirect
+          to={`/browse/user/${this.props.params.username}/video/${this.props.params.class}/1`}
+        ></Redirect>
+      );
+    } else if (!this.props.premium && parseInt(this.props.params.episode) > 3) {
+      return <Redirect to={`/premium`}></Redirect>;
+    } else if (this.state.redirectPremium) {
+      return <Redirect to="/premium"></Redirect>;
     } else {
       return (
         <div className="gray-background">
