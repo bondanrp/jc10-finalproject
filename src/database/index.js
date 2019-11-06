@@ -56,13 +56,6 @@ module.exports = {
       }
     );
   },
-
-  getAllUserData: (req, res) => {
-    db.query(`select * from users`, (err, result) => {
-      if (err) throw err;
-      res.send(result);
-    });
-  },
   login: (req, res) => {
     db.query(
       `select * from users where username = '${req.query.username}'`,
@@ -513,6 +506,36 @@ module.exports = {
   registerPremiumNotification: (req, res) => {
     db.query(
       `insert into notifications values (0,'${req.body.id}','premium/payment','Mohon tunggu beberapa saat untuk konfirmasi pembayaran dari tim kami', CURRENT_TIMESTAMP,0)`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  getUserData: (req, res) => {
+    db.query(
+      `select id, username, email, firstname, lastname, role, premium, profilepict from users`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  getVideoData: (req, res) => {
+    db.query(`select * from uploads`, (err, result) => {
+      if (err) throw err;
+      res.send(result);
+    });
+  },
+  premiumize: (req, res) => {
+    let premium;
+    if (req.body.type === "give") {
+      premium = 1;
+    } else {
+      premium = 0;
+    }
+    db.query(
+      `update users set premium = ${premium} where id = ${req.body.id}`,
       (err, result) => {
         if (err) throw err;
         res.send(result);

@@ -1,0 +1,146 @@
+.admin-container {
+  display: grid;
+  grid-template-columns: 200px 1200px;
+  justify-content: center;
+  column-gap: 10px;
+  padding: 50px 0;
+}
+.admin-container > div {
+  background: white;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
+}
+.admin-nav {
+  display: flex;
+  flex-direction: column;
+  height: 250px;
+}
+
+.admin-nav > label {
+  height: 50px;
+  margin: 0;
+  padding-left: 20px;
+  line-height: 50px;
+}
+.admin-nav > label:nth-of-type(1) {
+  font-family: "poppins";
+  color: #017a84;
+  border-bottom: 2px solid #017a84;
+}
+.admin-container > div:nth-of-type(2) {
+  padding: 50px;
+}
+.admin-table {
+  width: 100%;
+}
+.admin-table > thead {
+  border-bottom: 2px solid #017a84;
+  height: 50px;
+}
+.admin-table > thead > th {
+  width: 150px;
+}
+.admin-table > tbody > tr {
+  height: 40px;
+}
+.admin-table > tbody > tr:nth-of-type(odd) {
+  background: #e3e3e3;
+}
+.admin-table > tbody > tr > td > img {
+  width: 30px;
+  height: 30px;
+  border-radius: 30px;
+  object-fit: cover;
+  margin-left: 10px;
+}
+.admin-table > thead > th {
+  width: min-content;
+  text-align: center;
+}
+.admin-table > thead > th:nth-of-type(1),
+.admin-table > thead > th:nth-of-type(2) {
+  width: 50px;
+}
+.admin-table > tbody > tr > td {
+  text-align: center;
+}
+/* .admin-table > thead > th:nth-of-type(6) {
+  width: 30px;
+}
+.admin-table > thead > th:nth-of-type(7) {
+  width: 30px;
+} */
+.admin-title::before {
+  content: "Bagi Bakat ";
+  font-family: "poppins";
+  font-weight: 900;
+  color: #017a84;
+}
+.admin-title {
+  font-family: "poppins";
+  font-weight: 100;
+  display: inline;
+}
+.admin-table button {
+  width: 100px;
+}
+.deleteuser {
+  border: 1px solid tomato;
+  border-radius: 5px;
+  background: none;
+  color: tomato;
+  font-weight: 500;
+  font-family: "poppins";
+}
+.unpremiumize:hover {
+  background: tomato;
+  color: white;
+}
+.unpremiumize {
+  border: 1px solid tomato;
+  border-radius: 5px;
+  background: none;
+  color: tomato;
+  font-weight: 500;
+  font-family: "poppins";
+}
+.premiumize:hover {
+  background: #017a84;
+  color: white;
+}
+
+.premiumize {
+  border: 1px solid #017a84;
+  border-radius: 5px;
+  background: none;
+  color: #017a84;
+  font-weight: 500;
+  font-family: "poppins";
+}
+.yes {
+  margin: 0;
+  text-align: center;
+  color: #017a84;
+  font-family: "poppins";
+  font-weight: 700;
+}
+.no {
+  margin: 0;
+  text-align: center;
+  color: tomato;
+  font-family: "poppins";
+  font-weight: 700;
+}
+.admin-box {
+  position: relative;
+}
+.admin-search {
+  position: absolute;
+  top: 10px;
+  right: 0;
+  border-radius: 5px;
+  border: 1px solid #e6e6e6;
+  transition: 0.5s;
+}
+.admin-search:focus {
+  border: 1px solid #017a84;
+}

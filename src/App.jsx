@@ -5,8 +5,8 @@ import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import { connect } from "react-redux";
 
+import Admin from "./components/Admin";
 import Home from "./components/Home";
-import About from "./components/About";
 import Browse from "./components/Browse/browse";
 import Contact from "./components/Contact";
 import BecomeATeacher from "./components/BecomeATeacher";
@@ -50,7 +50,7 @@ class App extends Component {
         <Switch>
           <Route exact path="/" render={() => <Redirect to="/Home" />} />
           <Route path="/Home" component={Home} />
-          <Route path="/About" component={About} />
+          <Route path="/admindashboard" component={Admin} />
           <Route exact path="/Browse" component={Browse} />
           <Route exact path="/Browse/user/:username" component={Browse} />
           <Route
@@ -60,7 +60,11 @@ class App extends Component {
           />
           <Route path="/Contact" component={Contact} />
           <Route exact path="/BecomeATeacher" component={BecomeATeacher} />
-          <Route exact path="/BecomeATeacher/register" component={RegisterTeacher} />
+          <Route
+            exact
+            path="/BecomeATeacher/register"
+            component={RegisterTeacher}
+          />
           <Route path="/Register" component={Register} />
           <Route exact path="/Premium" component={Premium} />
           <Route exact path="/Premium/payment" component={Payment} />

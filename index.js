@@ -14,7 +14,6 @@ const {
   //profile
   verify,
   updateProfile,
-  getAllUserData,
   getUserName,
   getTeacher,
   login,
@@ -59,7 +58,10 @@ const {
   registerTeacher,
   registerTeacherNotification,
   registerPremium,
-  registerPremiumNotification
+  registerPremiumNotification,
+  getUserData,
+  getVideoData,
+  premiumize
 } = require("./src/database/index");
 var appKey = "rahasia";
 
@@ -129,7 +131,6 @@ app.get("/contact", contact);
 app.get("/verify", verify);
 // user db
 app.patch("/updateprofile", updateProfile);
-app.get("/getalluserdata", getAllUserData);
 app.get("/getteacher", getTeacher);
 app.get("/login", login);
 app.get("/getusername", getUserName);
@@ -178,6 +179,9 @@ app.post("/registerteacher", registerTeacher);
 app.post("/registerteachernotification", registerTeacherNotification);
 app.post("/registerpremium", registerPremium);
 app.post("/registerpremiumnotification", registerPremiumNotification);
+app.get("/getuserdata", getUserData);
+app.get("/getvideodata", getVideoData);
+app.patch("/premiumize", premiumize);
 
 //multer
 let multerStorageConfig = multer.diskStorage({

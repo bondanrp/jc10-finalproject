@@ -241,6 +241,14 @@ class NavBar extends Component {
               >
                 Become a Teacher
               </Link>
+            ) : this.props.role === "admin" ? (
+              <Link
+                className="tautan active"
+                onClick={() => this.setState({ toggleBurger: false })}
+                to="/admindashboard"
+              >
+                Admin Dashboard
+              </Link>
             ) : (
               <Link
                 className="tautan active"

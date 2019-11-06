@@ -167,6 +167,7 @@
 }
 .preview-thumbnail:hover > .video-play {
   display: block !important;
+  color: white;
 }
 .video-play {
   color: white;
