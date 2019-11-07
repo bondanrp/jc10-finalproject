@@ -3,6 +3,7 @@ import Axios from "axios";
 import "./profile.css";
 import { Link } from "react-router-dom";
 import swal from "sweetalert2";
+import slugify from "slugify";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlay, faLock, faPencilAlt } from "@fortawesome/free-solid-svg-icons";
@@ -201,7 +202,9 @@ export class Profile extends Component {
       if (idx >= this.state.pagemin && idx < this.state.pagemax) {
         return (
           <Link
-            to={`/browse/user/${val.author}/video/${val.class}/${val.episode}`}
+            to={`/browse/user/${val.author}/video/${slugify(val.class)}/${
+              val.episode
+            }`}
             className="linkaja preview"
           >
             <div

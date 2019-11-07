@@ -12,6 +12,7 @@ import querystring from "query-string";
 import { LoginModal } from "../Login/loginModal";
 import { Switch, Route } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import slugify from "slugify";
 import {
   faPlay,
   faLock,
@@ -205,7 +206,9 @@ export class Browse extends Component {
         <div className="featured-preview">
           <img src={val.thumbnail} alt="preview" />
           <div>
-            <Link to={`/browse/user/${val.author}/video/${val.class}/1`}>
+            <Link
+              to={`/browse/user/${val.author}/video/${slugify(val.class)}/1`}
+            >
               {val.class}
             </Link>
             <Link to={`/browse/user/${val.author}`}>
@@ -278,7 +281,9 @@ export class Browse extends Component {
             return (
               <div className="browse-preview">
                 <Link
-                  to={`/browse/user/${val.author}/video/${val.class}/${val.episode}`}
+                  to={`/browse/user/${val.author}/video/${slugify(val.class)}/${
+                    val.episode
+                  }`}
                   className="linkaja"
                 >
                   <div
@@ -749,7 +754,7 @@ export class Browse extends Component {
                 </Route>
                 <Route
                   exact
-                  path="/browse/user/:username/video/:class/:episode"
+                  path={`/browse/user/:username/video/:class/:episode`}
                 >
                   <Video
                     params={this.props.match.params}

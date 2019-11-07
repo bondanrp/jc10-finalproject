@@ -205,9 +205,15 @@ module.exports = {
     );
   },
   getVideo: (req, res) => {
+    let akhir = req.params.class;
     if (req.params.author) {
+      if (req.params.class.includes("-")) {
+        akhir = req.params.class.replace(/-/g, " ");
+      }
+      console.log(akhir);
+
       db.query(
-        `select j.*, f.id as posterid from uploads j join users f on j.author = f.username where j.episode = ${req.params.episode} and j.class = '${req.params.class}' and j.author='${req.params.author}'`,
+        `select j.*, f.id as posterid from uploads j join users f on j.author = f.username where j.episode = ${req.params.episode} and j.class = '${akhir}' and j.author='${req.params.author}'`,
         (err, result) => {
           if (err) throw err;
           res.send(result);

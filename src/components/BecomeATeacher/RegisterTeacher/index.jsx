@@ -69,7 +69,7 @@ export class RegisterTeacher extends Component {
       fd.append("cv", this.state.selectedFile, this.state.selectedFile.name);
       Axios.post(urlApi + "uploadcv", fd)
         .then(res => {
-          let hasil = urlApi + "files/cv/" + res.data.filename;
+          let hasil = urlApi + "files/CV/" + res.data.filename;
           Axios.post(urlApi + "registerteacher", {
             id: this.props.id,
             content1: this.state.experiences,

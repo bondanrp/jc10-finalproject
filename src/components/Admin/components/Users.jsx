@@ -136,7 +136,16 @@ export class Users extends Component {
   };
 
   pagelist = () => {
-    let total = Math.ceil(this.state.data.length / 15);
+    let filter = this.state.data.filter(el => {
+      return (
+        el.username.includes(this.state.filterList) ||
+        el.firstname.includes(this.state.filterList) ||
+        el.lastname.includes(this.state.filterList) ||
+        el.email.includes(this.state.filterList)
+      );
+    });
+
+    let total = Math.ceil(filter.length / 15);
     let pages = [];
     for (let i = 0; i < total; i++) {
       pages.push(i + 1);
@@ -180,7 +189,13 @@ export class Users extends Component {
           className="admin-search"
           placeholder=" search..."
           value={this.state.filterList}
-          onChange={e => this.setState({ filterList: e.target.value })}
+          onChange={e =>
+            this.setState({
+              filterList: e.target.value,
+              pagemax: 15,
+              pagemin: 0
+            })
+          }
         />
         <table className="admin-table">
           <thead>
@@ -233,7 +248,7 @@ export class Users extends Component {
             >
               Premium
             </th>
-            <th>Action</th>
+            <th>Premium Action</th>
           </thead>
           <tbody>{this.renderUsers()}</tbody>
         </table>

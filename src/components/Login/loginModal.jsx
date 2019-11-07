@@ -7,7 +7,6 @@ export class LoginModal extends Component {
       let username = this.props.username;
       let password = this.props.password;
       this.props.onLoginUser(username, password);
-      this.props.history.push("/");
     }
   };
   handleSubmit = event => {

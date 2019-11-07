@@ -3,6 +3,7 @@ import "./home.css";
 import Axios from "axios";
 import { Redirect } from "react-router-dom";
 import Swal from "sweetalert2";
+import slugify from "slugify";
 
 import { LoginModal } from "../Login/loginModal";
 import { onLoginUser } from "../../actions/login/login";
@@ -59,19 +60,15 @@ export class Home extends Component {
   }
 
   handleRedirect = () => {
-    if (this.props.username) {
+    if (this.props.username || this.state.targetEpisode === 1) {
       this.setState({ redirect: true });
     } else {
       this.loginModal();
     }
   };
   goToVideo = (u, c, e) => {
-    if (this.props.username) {
-      this.setState({ targetUser: u, targetClass: c, targetEpisode: e });
-      this.setState({ redirectToVideo: true });
-    } else {
-      Swal.fire("Error", "Please sign in to view the video", "error");
-    }
+    this.setState({ targetUser: u, targetClass: c, targetEpisode: e });
+    this.setState({ redirectToVideo: true });
   };
   loginModal = () => {
     this.setState(prevState => ({
@@ -83,7 +80,9 @@ export class Home extends Component {
     if (this.state.redirectToVideo) {
       return (
         <Redirect
-          to={`/browse/user/${this.state.targetUser}/video/${this.state.targetClass}/${this.state.targetEpisode}`}
+          to={`/browse/user/${this.state.targetUser}/video/${slugify(
+            this.state.targetClass
+          )}/${this.state.targetEpisode}`}
         ></Redirect>
       );
     } else if (this.state.loading) {
@@ -94,7 +93,7 @@ export class Home extends Component {
           return (
             <div
               onClick={() => {
-                if (this.props.username) {
+                if (this.props.username || val.episode === "1") {
                   this.goToVideo(val.author, val.class, val.episode);
                 } else {
                   this.loginModal();

@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import Axios from "axios";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
+import slugify from "slugify";
 const swalWithButtons = Swal.mixin({
   customClass: {
     confirmButton: "confirm-button",
@@ -28,7 +30,16 @@ export class Videos extends Component {
     });
   };
   pagelist = () => {
-    let total = Math.ceil(this.state.data.length / 15);
+    let filter = this.state.data.filter(el => {
+      return (
+        el.title.toLowerCase().includes(this.state.filterList) ||
+        el.class.toLowerCase().includes(this.state.filterList) ||
+        el.category.toLowerCase().includes(this.state.filterList) ||
+        el.author.toLowerCase().includes(this.state.filterList) ||
+        el.episode.toLowerCase().includes(this.state.filterList)
+      );
+    });
+    let total = Math.ceil(filter.length / 15);
     let pages = [];
     for (let i = 0; i < total; i++) {
       pages.push(i + 1);
@@ -86,7 +97,15 @@ export class Videos extends Component {
             </td>
             <td>{val.id}</td>
             <td>{val.class}</td>
-            <td>{val.title}</td>
+            <td>
+              <Link
+                to={`/browse/user/${val.author}/video/${slugify(val.class)}/${
+                  val.episode
+                }`}
+              >
+                {val.title}
+              </Link>
+            </td>
             <td>{val.episode}</td>
             <td>{val.category}</td>
             <td>{val.author}</td>

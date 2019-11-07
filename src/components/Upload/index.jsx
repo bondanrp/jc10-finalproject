@@ -172,7 +172,6 @@ export class Upload extends Component {
               >
                 Edit
               </button>
-              |<button className="delete">Delete</button>
             </div>
           </div>
         </React.Fragment>
@@ -325,13 +324,21 @@ export class Upload extends Component {
                       onClick={e => {
                         e.preventDefault();
                         if (this.state.newClass) {
-                          this.setState({
-                            class: this.state.class.concat([
-                              { class: this.state.newClass }
-                            ]),
-                            inputClass: this.state.newClass,
-                            newClass: ""
-                          });
+                          if (this.state.newClass.includes("-")) {
+                            swal.fire(
+                              "Error!",
+                              `Class Could Not Contain "-"`,
+                              "error"
+                            );
+                          } else {
+                            this.setState({
+                              class: this.state.class.concat([
+                                { class: this.state.newClass }
+                              ]),
+                              inputClass: this.state.newClass,
+                              newClass: ""
+                            });
+                          }
                         } else {
                           return null;
                         }

@@ -42,6 +42,9 @@ class Register extends Component {
   };
   handleChange = event => {
     this.setState({ [event.target.id]: event.target.value });
+    // if (event.target.value {
+    //   alert("no");
+    // }
   };
   handleSubmit = event => {
     event.preventDefault();

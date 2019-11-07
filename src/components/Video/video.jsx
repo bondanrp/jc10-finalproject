@@ -5,6 +5,7 @@ import { Link, Redirect } from "react-router-dom";
 import Swal from "sweetalert2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLock } from "@fortawesome/free-solid-svg-icons";
+import slugify from "slugify";
 
 import { Player } from "video-react";
 
@@ -200,7 +201,9 @@ export class Video extends Component {
           return (
             <React.Fragment>
               <Link
-                to={`/browse/user/${val.author}/video/${val.class}/${val.episode}`}
+                to={`/browse/user/${val.author}/video/${slugify(val.class)}/${
+                  val.episode
+                }`}
                 onClick={() => {
                   this.setState({ loading: true, refresh: true });
                 }}
@@ -266,7 +269,9 @@ export class Video extends Component {
           return (
             <React.Fragment>
               <Link
-                to={`/browse/user/${val.author}/video/${val.class}/${val.episode}`}
+                to={`/browse/user/${val.author}/video/${slugify(val.class)}/${
+                  val.episode
+                }`}
                 onClick={() => {
                   this.setState({ loading: true, refresh: true });
                 }}
@@ -332,7 +337,9 @@ export class Video extends Component {
           return (
             <React.Fragment>
               <Link
-                to={`/browse/user/${val.author}/video/${val.class}/${val.episode}`}
+                to={`/browse/user/${val.author}/video/${slugify(val.class)}/${
+                  val.episode
+                }`}
                 onClick={() => {
                   this.setState({ loading: true, refresh: true });
                 }}
@@ -361,7 +368,9 @@ export class Video extends Component {
           return (
             <React.Fragment>
               <Link
-                to={`/browse/user/${val.author}/video/${val.class}/${val.episode}`}
+                to={`/browse/user/${val.author}/video/${slugify(val.class)}/${
+                  val.episode
+                }`}
                 onClick={() => {
                   this.setState({ loading: true, refresh: true });
                 }}
