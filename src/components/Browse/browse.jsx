@@ -724,6 +724,7 @@ export class Browse extends Component {
                 <form
                   onSubmit={event => {
                     event.preventDefault();
+                    this.handleSearch();
                   }}
                 >
                   <input
@@ -731,9 +732,7 @@ export class Browse extends Component {
                     id="search"
                     value={this.state.search}
                     onChange={this.handleChange}
-                    onSubmit={() => {
-                      this.handleSearch();
-                    }}
+                    onSubmit={this.handleSearch}
                     placeholder="  Search..."
                   />
                   <button type="button" onClick={this.handleSearch}>

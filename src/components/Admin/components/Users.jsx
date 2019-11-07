@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Axios from "axios";
+import { Link } from "react-router-dom";
 
 let urlApi = "http://localhost:3001/";
 export class Users extends Component {
@@ -25,7 +26,8 @@ export class Users extends Component {
         el.username.includes(this.state.filterList) ||
         el.firstname.includes(this.state.filterList) ||
         el.lastname.includes(this.state.filterList) ||
-        el.email.includes(this.state.filterList)
+        el.email.includes(this.state.filterList) ||
+        el.role.includes(this.state.filterList)
       );
     });
 
@@ -37,11 +39,13 @@ export class Users extends Component {
               <img src={val.profilepict} alt="dp" />
             </td>
             <td>{val.id}</td>
-            <td>{val.username}</td>
-            <td>
+            <td className="text-left">
+              <Link to={`/browse/user/${val.username}`}>{val.username}</Link>
+            </td>
+            <td className="text-left">
               {val.firstname} {val.lastname}
             </td>
-            <td>{val.email}</td>
+            <td className="text-left">{val.email}</td>
             <td>{val.role}</td>
             <td>
               {val.premium ? (
@@ -70,7 +74,6 @@ export class Users extends Component {
                   Give
                 </button>
               )}
-              {/* <button className="deleteuser">Delete</button> */}
             </td>
           </tr>
         );

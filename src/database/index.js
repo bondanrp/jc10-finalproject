@@ -134,7 +134,7 @@ module.exports = {
               res.send({
                 status: "201",
                 message:
-                  "Your account has been created, please check your email to verify your account!"
+                  "Your account has been created, You may now login to our website!"
               });
             }
           );

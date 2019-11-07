@@ -2,7 +2,6 @@
 import "./home.css";
 import Axios from "axios";
 import { Redirect } from "react-router-dom";
-import Swal from "sweetalert2";
 import slugify from "slugify";
 
 import { LoginModal } from "../Login/loginModal";

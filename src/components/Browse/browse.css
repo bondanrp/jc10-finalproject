@@ -43,7 +43,7 @@
   color: white;
 }
 .browse-search > form > button {
-  background: #e2edee;
+  background: none;
   border-radius: 0 10px 10px 0;
   border: 2px solid #017a84;
   color: #017a84;

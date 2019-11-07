@@ -96,8 +96,8 @@ export class Videos extends Component {
               />
             </td>
             <td>{val.id}</td>
-            <td>{val.class}</td>
-            <td>
+            <td className="text-left">{val.class}</td>
+            <td className="text-left">
               <Link
                 to={`/browse/user/${val.author}/video/${slugify(val.class)}/${
                   val.episode
@@ -107,8 +107,8 @@ export class Videos extends Component {
               </Link>
             </td>
             <td>{val.episode}</td>
-            <td>{val.category}</td>
-            <td>{val.author}</td>
+            <td className="text-left">{val.category}</td>
+            <td className="text-left">{val.author}</td>
             <td>{val.views}</td>
             <td>
               <button

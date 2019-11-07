@@ -9,12 +9,14 @@
   background: white;
   box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.1);
 }
+.admin-table > thead > th:hover {
+  cursor: pointer;
+}
 .admin-nav {
   display: flex;
   flex-direction: column;
   height: 250px;
 }
-
 .admin-nav > label {
   height: 50px;
   margin: 0;
