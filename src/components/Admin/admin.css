@@ -157,8 +157,6 @@
   grid-template-columns: 1fr 4fr 1fr;
   border-top: 1px solid #017a84;
   padding: 10px;
-}
-.admin-payment:nth-last-of-type(1) {
   border-bottom: 1px solid #017a84;
 }
 

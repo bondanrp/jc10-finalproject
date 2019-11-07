@@ -33,3 +33,12 @@ export const timeSince = date => {
     return "just now";
   }
 };
+export const localTime = m => {
+  var x;
+  var z;
+  var y = new Date(m).toString().split(" ");
+  x = [y[2], y[1], y[3]].join("-");
+  console.log(y);
+  z = [x, y[4]].join(" ");
+  return z;
+};

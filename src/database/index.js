@@ -468,7 +468,7 @@ module.exports = {
   // 2 = pembayaran
   registerTeacher: (req, res) => {
     db.query(
-      `insert into admin values (0, '1', '${req.body.id}', '${req.body.content1}', '${req.body.content2}', '${req.body.attachment}', CURRENT_TIMESTAMP,0)`,
+      `insert into admin values (0, '1', '${req.body.id}', '${req.body.content1}', '${req.body.content2}', '${req.body.attachment}', CURRENT_TIMESTAMP,0,'')`,
       (err, result) => {
         db.query(
           `update users set statusdaftarteacher = 1 where id='${req.body.id}'`
@@ -495,7 +495,7 @@ module.exports = {
 
   registerPremium: (req, res) => {
     db.query(
-      `insert into admin values (0, '2', '${req.body.id}', '${req.body.content1}', '${req.body.content2}', '${req.body.attachment}', CURRENT_TIMESTAMP,0)`,
+      `insert into admin values (0, '2', '${req.body.id}', '${req.body.content1}', '${req.body.content2}', '${req.body.attachment}', CURRENT_TIMESTAMP,0,'')`,
       (err, result) => {
         db.query(
           `update users set statusdaftarpremium = 1 where id='${req.body.id}'`
@@ -577,10 +577,10 @@ module.exports = {
   },
   deletePayment: (req, res) => {
     db.query(
-      `delete from admin where user_id=${req.params.id} and notif_type=2 `,
+      `update admin set status = 2, info= '${req.query.reason}' where user_id=${req.query.id} and notif_type=2 `,
       (err, result) => {
         db.query(
-          `insert into notifications values (0,'${req.params.id}','premium/payment','Your payment have been rejected! Please contact our Admin via admin@bagibakat.com for help', CURRENT_TIMESTAMP,0)`,
+          `insert into notifications values (0,'${req.query.id}','premium/payment','Your payment have been rejected! Reason:"${req.query.reason}" Please contact our Admin via admin@bagibakat.com for help', CURRENT_TIMESTAMP,0)`,
           (err2, result2) => {
             if (err2) throw err2;
             res.send(result2);

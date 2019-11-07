@@ -188,7 +188,7 @@ app.get("/getvideodata", getVideoData);
 app.patch("/premiumize", premiumize);
 app.get("/getpayments", getPayments);
 app.patch("/acceptpayment", acceptPayment);
-app.delete("/deletepayment/:id", deletePayment);
+app.delete("/deletepayment", deletePayment);
 app.patch("/resetstatus", resetStatus);
 
 //multer

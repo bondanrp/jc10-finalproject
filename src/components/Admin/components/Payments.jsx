@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Axios from "axios";
-import { timeSince } from "../../../functions";
+import { timeSince, localTime } from "../../../functions";
 
 import Swal from "sweetalert2";
 const swalWithButtons = Swal.mixin({
@@ -18,6 +18,8 @@ export class Payments extends Component {
   }
   getData = () => {
     Axios.get(urlApi + "getpayments").then(res => {
+      console.log(res.data);
+
       this.setState({ data: res.data });
     });
   };
@@ -25,7 +27,7 @@ export class Payments extends Component {
     swalWithButtons
       .fire({
         title: "Are you sure you want to accept this request?",
-        text: "You won't be able to revert this!",
+        text: "Please make sure the receipt is correct!",
         // type: "warning",
         showCancelButton: true,
         confirmButtonText: "Yes, accept!",
@@ -46,6 +48,7 @@ export class Payments extends Component {
         }
       });
   };
+
   handleReject = id => {
     swalWithButtons
       .fire({
@@ -59,21 +62,39 @@ export class Payments extends Component {
       })
       .then(result => {
         if (result.value) {
-          Axios.delete(urlApi + "deletepayment/" + id).then(res => {
-            Axios.patch(urlApi + "resetstatus", { id }).then(res => {
-              this.getData();
-              swalWithButtons.fire(
-                "Deleted!",
-                "Your requested payment request has been deleted."
-              );
-            });
+          swalWithButtons.fire({
+            title: "Please enter the reason for rejecting this request!",
+            input: "text",
+            inputAttributes: {
+              autocapitalize: "off"
+            },
+            showCancelButton: true,
+            confirmButtonText: "Reject",
+            showLoaderOnConfirm: true,
+            preConfirm: reason => {
+              Axios.delete(urlApi + "deletepayment", {
+                params: { id, reason }
+              }).then(res => {
+                Axios.patch(urlApi + "resetstatus", { id })
+                  .then(res => {
+                    this.getData();
+                    swalWithButtons.fire(
+                      "Deleted!",
+                      "Your requested payment request has been deleted."
+                    );
+                  })
+                  .catch(error => {
+                    Swal.showValidationMessage(`Request failed: ${error}`);
+                  });
+              });
+            }
           });
         }
       });
   };
   mapPayments = x => {
     let render = this.state.data.map(val => {
-      if (val.status === x) {
+      if (parseInt(val.status) === x) {
         return (
           <div className="admin-payment">
             <div>
@@ -103,8 +124,8 @@ export class Payments extends Component {
                   : "BNI"}
               </p>
               <p>
-                Dibayarkan Pada: {val.timestamp.replace(/T/, " ").slice(0, -5)}{" "}
-                ({timeSince(val.timestamp)})
+                Dibayarkan Pada: {localTime(val.timestamp)} (
+                {timeSince(val.timestamp)})
               </p>
               <p
                 className="bukti-text"
@@ -120,7 +141,7 @@ export class Payments extends Component {
                 <img className="bukti" src={val.attachment} alt="bukti" />
               ) : null}
             </div>
-            {val.status === 0 ? (
+            {parseInt(val.status) === 0 ? (
               <div className="admin-payment-button">
                 <button
                   className="premiumize"
@@ -137,9 +158,16 @@ export class Payments extends Component {
                   Reject
                 </button>
               </div>
-            ) : (
+            ) : val.status === 1 ? (
               <div className="admin-payment-button">
                 <h3>Accepted</h3>
+              </div>
+            ) : (
+              <div className="admin-payment-button">
+                <h3 style={{ color: "red" }}>Rejected</h3>
+                <p style={{ textAlign: "justify", fontFamily: "monospace" }}>
+                  {val.info}
+                </p>
               </div>
             )}
           </div>
@@ -149,6 +177,7 @@ export class Payments extends Component {
 
     return render;
   };
+
   render() {
     return (
       <div className="admin-box">
@@ -157,6 +186,8 @@ export class Payments extends Component {
         {this.mapPayments(0)}
         <h2>Accepted</h2>
         {this.mapPayments(1)}
+        <h2>Rejected</h2>
+        {this.mapPayments(2)}
       </div>
     );
   }

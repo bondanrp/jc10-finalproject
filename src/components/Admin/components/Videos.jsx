@@ -225,7 +225,13 @@ export class Videos extends Component {
           className="admin-search"
           placeholder=" search..."
           value={this.state.filterList}
-          onChange={e => this.setState({ filterList: e.target.value })}
+          onChange={e =>
+            this.setState({
+              filterList: e.target.value,
+              pagemax: 15,
+              pagemin: 0
+            })
+          }
         />
         <table className="admin-table">
           <thead>
