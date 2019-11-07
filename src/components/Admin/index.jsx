@@ -9,7 +9,7 @@ import Payments from "./components/Payments";
 export class Admin extends Component {
   state = {
     loading: true,
-    nav: "users"
+    nav: "payments"
   };
   componentDidMount() {
     this.setState({ loading: false });

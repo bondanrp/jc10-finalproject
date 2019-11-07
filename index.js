@@ -61,7 +61,11 @@ const {
   registerPremiumNotification,
   getUserData,
   getVideoData,
-  premiumize
+  premiumize,
+  getPayments,
+  acceptPayment,
+  deletePayment,
+  resetStatus
 } = require("./src/database/index");
 var appKey = "rahasia";
 
@@ -182,6 +186,10 @@ app.post("/registerpremiumnotification", registerPremiumNotification);
 app.get("/getuserdata", getUserData);
 app.get("/getvideodata", getVideoData);
 app.patch("/premiumize", premiumize);
+app.get("/getpayments", getPayments);
+app.patch("/acceptpayment", acceptPayment);
+app.delete("/deletepayment/:id", deletePayment);
+app.patch("/resetstatus", resetStatus);
 
 //multer
 let multerStorageConfig = multer.diskStorage({

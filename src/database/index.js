@@ -468,7 +468,7 @@ module.exports = {
   // 2 = pembayaran
   registerTeacher: (req, res) => {
     db.query(
-      `insert into admin values (0, '1', '${req.body.id}', '${req.body.content1}', '${req.body.content2}', '${req.body.attachment}', CURRENT_TIMESTAMP)`,
+      `insert into admin values (0, '1', '${req.body.id}', '${req.body.content1}', '${req.body.content2}', '${req.body.attachment}', CURRENT_TIMESTAMP,0)`,
       (err, result) => {
         db.query(
           `update users set statusdaftarteacher = 1 where id='${req.body.id}'`
@@ -495,7 +495,7 @@ module.exports = {
 
   registerPremium: (req, res) => {
     db.query(
-      `insert into admin values (0, '2', '${req.body.id}', '${req.body.content1}', '${req.body.content2}', '${req.body.attachment}', CURRENT_TIMESTAMP)`,
+      `insert into admin values (0, '2', '${req.body.id}', '${req.body.content1}', '${req.body.content2}', '${req.body.attachment}', CURRENT_TIMESTAMP,0)`,
       (err, result) => {
         db.query(
           `update users set statusdaftarpremium = 1 where id='${req.body.id}'`
@@ -535,13 +535,64 @@ module.exports = {
   },
   premiumize: (req, res) => {
     let premium;
+    let stat;
     if (req.body.type === "give") {
       premium = 1;
+      stat = 2;
     } else {
       premium = 0;
+      stat = 0;
     }
     db.query(
-      `update users set premium = ${premium} where id = ${req.body.id}`,
+      `update users set premium = ${premium}, statusdaftarpremium=${stat} where id = ${req.body.id}`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  getPayments: (req, res) => {
+    db.query(
+      `select j.*, f.username, f.profilepict, f.email,f.firstname,f.lastname from admin j join users f on f.id = j.user_id where j.notif_type=2`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  acceptPayment: (req, res) => {
+    db.query(
+      `update admin set status = 1 where user_id=${req.body.id}`,
+      (err, result) => {
+        db.query(
+          `insert into notifications values (0,'${req.body.id}','premium/payment','Your payment have been accepted! Please enjoy Bagi Bakat Premium!', CURRENT_TIMESTAMP,0)`,
+          (err2, result2) => {
+            if (err2) throw err2;
+            res.send(result2);
+            if (err) throw err;
+          }
+        );
+      }
+    );
+  },
+  deletePayment: (req, res) => {
+    db.query(
+      `delete from admin where user_id=${req.params.id} and notif_type=2 `,
+      (err, result) => {
+        db.query(
+          `insert into notifications values (0,'${req.params.id}','premium/payment','Your payment have been rejected! Please contact our Admin via admin@bagibakat.com for help', CURRENT_TIMESTAMP,0)`,
+          (err2, result2) => {
+            if (err2) throw err2;
+            res.send(result2);
+            if (err) throw err;
+          }
+        );
+      }
+    );
+  },
+  resetStatus: (req, res) => {
+    db.query(
+      `update users set statusdaftarpremium= 0 where id=${req.body.id}`,
       (err, result) => {
         if (err) throw err;
         res.send(result);

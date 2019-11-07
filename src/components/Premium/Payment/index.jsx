@@ -57,7 +57,7 @@ export class Payment extends Component {
       return (
         <div className="payment-paket">
           <h3>Total Pembayaran:</h3>
-          <h2> Rp.99,000/Hari</h2>
+          <h2> Rp.99,000/Bulan</h2>
           <span>Lebih hemat dengan berlangganan per tahun!</span>
         </div>
       );
@@ -66,7 +66,7 @@ export class Payment extends Component {
       return (
         <div className="payment-paket">
           <h3>Total Pembayaran:</h3>
-          <h2> Rp.999,000/Hari</h2>
+          <h2> Rp.999,000/Tahun</h2>
           <span style={{ color: "green" }}>Paket paling hemat!</span>
         </div>
       );
@@ -221,8 +221,6 @@ export class Payment extends Component {
       );
     } else if (!this.props.username) {
       return <Redirect to="/login" />;
-    } else if (this.props.premium) {
-      return <Redirect to="/"></Redirect>;
     } else if (!this.state.status) {
       return (
         <div className="gray-background">
@@ -356,6 +354,25 @@ export class Payment extends Component {
                 <hr />
                 Mohon hubungi <strong>support@bagibakat.com</strong> jika
                 memerlukan bantuan lebih lanjut.
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    } else if (this.state.status === 2 || this.props.premium) {
+      return (
+        <div className="gray-background">
+          <div className="payment-container">
+            <div className="payment-card">
+              <h3 className="admin-title">Premium</h3>
+              <div className="payment-instruction">
+                Anda sudah terdaftar sebagai akun premium!{" "}
+                {this.props.role === "teacher"
+                  ? "Bagi Bakat Premium merupakan bagian dari program teacher kami."
+                  : "Pembayaran anda sudah diterima oleh tim kami."}
+                <br />
+                <hr />
+                Silahkan menikmati Bagi Bakat Premium!
               </div>
             </div>
           </div>
