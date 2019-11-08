@@ -553,7 +553,16 @@ module.exports = {
   },
   getPayments: (req, res) => {
     db.query(
-      `select j.*, f.username, f.profilepict, f.email,f.firstname,f.lastname from admin j join users f on f.id = j.user_id where j.notif_type=2`,
+      `select j.*, f.username, f.profilepict, f.email,f.firstname,f.lastname from admin j join users f on f.id = j.user_id where j.notif_type=${req.query.type}`,
+      (err, result) => {
+        if (err) throw err;
+        res.send(result);
+      }
+    );
+  },
+  makeTeacher: (req, res) => {
+    db.query(
+      `update users set role = 'teacher', premium=1 where id=${req.body.id}`,
       (err, result) => {
         if (err) throw err;
         res.send(result);
@@ -561,11 +570,19 @@ module.exports = {
     );
   },
   acceptPayment: (req, res) => {
+    let link;
+    let msg;
+    if (req.body.type === 2) {
+      msg = "Your payment have been accepted! Please enjoy Bagi Bakat Premium!";
+    } else {
+      msg =
+        "Your application for the teacher role have been accepted! You are now a teacher at Bagi Bakat! ";
+    }
     db.query(
       `update admin set status = 1 where user_id=${req.body.id}`,
       (err, result) => {
         db.query(
-          `insert into notifications values (0,'${req.body.id}','premium/payment','Your payment have been accepted! Please enjoy Bagi Bakat Premium!', CURRENT_TIMESTAMP,0)`,
+          `insert into notifications values (0,'${req.body.id}','home','${msg}', CURRENT_TIMESTAMP,0)`,
           (err2, result2) => {
             if (err2) throw err2;
             res.send(result2);
@@ -575,12 +592,24 @@ module.exports = {
       }
     );
   },
+
   deletePayment: (req, res) => {
+    console.log(req.body.id);
+
     db.query(
-      `update admin set status = 2, info= '${req.query.reason}' where user_id=${req.query.id} and notif_type=2 `,
+      `update admin set status = 2, info= '${req.body.reason}' where user_id='${req.body.id}' and notif_type='${req.body.type}'`,
       (err, result) => {
+        let message;
+        let link;
+        if (req.body.type === 2) {
+          message = `Your payment have been rejected! Reason: "${req.body.reason}" Please contact our Admin via admin@bagibakat.com for help`;
+          link = "premium/payment";
+        } else {
+          message = `Your teacher application have been rejected! Reason: "${req.body.reason}" Please contact our Admin via admin@bagibakat.com for help`;
+          link = "becomeateacher/register";
+        }
         db.query(
-          `insert into notifications values (0,'${req.query.id}','premium/payment','Your payment have been rejected! Reason:"${req.query.reason}" Please contact our Admin via admin@bagibakat.com for help', CURRENT_TIMESTAMP,0)`,
+          `insert into notifications values (0,'${req.body.id}','${link}','${message}', CURRENT_TIMESTAMP,0)`,
           (err2, result2) => {
             if (err2) throw err2;
             res.send(result2);
@@ -591,8 +620,14 @@ module.exports = {
     );
   },
   resetStatus: (req, res) => {
+    let status;
+    if (req.body.type === 2) {
+      status = "statusdaftarpremium";
+    } else {
+      status = "statusdaftarteacher";
+    }
     db.query(
-      `update users set statusdaftarpremium= 0 where id=${req.body.id}`,
+      `update users set ${status}= 0 where id=${req.body.id}`,
       (err, result) => {
         if (err) throw err;
         res.send(result);

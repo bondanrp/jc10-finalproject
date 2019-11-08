@@ -109,8 +109,6 @@ export class RegisterTeacher extends Component {
       );
     } else if (!this.props.username) {
       return <Redirect to="/login" />;
-    } else if (this.props.premium) {
-      return <Redirect to="/"></Redirect>;
     } else if (!this.state.status) {
       return (
         <div className="gray-background">

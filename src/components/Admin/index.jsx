@@ -5,11 +5,12 @@ import "./admin.css";
 import Users from "./components/Users";
 import Videos from "./components/Videos";
 import Payments from "./components/Payments";
+import Applications from "./components/Applications";
 
 export class Admin extends Component {
   state = {
     loading: true,
-    nav: "payments"
+    nav: "users"
   };
   componentDidMount() {
     this.setState({ loading: false });
@@ -59,7 +60,7 @@ export class Admin extends Component {
                   this.setState({ nav: "applications" });
                 }}
               />
-              <label htmlFor="item4">Applications</label>
+              <label htmlFor="item4">Teacher Applications</label>
             </div>
             <div>
               {this.state.nav === "users" ? (
@@ -68,7 +69,9 @@ export class Admin extends Component {
                 <Payments />
               ) : this.state.nav === "videos" ? (
                 <Videos />
-              ) : null}
+              ) : (
+                <Applications />
+              )}
             </div>
           </div>
         </div>

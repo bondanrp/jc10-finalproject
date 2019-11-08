@@ -186,3 +186,6 @@
   border-bottom: 1px solid black;
   transition-duration: 1s;
 }
+.terms {
+  display: inline;
+}

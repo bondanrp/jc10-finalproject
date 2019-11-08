@@ -179,11 +179,11 @@ class Register extends Component {
                       }));
                     }}
                   />
-                  <span className="text-justify">
-                    I have read and agree to the
-                    <button className="terms" onClick={this.toggle}>
+                  <span className="text-center">
+                    I have read and agree to the{" "}
+                    <div className="terms" onClick={this.toggle}>
                       terms and conditions
-                    </button>
+                    </div>
                   </span>
                   <div className="text-center mt-5">
                     <button

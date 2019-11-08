@@ -204,3 +204,18 @@
   flex-direction: column;
   justify-content: flex-start;
 }
+.app-data > p {
+  margin-bottom: 2px;
+}
+.app-data {
+  display: grid;
+  grid-template-columns: 140px 10px 500px;
+}
+.app-info {
+  margin: auto;
+  width: 80%;
+  background: white;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+  padding: 0 50px;
+  margin: 50px;
+}

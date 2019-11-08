@@ -17,9 +17,7 @@ export class Payments extends Component {
     this.getData();
   }
   getData = () => {
-    Axios.get(urlApi + "getpayments").then(res => {
-      console.log(res.data);
-
+    Axios.get(urlApi + "getpayments", { params: { type: 2 } }).then(res => {
       this.setState({ data: res.data });
     });
   };
@@ -37,7 +35,7 @@ export class Payments extends Component {
       .then(result => {
         if (result.value) {
           Axios.patch(urlApi + "premiumize", { type: "give", id }).then(res => {
-            Axios.patch(urlApi + "acceptpayment", { id }).then(res => {
+            Axios.patch(urlApi + "acceptpayment", { id, type: 2 }).then(res => {
               this.getData();
               swalWithButtons.fire(
                 "Accepted",
@@ -72,10 +70,12 @@ export class Payments extends Component {
             confirmButtonText: "Reject",
             showLoaderOnConfirm: true,
             preConfirm: reason => {
-              Axios.delete(urlApi + "deletepayment", {
-                params: { id, reason }
+              Axios.patch(urlApi + "deletepayment", {
+                id,
+                reason,
+                type: 2
               }).then(res => {
-                Axios.patch(urlApi + "resetstatus", { id })
+                Axios.patch(urlApi + "resetstatus", { id, type: 2 })
                   .then(res => {
                     this.getData();
                     swalWithButtons.fire(

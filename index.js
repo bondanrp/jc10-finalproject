@@ -63,6 +63,7 @@ const {
   getVideoData,
   premiumize,
   getPayments,
+  makeTeacher,
   acceptPayment,
   deletePayment,
   resetStatus
@@ -187,8 +188,9 @@ app.get("/getuserdata", getUserData);
 app.get("/getvideodata", getVideoData);
 app.patch("/premiumize", premiumize);
 app.get("/getpayments", getPayments);
+app.patch("/maketeacher", makeTeacher);
 app.patch("/acceptpayment", acceptPayment);
-app.delete("/deletepayment", deletePayment);
+app.patch("/deletepayment", deletePayment);
 app.patch("/resetstatus", resetStatus);
 
 //multer
