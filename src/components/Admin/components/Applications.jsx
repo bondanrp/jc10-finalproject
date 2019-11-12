@@ -208,23 +208,27 @@ export class Applications extends Component {
               <br />
               <hr />
               <div className="text-right py-5">
-                <button
-                  className="premiumize"
-                  onClick={() => {
-                    this.handleAccept(parseInt(val.user_id));
-                  }}
-                >
-                  Accept
-                </button>
-                <button
-                  onClick={() => {
-                    this.handleReject(parseInt(val.user_id));
-                  }}
-                  style={{ marginLeft: "20px" }}
-                  className="unpremiumize"
-                >
-                  Reject
-                </button>
+                {!val.status ? (
+                  <>
+                    <button
+                      className="premiumize"
+                      onClick={() => {
+                        this.handleAccept(parseInt(val.user_id));
+                      }}
+                    >
+                      Accept
+                    </button>
+                    <button
+                      onClick={() => {
+                        this.handleReject(parseInt(val.user_id));
+                      }}
+                      style={{ marginLeft: "20px" }}
+                      className="unpremiumize"
+                    >
+                      Reject
+                    </button>
+                  </>
+                ) : null}
               </div>
             </div>
           </>
