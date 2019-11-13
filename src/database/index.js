@@ -122,15 +122,15 @@ module.exports = {
             `insert into users values (0,'${req.body.username}','${req.body.email}','${req.body.password}', 'user','${req.body.firstname}','${req.body.lastname}','http://localhost:3001/files/uploads.png',0,0,0)`,
             (err2, result) => {
               if (err2) throw err2;
-              let mailOptions = {
-                from: '"Bagi Bakat" <bondanrp@gmail.com>',
-                to: req.body.email,
-                subject: "Verify Your Account",
-                html: `<p>Please <a href='http://localhost:3001/verify?username=${req.body.username}'>click here</a> to verify your account.</p>`
-              };
-              transporter.sendMail(mailOptions, (err3, info) => {
-                if (err3) throw err3;
-              });
+              // let mailOptions = {
+              //   from: '"Bagi Bakat" <bondanrp@gmail.com>',
+              //   to: req.body.email,
+              //   subject: "Verify Your Account",
+              //   html: `<p>Please <a href='http://localhost:3001/verify?username=${req.body.username}'>click here</a> to verify your account.</p>`
+              // };
+              // transporter.sendMail(mailOptions, (err3, info) => {
+              //   if (err3) throw err3;
+              // });
               res.send({
                 status: "201",
                 message:
