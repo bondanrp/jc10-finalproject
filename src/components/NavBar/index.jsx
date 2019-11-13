@@ -281,7 +281,16 @@ class NavBar extends Component {
             <div
               className={this.state.premiumToggle ? "nav-premium" : "d-none"}
             >
-              {this.props.username ? "Upgrade to " : "Sign In and get "}
+              {this.props.username ? (
+                "Upgrade to "
+              ) : (
+                <>
+                  <Link to="/login" className="text-white">
+                    Sign In
+                  </Link>{" "}
+                  and get{" "}
+                </>
+              )}
               <Link to="/premium" className="text-white">
                 premium
               </Link>{" "}
@@ -311,9 +320,4 @@ const mapStateToProps = state => {
     premium: state.auth.premium
   };
 };
-export default withRouter(
-  connect(
-    mapStateToProps,
-    { onLogOutUser }
-  )(NavBar)
-);
+export default withRouter(connect(mapStateToProps, { onLogOutUser })(NavBar));
