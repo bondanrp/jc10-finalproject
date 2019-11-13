@@ -24,16 +24,14 @@ Mengambil inspirasi dari SkillShare, Youtube, RuangGuru, Zenius. <br>
 `DONE` kolom komentar.<br>
 `DONE` Notifikasi untuk teacher yang bersangkutan ketika ada user yang berkomentar di videonya.<br>
 `DONE` Related videos berdasarkan kategori.<br>
-`PLANNED` Free user hanya mendapat akses 5 video per bulan.<br>
-`PLANNED` View video hanya akan bertambah jika user menghabiskan waktu setidaknya 1 menit di halaman video.<br>
-`PLANNED` View video hanya akan bertambah 1 per user.<br>
-`PLANNED` Penanda unik untuk komentar dari Teacher yang post video.<br>
+`DONE` Free user hanya mendapat akses 3 video per kelas.<br>
+`DONE` View video hanya akan bertambah jika user menghabiskan waktu setidaknya 1 menit di halaman video.<br>
+`DONE` Penanda unik untuk komentar dari Teacher yang post video.<br>
 
 ## Home
 
 `DONE` Menunjukkan preview card untuk tiap kategori.<br>
 `DONE` Login modal ketika mencoba mengakses video sebelum melakukan login.<br>
-`WIP` konten.<br>
 
 ## Browse
 
@@ -42,7 +40,7 @@ Mengambil inspirasi dari SkillShare, Youtube, RuangGuru, Zenius. <br>
 `DONE` Menunjukkan video-video berdasarkan category.<br>
 `DONE` Menunjukkan teacher-teacher.<br>
 `DONE` Category menyesuaikan kategori video yang pernah diupload teacher.<br>
-`WIP` Proper pagination - sekarang hanya show more yang tidak konsisten.<br>
+`DONE` Proper pagination<br>
 
 ## Profile Page
 
@@ -50,17 +48,17 @@ Mengambil inspirasi dari SkillShare, Youtube, RuangGuru, Zenius. <br>
 `DONE` Melihat teacher-teacher yang di subscribe oleh user.<br>
 `DONE` Tombol subscribe/unsubscribe pada profile page teacher.<br>
 `DONE` Upload profile picture dengan mengklik DP user pada profile page.<br>
-`PLANNED` pagination pada video dan subscribed teacher.<br>
+`DONE` pagination pada video dan subscribed teacher.<br>
 
 ## Upload Video
 
-`WIP` semua wip.<br>
-`PLANNED` notifikasi untuk subscriber ketika melakukan upload.<br>
+`DONE` upload video.<br>
+`DONE` notifikasi untuk subscriber ketika melakukan upload.<br>
 
 ## Become a Teacher
 
-`PLANNED` Form untuk user yang sudah register berisikan kontak, pengalaman, CV.<br>
-`PLANNED` Notifikasi untuk admin.<br>
+`DONE` Form untuk user yang sudah register berisikan kontak, pengalaman, CV.<br>
+`DONE` Notifikasi untuk admin.<br>
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
