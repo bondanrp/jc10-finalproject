@@ -4,9 +4,7 @@
 
 Project ini merupakan sebuah platform untuk berbagi skill non-akademis melalui video. User dapat subscribe ke teacher favorit untuk mendapatkan update terbaru dan berdiskusi melalui kolom komentar.<br>
 
-User dapat apply untuk menjadi teacher dengan mengisi form dan mengupload CV yang nantinya akan dikonfirmasi oleh admin (planned)<br>
-
-User gratis memiliki banner iklan di halaman video dan di halaman browse (planned). <br>
+User dapat apply untuk menjadi teacher dengan mengisi form dan mengupload CV yang nantinya akan dikonfirmasi oleh admin<br>
 
 Mengambil inspirasi dari SkillShare, Youtube, RuangGuru, Zenius. <br>
 
